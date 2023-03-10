@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/@generated/"
+  outputToNestJsResourceStructure = "true"
+  exportRelationModifierClasses   = true
+  reExport                        = "true"
+  createDtoPrefix                 = "Create"
+  updateDtoPrefix                 = "Update"
+  annotateAllDtoProperties        = "true"
+  dtoSuffix                       = "Dto"
+  classValidation                 = "true"
+  fileNamingStyle                 = "camel"
+  outputType                      = "class"
+  prettier                        = "true"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(cuid())
+  username     String          @unique
+  /// @DtoEntityHidden
+  password     String
+  email        String          @unique
+  /// @DtoCreateOptional
+  type         String          @default("USER")
+  /// @DtoCreateOptional
+  /// @DtoReadOnly
+  createdAt    DateTime        @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt    DateTime        @updatedAt @map("updated_at")
+  /// @DtoCreateOptional
+  transactions Transaction[]
+  /// @DtoCreateOptional
+  progress     User_Progress[]
+}
+
+model Quiz_Category {
+  id        String   @id @default(cuid())
+  name      String
+  /// @DtoReadOnly
+  createdAt DateTime @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt DateTime @updatedAt @map("updated_at")
+  /// @DtoCreateOptional
+  quizzes   Quiz[]
+}
+
+model Quiz {
+  id                  String          @id @default(cuid())
+  name                String
+  category_id         String
+  /// @DtoCreateOptional
+  cost                Float           @default(0)
+  /// @DtoCreateOptional
+  negative_mark_value Float?          @default(0)
+  /// @DtoReadOnly
+  createdAt           DateTime        @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+  Question            Question[]
+  /// @DtoCreateOptional
+  category            Quiz_Category?  @relation(fields: [category_id], references: [id])
+  /// @DtoCreateOptional
+  Transaction         Transaction[]
+  /// @DtoCreateOptional
+  User_Progress       User_Progress[]
+}
+
+model Question_Category {
+  id        String     @id @default(cuid())
+  name      String
+  /// @DtoReadOnly
+  createdAt DateTime   @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  /// @DtoCreateOptional
+  quizzes   Question[]
+}
+
+model Question {
+  id                  String             @id @default(cuid())
+  quiz_id             String
+  text                String
+  correct_answer      String
+  /// @DtoCreateOptional
+  answer_explanation  String?
+  /// @DtoReadOnly
+  createdAt           DateTime           @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt           DateTime           @updatedAt @map("updated_at")
+  /// @ArrayNotEmpty
+  options             String[]
+  /// @DtoCreateOptional
+  quiz                Quiz?              @relation(fields: [quiz_id], references: [id])
+  Question_Category   Question_Category? @relation(fields: [question_CategoryId], references: [id])
+  question_CategoryId String?
+}
+
+model User_Progress {
+  id             String   @id @default(cuid())
+  user_id        String
+  quiz_id        String
+  score          Int
+  negative_score Float
+  /// @DtoReadOnly
+  createdAt      DateTime @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  quiz           Quiz     @relation(fields: [quiz_id], references: [id])
+  user           User     @relation(fields: [user_id], references: [id])
+}
+
+model Transaction {
+  id               String   @id @default(cuid())
+  user_id          String
+  quiz_id          String
+  amount           Int
+  transaction_date DateTime
+  /// @DtoReadOnly
+  createdAt        DateTime @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  quiz             Quiz     @relation(fields: [quiz_id], references: [id])
+  user             User     @relation(fields: [user_id], references: [id])
+}

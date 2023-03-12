@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from 'src/@generated/user/dto';
+import { CreateUserDto, UpdateUserDto } from 'src/@generated/user/dto/index';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 

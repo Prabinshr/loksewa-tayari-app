@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateTransactionDto, UpdateTransactionDto } from 'src/@generated/transaction/dto';
+import { CreateTransactionDto, UpdateTransactionDto } from 'src/@generated/transaction/dto/index';
 @ApiTags('Transaction')
 @Controller('transaction')
 export class TransactionController {

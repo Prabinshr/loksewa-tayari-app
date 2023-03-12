@@ -9,6 +9,7 @@ import { QuestionModule } from 'src/question/question.module';
 import { UserProgressModule } from 'src/progress/progress.module';
 import { TransactionModule } from 'src/transaction/transaction.module';
 import { QuestionCategoryModule } from 'src/question_category/question_category.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { QuestionCategoryModule } from 'src/question_category/question_category.
     UserProgressModule,
     TransactionModule,
     QuestionCategoryModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

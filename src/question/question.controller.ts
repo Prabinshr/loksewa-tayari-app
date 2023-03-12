@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateQuestionDto, UpdateQuestionDto } from 'src/@generated/question/dto';
+import { CreateQuestionDto, UpdateQuestionDto } from 'src/@generated/question/dto/index';
 @ApiTags("Question")
 @Controller('question')
 export class QuestionController {

@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateQuizCategoryDto, UpdateQuizCategoryDto } from 'src/@generated/quizCategory/dto';
+import { CreateQuizCategoryDto, UpdateQuizCategoryDto } from 'src/@generated/quizCategory/dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()

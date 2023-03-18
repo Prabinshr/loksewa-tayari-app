@@ -6,11 +6,13 @@ import * as bcrypt from 'bcrypt';
 import { jwtSecret } from '../utils/constant';
 import { ForbiddenException } from '@nestjs/common/exceptions';
 import { Request, Response } from 'express';
+import { SignupDto } from './dto/sign_up.dto';
+import { SigninDto } from './dto/sign_in.dto';
 @Injectable()
 export class AuthService {
   constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
-  async signup(dto: AuthDto) {
+  async signup(dto: SignupDto) {
     const { username, email, password } = dto;
     const foundUser = await this.prisma.user.findUnique({
       where: { email: email },
@@ -33,8 +35,9 @@ export class AuthService {
       message: 'signup was successful ',
     };
   }
-  async signin(dto: AuthDto, req: Request, res: Response) {
-    const { email, password } = dto;
+  async signin(dto: SigninDto, req: Request, res: Response) {
+    const email = dto.email;
+    const password = dto.password;
     const foundUser = await this.prisma.user.findUnique({
       where: { email: email },
     });

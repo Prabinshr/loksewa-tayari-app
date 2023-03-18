@@ -12,7 +12,7 @@ import { QuestionCategoryService } from './question_category.service';
 import {
   CreateQuestionCategoryDto,
   UpdateQuestionCategoryDto,
-} from 'src/@generated/questionCategory/dto';
+} from 'src/@generated/questionCategory/dto/index';
 
 @ApiTags('Question Category')
 @Controller('question-category')

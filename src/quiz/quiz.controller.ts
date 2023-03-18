@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { QuizService } from './quiz.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateQuizDto, UpdateQuizDto } from 'src/@generated/quiz/dto';
+import { CreateQuizDto, UpdateQuizDto } from 'src/@generated/quiz/dto/index';
 
 @ApiTags("quiz")
 @Controller('quiz')

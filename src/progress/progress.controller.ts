@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserProgressService } from './progress.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateUserProgressDto, UpdateUserProgressDto } from 'src/@generated/userProgress/dto';
+import { CreateUserProgressDto, UpdateUserProgressDto } from 'src/@generated/userProgress/dto/index';
 
 @ApiTags('User Progress')
 @Controller('user-progress')

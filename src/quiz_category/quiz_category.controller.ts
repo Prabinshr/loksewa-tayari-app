@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { QuizCategoryService } from './quiz_category.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateQuizCategoryDto, UpdateQuizCategoryDto } from 'src/@generated/quizCategory/dto';
+import { CreateQuizCategoryDto, UpdateQuizCategoryDto } from 'src/@generated/quizCategory/dto/index';
 
 @ApiTags('Quiz Category')
 @Controller('quiz-category')

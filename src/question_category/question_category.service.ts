@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import {
   CreateQuestionCategoryDto,
   UpdateQuestionCategoryDto,
-} from 'src/@generated/questionCategory/dto';
+} from 'src/@generated/questionCategory/dto/index';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()

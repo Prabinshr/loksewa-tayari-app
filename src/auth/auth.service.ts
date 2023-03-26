@@ -1,96 +1,213 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { AuthDto } from './dto/auth.dto';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { jwtSecret } from '../utils/constant';
-import { ForbiddenException } from '@nestjs/common/exceptions';
-import { Request, Response } from 'express';
-import { SignupDto } from './dto/sign_up.dto';
-import { SigninDto } from './dto/sign_in.dto';
+import { User } from '@prisma/client';
+
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwt: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {}
 
-  async signup(dto: SignupDto) {
-    const { username, email, password } = dto;
-    const foundUser = await this.prisma.user.findUnique({
-      where: { email: email },
-    });
-    if (foundUser) {
-      throw new BadRequestException('Email already exists ');
-    }
-    const hashedPassword = await this.hashPassword(password);
-
-    await this.prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-
-      },
-    });
-
-    return {
-      message: 'signup was successful ',
-    };
-  }
-  async signin(dto: SigninDto, req: Request, res: Response) {
-    const email = dto.email;
-    const password = dto.password;
-    const foundUser = await this.prisma.user.findUnique({
-      where: { email: email },
-    });
-    if (!foundUser) {
-      throw new BadRequestException('Wrong credentials ');
-    }
-    const isPasswordValid = await this.comparePassword({
-      password,
-      hash: foundUser.password,
-    });
-    if (!isPasswordValid) {
-      throw new BadRequestException('Wrong credentials ');
-    }
-
-    // sign jwt and return to user
-
-    const token = await this.signToken({
-      id: foundUser.id,
-      email: foundUser.email,
-    });
-
-    if (!token) {
-      throw new ForbiddenException();
-    }
-    res.cookie('token', token);
-
-    return res.send({
-        message: 'signin was successful ',
-        token
-    })
-  }
-
-  async signout(req: Request, res: Response) {
-    res.clearCookie('token');
-    return res.send({
-        message: 'signout was successful ',
-    });
-  }
-
-  async hashPassword(password: string) {
-    const salt = 10;
-    return await bcrypt.hash(password, salt);
-  }
-  async comparePassword(args: { password: string; hash: string }) {
-    const { password, hash } = args;
-    return await bcrypt.compare(password, hash);
-  }
-
-  async signToken(args: { id: string; email: string }) {
-    const payload = args;
-
-    return this.jwt.signAsync(payload, {
-      secret: jwtSecret,
-    });
+  async generateJWT(userPayload: Partial<User>) {
+    return await this.jwtService.signAsync(userPayload);
   }
 }
+// export class AuthService {
+//   constructor(
+//     private userService: UserService,
+//     private jwtService: JwtService,
+//     private otpService: OtpService,
+//   ) {}
+
+//   async register(userDetail: CreateUserDto) {
+//     const emailExists = await this.userService.getUserByEmail(userDetail.email);
+
+//     if (emailExists && emailExists.role === UserRole.ghost) {
+//       const usernameExists = await this.userService.getUserByUsername(
+//         userDetail.username,
+//       );
+
+//       if (usernameExists) {
+//         throw new BadRequestException({
+//           message: 'Username already exists.',
+//         });
+//       }
+
+//       // const { ...savedUser } = await this.userService.createUser(userDetail);
+//       const savedUser = await this.userService.createGhostUser(
+//         emailExists.id,
+//         userDetail,
+//       );
+
+//       // send email with OTP
+//       const otp = await this.otpService.createOtp(
+//         savedUser.id,
+//         OTPType.emailVerification,
+//       );
+
+//       const html = await getMailTemplates(MailType.new_registration_otp, {
+//         otp: otp.code,
+//       });
+
+//       sendMail({
+//         to: savedUser.email,
+//         subject: 'Email Verification',
+//         html,
+//       });
+
+//       return savedUser;
+//     }
+
+//     if (emailExists) {
+//       throw new BadRequestException({
+//         message: 'Email already exists.',
+//       });
+//     }
+
+//     const usernameExists = await this.userService.getUserByUsername(
+//       userDetail.username,
+//     );
+
+//     if (usernameExists) {
+//       throw new BadRequestException({
+//         message: 'Username already exists.',
+//       });
+//     }
+
+//     const { ...savedUser } = await this.userService.createUser(userDetail);
+
+//     // send email with OTP
+//     const otp = await this.otpService.createOtp(
+//       savedUser.id,
+//       OTPType.emailVerification,
+//     );
+
+//     const html = await getMailTemplates(MailType.new_registration_otp, {
+//       otp: otp.code,
+//     });
+
+//     sendMail({
+//       to: savedUser.email,
+//       subject: 'Email Verification',
+//       html,
+//     });
+
+//     return savedUser;
+//   }
+
+//   async login(input: LoginDto, response: any) {
+//     const user = await this.validateUser(input.email, input.password);
+//     const payload = { sub: user.id, role: user.role };
+//     const access_token = await this.jwtService.signAsync(payload, {
+//       expiresIn: '7d',
+//       secret: process.env.JWT_SECRET,
+//     });
+
+//     response.cookie('jwt', access_token, {
+//       httpOnly: true,
+//       domain: 'localhost',
+//     });
+
+//     return {
+//       verified: true,
+//       jwt: access_token,
+//       role: user.role,
+//     };
+//   }
+
+//   async validateUser(email: string, password: string) {
+//     const user = await this.userService.getUserByEmailWithPassword(email);
+//     if (!user)
+//       throw new UnauthorizedException({
+//         verified: null,
+//         message: 'Invalid email or password.',
+//       });
+
+//     if (!user.password) {
+//       throw new UnauthorizedException({
+//         verified: null,
+//         message: 'Please register your account.',
+//       });
+//     }
+
+//     const valid = await argon.verify(user.password, password);
+//     if (!valid)
+//       throw new UnauthorizedException({
+//         verified: null,
+//         message: 'Invalid email or password.',
+//       });
+
+//     if (!user.isVerified) {
+//       // send email with OTP
+//       const otp = await this.otpService.createOtp(
+//         user.id,
+//         OTPType.emailVerification,
+//       );
+
+//       sendMail({
+//         to: email,
+//         subject: 'Email Verification',
+//         text: `Your Email Verification OTP is ${otp.code}`,
+//       });
+
+//       // sendGridMail(
+//       //   email,
+//       //   'Email Verification',
+//       //   `Your Email Verification OTP is ${otp.code}`,
+//       // );
+
+//       throw new UnauthorizedException({
+//         verified: false,
+//         email,
+//         message:
+//           'User is not yet verified. Please check your inbox to verify your email.',
+//       });
+//     }
+
+//     return user;
+//   }
+
+//   async resendEmailVerification(input: ResendEmailVerificationDto) {
+//     const user = await this.userService.getUserByEmail(input.email);
+//     if (!user) throw new NotFoundException('User not found');
+//     if (user.isVerified)
+//       throw new BadRequestException('User already verified.');
+
+//     const previousOtp = await this.otpService.findLastOtp(
+//       user.id,
+//       OTPType.emailVerification,
+//     );
+
+//     if (previousOtp) {
+//       const waitTime = 1000 * 60 * 1; // resend only after one minute
+//       const completedWaitTime =
+//         previousOtp.createdAt.getTime() + waitTime < Date.now();
+//       if (!completedWaitTime) {
+//         throw new BadRequestException('Please request OTP after one minute.');
+//       }
+//     }
+
+//     // send email with OTP
+//     const otp = await this.otpService.createOtp(
+//       user.id,
+//       OTPType.emailVerification,
+//     );
+
+//     sendMail({
+//       to: user.email,
+//       subject: 'Email Verification',
+//       text: `Your Email Verification OTP is ${otp.code}`,
+//     });
+
+//     // sendGridMail(
+//     //   user.email,
+//     //   'Email Verification',
+//     //   `Your Email Verification OTP is ${otp.code}`,
+//     // );
+//     return { message: 'Email verification OTP has been resent.' };
+//   }
+
+//   async verifyEmail(email: string, code: string) {
+//     await this.userService.verifyEmail(email, code);
+
+//     return { message: 'Email has been successfully verified.' };
+//   }
+// }

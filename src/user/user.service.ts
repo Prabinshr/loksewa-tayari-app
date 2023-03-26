@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CreateUserDto, UpdateUserDto } from 'src/@generated/user/dto/index';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -20,7 +20,10 @@ export class UserService {
     });
     if (user) throw new HttpException('User already exists', 400);
     const { password, ...newUser } = await this.prisma.user.create({
-      data: createUserDto,
+      data: {
+        ...createUserDto,
+        type: 'USER',
+      },
     });
     // Return user without password
     return newUser;
@@ -82,6 +85,16 @@ export class UserService {
     });
     const { password, ...withoutPassword } = user;
     return withoutPassword;
+  }
+  async findByUsername(username: string) {
+    // returns a single user without the password
+    const user = await this.prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+    // const { password, ...withoutPassword } = user;
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

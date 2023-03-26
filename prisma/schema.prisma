@@ -2,25 +2,30 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator nestjsDto {
-  provider                        = "prisma-generator-nestjs-dto"
-  output                          = "../src/@generated/"
-  outputToNestJsResourceStructure = "true"
-  exportRelationModifierClasses   = true
-  reExport                        = "true"
-  createDtoPrefix                 = "Create"
-  updateDtoPrefix                 = "Update"
-  annotateAllDtoProperties        = "true"
-  dtoSuffix                       = "Dto"
-  classValidation                 = "true"
-  fileNamingStyle                 = "camel"
-  outputType                      = "class"
-  prettier                        = "true"
-}
+// generator nestjsDto {
+//   provider                        = "prisma-generator-nestjs-dto"
+//   output                          = "../src"
+//   outputToNestJsResourceStructure = "true"
+//   exportRelationModifierClasses   = true
+//   reExport                        = "true"
+//   createDtoPrefix                 = "Create"
+//   updateDtoPrefix                 = "Update"
+//   annotateAllDtoProperties        = "true"
+//   dtoSuffix                       = "Dto"
+//   classValidation                 = "true"
+//   outputType                      = "class"
+//   prettier                        = "true"
+// }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+  SUBSCRIBED_USER
 }
 
 model User {
@@ -30,7 +35,7 @@ model User {
   password     String
   email        String          @unique
   /// @DtoCreateOptional
-  type         String          @default("USER")
+  type         Role?            @default(USER)
   /// @DtoCreateOptional
   /// @DtoReadOnly
   createdAt    DateTime        @default(now()) @map("created_at")
@@ -40,6 +45,7 @@ model User {
   transactions Transaction[]
   /// @DtoCreateOptional
   progress     User_Progress[]
+  otps         OTP[]
 }
 
 model Quiz_Category {
@@ -130,4 +136,20 @@ model Transaction {
   updatedAt        DateTime @updatedAt @map("updated_at")
   quiz             Quiz     @relation(fields: [quiz_id], references: [id])
   user             User     @relation(fields: [user_id], references: [id])
+}
+
+enum OTPType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+  OTHER
+}
+
+model OTP {
+  id        String   @id @default(cuid())
+  type      OTPType
+  code      String
+  user_id   String
+  user      User     @relation(fields: [user_id], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }

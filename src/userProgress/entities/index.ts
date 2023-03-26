@@ -1,0 +1,2 @@
+
+export * from './userProgress.entity';

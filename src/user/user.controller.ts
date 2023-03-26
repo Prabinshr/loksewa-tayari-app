@@ -9,13 +9,20 @@ import {
   ValidationPipe,
   Query,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto, UpdateUserDto } from 'src/@generated/user/dto/index';
+import { CreateUserDto, UpdateUserDto } from './dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guard/role.guard';
+import { Roles } from 'src/auth/guard/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('User')
 @Controller('user')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles(Role.ADMIN)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -28,8 +35,8 @@ export class UserController {
   @Get()
   // Generate a findAll method that takes a page and limit as optional query parameter
   findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
-    page = parseInt(page.toString()) || 1;
-    limit = parseInt(limit.toString()) || 10;
+    page = parseInt(page?.toString()) || 1;
+    limit = parseInt(limit?.toString()) || 10;
     if ((page > 100 || page < 1) && (limit > 100 || limit < 10)) {
       throw new BadRequestException(
         'Page and limit must be greater than 10 and less than 100',

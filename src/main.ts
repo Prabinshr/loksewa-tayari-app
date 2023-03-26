@@ -12,6 +12,17 @@ async function bootstrap() {
       'This API allows users to access and interact with quizzes on the Quiz Platform. Administrators can manage quizzes and questions, while regular users can take quizzes and view their progress and scores.',
     )
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'Bearer',
+        name: 'Authorization',
+        bearerFormat: 'Bearer',
+        description: "Enter 'Bearer' [space] and then your token",
+        in: 'header',
+      },
+      'access-token',
+    )
     .build();
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));

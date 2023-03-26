@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateQuestionDto, UpdateQuestionDto } from 'src/@generated/question/dto/index';
+import { CreateQuestionDto, UpdateQuestionDto } from './dto';
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags("Question")
 @Controller('question')
+@UseGuards(AuthGuard('jwt'))
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 

@@ -3,13 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
-import { QuizCategoryModule } from 'src/quiz_category/quiz_category.module';
 import { QuizModule } from 'src/quiz/quiz.module';
 import { QuestionModule } from 'src/question/question.module';
-import { UserProgressModule } from 'src/progress/progress.module';
+import { UserProgressModule } from 'src/userProgress/progress.module';
 import { TransactionModule } from 'src/transaction/transaction.module';
-import { QuestionCategoryModule } from 'src/question_category/question_category.module';
+import { QuestionCategoryModule } from 'src/questionCategory/question_category.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { QuizCategoryModule } from 'src/quizCategory/quiz_category.module';
 
 @Module({
   imports: [

@@ -1,7 +1,6 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Role } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 const prisma = new PrismaClient();
-const userTypes = ['ADMIN', 'USER'];
 async function main() {
   for (let i = 0; i <= 100; i++) {
     await prisma.user.create({
@@ -9,7 +8,7 @@ async function main() {
         username: faker.internet.userName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
-        type: userTypes[faker.datatype.number({ min: 0, max: 1 })],
+        type: Role[faker.datatype.number({ min: 0, max: 1 })],
         progress: {
           create: {
             score: faker.datatype.number({ min: 0, max: 1000 }),
@@ -42,12 +41,13 @@ async function main() {
         transaction_date: faker.date.past(),
         quiz: {
           connect: {
-            id: (quizzes[faker.datatype.number({ min: 0, max: quizzes.length })].id),
+            id: quizzes[faker.datatype.number({ min: 0, max: quizzes.length })]
+              .id,
           },
         },
         user: {
           connect: {
-            email: (users[faker.datatype.number({ min: 0, max: users.length })]),
+            email: users[faker.datatype.number({ min: 0, max: users.length })],
           },
         },
       },
@@ -67,7 +67,8 @@ async function main() {
         ],
         quiz: {
           connect: {
-            id: (quizzes[faker.datatype.number({ min: 0, max: quizzes.length })].id),
+            id: quizzes[faker.datatype.number({ min: 0, max: quizzes.length })]
+              .id,
           },
         },
       },

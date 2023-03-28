@@ -1,32 +1,32 @@
 import {
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateTransactionDto, UpdateTransactionDto } from './dto';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guard/role.guard';
 @ApiTags('Transaction')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
-  @Post()
-  create(
-    @Body() createTransactionDto: CreateTransactionDto,
-    quiz_id: string,
-    user_id: string,
-  ) {
-    return this.transactionService.create(
-      createTransactionDto,
-      quiz_id,
-      user_id,
-    );
-  }
+  // TODO: CUD transactions should be done by the system. So, not exposing them to the user.
+  // @Post()
+  // create(
+  //   @Body() createTransactionDto: CreateTransactionDto,
+  //   quiz_id: string,
+  //   user_id: string,
+  // ) {
+  //   return this.transactionService.create(
+  //     createTransactionDto,
+  //     quiz_id,
+  //     user_id,
+  //   );
+  // }
 
   @Get()
   findAll() {
@@ -38,16 +38,16 @@ export class TransactionController {
     return this.transactionService.findOne(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateTransactionDto: UpdateTransactionDto,
-  ) {
-    return this.transactionService.update(id, updateTransactionDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateTransactionDto: UpdateTransactionDto,
+  // ) {
+  //   return this.transactionService.update(id, updateTransactionDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.transactionService.remove(id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.transactionService.remove(id);
+  // }
 }

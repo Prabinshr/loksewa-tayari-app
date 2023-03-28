@@ -2,10 +2,26 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
+  async changeRole(id: string, role: Role) {
+    try {
+      const user = await this.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          type: role,
+        },
+      });
+      return user;
+    } catch (error) {
+      
+    }
+  }
   async create(createUserDto: CreateUserDto) {
     // Check if user exists
     // If not, create user

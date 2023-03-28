@@ -20,12 +20,17 @@ import { Roles } from 'src/auth/guard/roles.decorator';
 import { Role } from '@prisma/client';
 
 @ApiTags('User')
-@ApiBearerAuth("jwt")
+@ApiBearerAuth('jwt')
 @Controller('user')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Roles(Role.ADMIN)
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Patch(':id/role')
+  changeRole(@Param('id') id: string, @Body('role') role: Role) {
+    return this.userService.changeRole(id, role);
+  }
 
   @Post()
   @ApiCreatedResponse({ type: CreateUserDto })

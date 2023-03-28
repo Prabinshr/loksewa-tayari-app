@@ -24,8 +24,9 @@ datasource db {
 
 enum Role {
   ADMIN
-  USER
+  MODERATOR
   SUBSCRIBED_USER
+  USER
 }
 
 model User {

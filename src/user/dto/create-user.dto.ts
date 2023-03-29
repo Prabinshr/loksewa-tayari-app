@@ -31,14 +31,4 @@ password: string;
 @IsNotEmpty()
 @IsString()
 email: string;
-@ApiProperty()
-@IsBoolean()
-verified: boolean;
-@ApiProperty({
-  enum: Role,
-  default: `USER`,
-})
-@IsOptional()
-@IsIn(["ADMIN","MODERATOR","SUBSCRIBED_USER","USER"])
-type?: Role;
 }

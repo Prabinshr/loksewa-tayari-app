@@ -18,9 +18,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     const user = await this.userService.findByUsername(username);
     if (user && (await argon.verify(user.password, password))) {
       const { password, ...result } = user;
-      return user.verified
-        ? result
-        : new HttpException('User not verified', 401);
+      return result;
     }
     throw new UnauthorizedException();
   }

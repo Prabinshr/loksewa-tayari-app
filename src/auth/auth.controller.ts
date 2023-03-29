@@ -1,33 +1,76 @@
 import {
   Body,
   Controller,
+  HttpException,
   InternalServerErrorException,
   Post,
-  Request,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
+import { CreateOtpDto } from 'src/otp/dto';
+import { OtpService } from 'src/otp/otp.service';
+import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
+import { User } from 'src/user/entities';
+import { UserService } from 'src/user/user.service';
+import { CreateUserDto } from 'src/user/dto';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private readonly otpService: OtpService,
+  ) {}
 
   @Post('login')
   @ApiBody({ type: LoginDTO })
   @UseGuards(AuthGuard('local')) // <---- This is important. It handles the authentication.
-  async login(@Request() req, @Body(new ValidationPipe()) loginDto: LoginDTO) {
+  async login(
+    @CurrentUser() user,
+    @Body(new ValidationPipe()) loginDto: LoginDTO,
+  ) {
     // Only the authenticated user can access this route
-    console.log(req.user);
-    const token = await this.authService.generateJWT(req.user);
+    const token = await this.authService.generateJWT(user);
     if (token) {
       return { token };
     } else {
       throw new InternalServerErrorException("Couldn't generate token.");
     }
+  }
+
+  @Post('register')
+  @ApiCreatedResponse({ type: User })
+  @ApiBody({ type: CreateUserDto })
+  async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
+  }
+
+  @Post('validate-otp')
+  @ApiBearerAuth("jwt")
+  @ApiBody({ type: CreateOtpDto })
+  @UseGuards(AuthGuard('jwt'))
+  async validateOtp(
+    @CurrentUser() currentUser,
+    @Body(new ValidationPipe()) otpDto: CreateOtpDto,
+  ) {
+    const validOTP = await this.otpService.validateOtp(
+      currentUser.id,
+      otpDto.code,
+      otpDto.type,
+    );
+    if (!validOTP) {
+      throw new InternalServerErrorException('Invalid OTP');
+    }
+    return this.authService.validateUser(currentUser);
   }
 }

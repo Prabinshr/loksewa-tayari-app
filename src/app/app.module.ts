@@ -11,6 +11,7 @@ import { QuestionCategoryModule } from 'src/questionCategory/question_category.m
 import { AuthModule } from 'src/auth/auth.module';
 import { QuizCategoryModule } from 'src/quizCategory/quiz_category.module';
 import { UserService } from 'src/user/user.service';
+import { OtpModule } from 'src/otp/otp.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { UserService } from 'src/user/user.service';
     UserProgressModule,
     TransactionModule,
     QuestionCategoryModule,
-    AuthModule
+    AuthModule,
+    OtpModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

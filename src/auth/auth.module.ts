@@ -9,6 +9,7 @@ import { AuthService } from './auth.service';
 import { TOKENS } from 'config';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { OtpService } from 'src/otp/otp.service';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       verifyOptions: { issuer: 'https://neptechpal.com' },
     }),
   ],
-  providers: [LocalStrategy, JwtStrategy, UserService, AuthService],
+  providers: [LocalStrategy, JwtStrategy, UserService, AuthService, OtpService],
   controllers: [AuthController],
   exports: [],
 })

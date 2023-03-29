@@ -2,12 +2,16 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Role } from '@prisma/client';
+import { OTPType, Role } from '@prisma/client';
 import * as argon from 'argon2';
+import { OtpService } from 'src/otp/otp.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly otpService: OtpService,
+  ) {}
   async changeRole(id: string, role: Role) {
     try {
       const user = await this.prisma.user.update({
@@ -15,7 +19,7 @@ export class UserService {
           id,
         },
         data: {
-          role
+          role,
         },
       });
       return user;
@@ -38,15 +42,22 @@ export class UserService {
       },
     });
     if (user) throw new HttpException('User already exists', 400);
+    const hashedPassword = await argon.hash(createUserDto.password);
+    createUserDto.password = hashedPassword;
+    console.log(hashedPassword);
     const { password, ...newUser } = await this.prisma.user.create({
       data: {
         email: createUserDto.email.toLowerCase(),
         username: createUserDto.username.toLowerCase(),
-        password: await argon.hash(createUserDto.password),
         role: Role.USER,
+        verified: false,
         ...createUserDto,
       },
     });
+    if (newUser) {
+      await this.otpService.createOtp(newUser.id, OTPType.EMAIL_VERIFICATION);
+      // TODO : Mechanism to send OTP to user by EMAIL or PHONE.
+    }
     // Return user without password
     return newUser;
   }

@@ -18,6 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guard/role.guard';
 import { Roles } from 'src/auth/guard/roles.decorator';
 import { Role } from '@prisma/client';
+import { User } from './entities';
 
 @ApiTags('User')
 @ApiBearerAuth('jwt')
@@ -33,9 +34,9 @@ export class UserController {
   }
 
   @Post()
-  @ApiCreatedResponse({ type: CreateUserDto })
-  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @ApiCreatedResponse({ type: User })
+  async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+    return await this.userService.create(createUserDto);
   }
 
   @Get()

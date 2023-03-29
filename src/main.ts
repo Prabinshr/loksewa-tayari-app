@@ -15,17 +15,17 @@ async function bootstrap() {
     .addBearerAuth(
       {
         type: 'http',
-        scheme: 'Bearer',
+        scheme: 'bearer',
         name: 'Authorization',
-        bearerFormat: 'Bearer',
-        description: "Enter 'Bearer' [space] and then your token",
+        bearerFormat: "JWT",
+        description: "Enter your JWT token",
         in: 'header',
       },
-      'access-token',
+      'jwt',
     )
     .build();
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform:true }));
   app.use(cookieParser());
 
   const document = SwaggerModule.createDocument(app, config);

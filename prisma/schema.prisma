@@ -24,18 +24,22 @@ datasource db {
 
 enum Role {
   ADMIN
-  USER
+  MODERATOR
   SUBSCRIBED_USER
+  USER
 }
 
 model User {
   id           String          @id @default(cuid())
   username     String          @unique
+  first_name   String          
+  middle_name  String?         
+  last_name    String          
   /// @DtoEntityHidden
   password     String
   email        String          @unique
   /// @DtoCreateOptional
-  type         Role?            @default(USER)
+  role         Role?           @default(USER)
   /// @DtoCreateOptional
   /// @DtoReadOnly
   createdAt    DateTime        @default(now()) @map("created_at")

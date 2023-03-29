@@ -12,7 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guard/role.guard';
@@ -20,11 +20,17 @@ import { Roles } from 'src/auth/guard/roles.decorator';
 import { Role } from '@prisma/client';
 
 @ApiTags('User')
+@ApiBearerAuth('jwt')
 @Controller('user')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Roles(Role.ADMIN)
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Patch(':id/role')
+  changeRole(@Param('id') id: string, @Body('role') role: Role) {
+    return this.userService.changeRole(id, role);
+  }
 
   @Post()
   @ApiCreatedResponse({ type: CreateUserDto })

@@ -7,8 +7,11 @@ async function main() {
       data: {
         username: faker.internet.userName(),
         email: faker.internet.email(),
+        first_name: faker.name.firstName(),
+        middle_name: faker.name.middleName(),
+        last_name: faker.name.lastName(),
         password: faker.internet.password(),
-        type: Role[faker.datatype.number({ min: 0, max: 1 })],
+        role: Role[faker.datatype.number({ min: 0, max: 2 })],
         progress: {
           create: {
             score: faker.datatype.number({ min: 0, max: 1000 }),
@@ -32,48 +35,51 @@ async function main() {
   }
 
   const users = (await prisma.user.findMany()).map((user) => user.email);
-  const quizzes = await prisma.quiz.findMany();
-
-  for (let i = 0; i < 100; i++) {
-    await prisma.transaction.create({
-      data: {
-        amount: faker.datatype.number({ min: 0, max: 1000 }),
-        transaction_date: faker.date.past(),
-        quiz: {
-          connect: {
-            id: quizzes[faker.datatype.number({ min: 0, max: quizzes.length })]
-              .id,
+  prisma.quiz.findMany().then(async (quizzes) => {
+    for (let i = 0; i < 100; i++) {
+      await prisma.transaction.create({
+        data: {
+          amount: faker.datatype.number({ min: 0, max: 1000 }),
+          transaction_date: faker.date.past(),
+          quiz: {
+            connect: {
+              id: quizzes[
+                faker.datatype.number({ min: 0, max: quizzes.length })
+              ].id,
+            },
+          },
+          user: {
+            connect: {
+              email:
+                users[faker.datatype.number({ min: 0, max: users.length })],
+            },
           },
         },
-        user: {
-          connect: {
-            email: users[faker.datatype.number({ min: 0, max: users.length })],
+      });
+    }
+    for (let i = 0; i <= 100; i++) {
+      await prisma.question.create({
+        data: {
+          text: faker.lorem.sentence(),
+          answer_explanation: faker.lorem.paragraph(),
+          correct_answer: faker.lorem.word(),
+          options: [
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+            faker.lorem.word(),
+          ],
+          quiz: {
+            connect: {
+              id: quizzes[
+                faker.datatype.number({ min: 0, max: quizzes.length })
+              ].id,
+            },
           },
         },
-      },
-    });
-  }
-  for (let i = 0; i <= 100; i++) {
-    await prisma.question.create({
-      data: {
-        text: faker.lorem.sentence(),
-        answer_explanation: faker.lorem.paragraph(),
-        correct_answer: faker.lorem.word(),
-        options: [
-          faker.lorem.word(),
-          faker.lorem.word(),
-          faker.lorem.word(),
-          faker.lorem.word(),
-        ],
-        quiz: {
-          connect: {
-            id: quizzes[faker.datatype.number({ min: 0, max: quizzes.length })]
-              .id,
-          },
-        },
-      },
-    });
-  }
+      });
+    }
+  });
 }
 
 main()

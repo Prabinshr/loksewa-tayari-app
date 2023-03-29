@@ -1,24 +1,41 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { Role } from '@prisma/client';
+
+import {Role} from '@prisma/client'
+import {IsIn,IsNotEmpty,IsOptional,IsString} from 'class-validator'
+import {ApiProperty} from '@nestjs/swagger'
+
+
+
 
 export class CreateUserDto {
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  username: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  password: string;
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  email: string;
-  @ApiProperty({
-    enum: [Role.USER],
-  })
-  @IsOptional()
-  @IsString()
-  type?: string;
+@IsNotEmpty()
+@IsString()
+username: string;
+@ApiProperty()
+@IsNotEmpty()
+@IsString()
+first_name: string;
+@ApiProperty()
+@IsOptional()
+@IsString()
+middle_name?: string;
+@ApiProperty()
+@IsNotEmpty()
+@IsString()
+last_name: string;
+@ApiProperty()
+@IsNotEmpty()
+@IsString()
+password: string;
+@ApiProperty()
+@IsNotEmpty()
+@IsString()
+email: string;
+@ApiProperty({
+  enum: Role,
+  default: `USER`,
+})
+@IsOptional()
+@IsIn(["ADMIN","MODERATOR","SUBSCRIBED_USER","USER"])
+type?: Role;
 }

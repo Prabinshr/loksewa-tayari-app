@@ -17,7 +17,7 @@ import { Role } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('quiz')
-@ApiBearerAuth()
+@ApiBearerAuth("jwt")
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller('quiz')
 export class QuizController {
@@ -29,13 +29,13 @@ export class QuizController {
     return this.quizService.create(createQuizDto);
   }
 
-  @Roles(Role.USER, Role.ADMIN, Role.SUBSCRIBED_USER)
+  @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
   @Get()
   findAll() {
     return this.quizService.findAll();
   }
 
-  @Roles(Role.USER, Role.ADMIN, Role.SUBSCRIBED_USER)
+  @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.quizService.findOne(id);

@@ -1,4 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -18,7 +22,11 @@ export class QuestionService {
         data: createQuestionDto,
       });
     } catch (error) {
-      throw new HttpException('Error creating question', 500);
+      console.error(error);
+
+      throw new InternalServerErrorException('Question could not be created', {
+        description: error.toString(),
+      });
     }
   }
 

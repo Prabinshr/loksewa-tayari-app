@@ -1,6 +1,7 @@
+
+import {OTPType} from '@prisma/client'
 import {ApiProperty} from '@nestjs/swagger'
 import {User} from '../../user/entities/user.entity'
-import { OTPType } from '@prisma/client';
 
 
 export class Otp {

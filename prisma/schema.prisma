@@ -38,6 +38,7 @@ model User {
   /// @DtoEntityHidden
   password     String
   email        String          @unique
+  verified     Boolean?        @default(false)
   /// @DtoCreateOptional
   role         Role?           @default(USER)
   /// @DtoCreateOptional

@@ -3,6 +3,7 @@ import { CreateUserDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Role } from '@prisma/client';
+import * as argon from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -38,6 +39,7 @@ export class UserService {
     const { password, ...newUser } = await this.prisma.user.create({
       data: {
         ...createUserDto,
+        password: await argon.hash(createUserDto.password),
         type: 'USER',
       },
     });

@@ -32,9 +32,9 @@ enum Role {
 model User {
   id           String          @id @default(cuid())
   username     String          @unique
-  first_name   String          
-  middle_name  String?         
-  last_name    String          
+  first_name   String
+  middle_name  String?
+  last_name    String
   /// @DtoEntityHidden
   password     String
   email        String          @unique
@@ -126,7 +126,7 @@ model User_Progress {
   /// @DtoReadOnly
   updatedAt      DateTime @updatedAt @map("updated_at")
   quiz           Quiz     @relation(fields: [quiz_id], references: [id])
-  user           User     @relation(fields: [user_id], references: [id])
+  user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Transaction {
@@ -140,7 +140,7 @@ model Transaction {
   /// @DtoReadOnly
   updatedAt        DateTime @updatedAt @map("updated_at")
   quiz             Quiz     @relation(fields: [quiz_id], references: [id])
-  user             User     @relation(fields: [user_id], references: [id])
+  user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 enum OTPType {
@@ -154,7 +154,7 @@ model OTP {
   type      OTPType
   code      String
   user_id   String
-  user      User     @relation(fields: [user_id], references: [id])
+  user      User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }

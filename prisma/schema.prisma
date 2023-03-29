@@ -2,20 +2,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator nestjsDto {
-  provider                        = "prisma-generator-nestjs-dto"
-  output                          = "../src"
-  outputToNestJsResourceStructure = "true"
-  exportRelationModifierClasses   = true
-  reExport                        = "true"
-  createDtoPrefix                 = "Create"
-  updateDtoPrefix                 = "Update"
-  annotateAllDtoProperties        = "true"
-  dtoSuffix                       = "Dto"
-  classValidation                 = "true"
-  outputType                      = "class"
-  prettier                        = "true"
-}
+// generator nestjsDto {
+//   provider                        = "prisma-generator-nestjs-dto"
+//   output                          = "../src"
+//   outputToNestJsResourceStructure = "true"
+//   exportRelationModifierClasses   = true
+//   reExport                        = "true"
+//   createDtoPrefix                 = "Create"
+//   updateDtoPrefix                 = "Update"
+//   annotateAllDtoProperties        = "true"
+//   dtoSuffix                       = "Dto"
+//   classValidation                 = "true"
+//   outputType                      = "class"
+//   prettier                        = "true"
+// }
 
 datasource db {
   provider = "postgresql"
@@ -39,7 +39,7 @@ model User {
   password     String
   email        String          @unique
   /// @DtoCreateOptional
-  type         Role?           @default(USER)
+  role         Role?           @default(USER)
   /// @DtoCreateOptional
   /// @DtoReadOnly
   createdAt    DateTime        @default(now()) @map("created_at")

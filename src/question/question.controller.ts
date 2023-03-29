@@ -39,7 +39,7 @@ export class QuestionController {
   @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
   findOne(@Param('id') id: string, @CurrentUser() user: User) {
     const quizQuestion = this.questionService.findOne(id);
-    // if(quizQuestion.quiz.cost >=0 && user.type === Role.USER){
+    // if(quizQuestion.quiz.cost >=0 && user.role === Role.USER){
     //   throw new ForbiddenException("You don't have access to this question.");
     // }
   }

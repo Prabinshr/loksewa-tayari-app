@@ -15,32 +15,36 @@ export class UserService {
           id,
         },
         data: {
-          type: role,
+          role
         },
       });
       return user;
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
   async create(createUserDto: CreateUserDto) {
+    // Check if the username contains spaces or any special characters
+    if (createUserDto.username.includes(' ')) {
+      throw new HttpException('Username cannot contain spaces', 400);
+    }
     // Check if user exists
     // If not, create user
     // If yes, return error
     const user = await this.prisma.user.findFirst({
       where: {
         OR: [
-          { username: createUserDto.username },
-          { email: createUserDto.email },
+          { username: createUserDto.username.toLowerCase() },
+          { email: createUserDto.email.toLowerCase() },
         ],
       },
     });
     if (user) throw new HttpException('User already exists', 400);
     const { password, ...newUser } = await this.prisma.user.create({
       data: {
-        ...createUserDto,
+        email: createUserDto.email.toLowerCase(),
+        username: createUserDto.username.toLowerCase(),
         password: await argon.hash(createUserDto.password),
-        type: 'USER',
+        role: Role.USER,
+        ...createUserDto,
       },
     });
     // Return user without password

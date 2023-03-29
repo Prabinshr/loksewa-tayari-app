@@ -41,7 +41,7 @@ export class UserProgressController {
   @Roles(Role.SUBSCRIBED_USER, Role.ADMIN)
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUser() user: User) {    
-    if (user.type === Role.ADMIN || user.id === id) {
+    if (user.role === Role.ADMIN || user.id === id) {
       return this.userProgressService.findOne(id);
     }
     throw new ForbiddenException("You don't have access to this resource");

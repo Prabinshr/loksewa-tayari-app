@@ -11,14 +11,14 @@ import {
 import { QuizService } from './quiz.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateQuizDto, UpdateQuizDto } from './dto/';
-import { RolesGuard } from 'src/auth/guard/role.guard';
-import { Roles } from 'src/auth/guard/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('quiz')
 @ApiBearerAuth("jwt")
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(new JwtAuthGuard(), RolesGuard)
 @Controller('quiz')
 export class QuizController {
   constructor(private readonly quizService: QuizService) {}

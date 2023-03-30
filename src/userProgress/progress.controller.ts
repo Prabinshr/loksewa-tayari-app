@@ -7,14 +7,14 @@ import {
 } from '@nestjs/common';
 import { UserProgressService } from './progress.service';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/guard/role.guard';
-import { Roles } from 'src/auth/guard/roles.decorator';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('User Progress')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(new JwtAuthGuard(), RolesGuard)
 @Controller('user-progress')
 export class UserProgressController {
   constructor(private readonly userProgressService: UserProgressService) {}

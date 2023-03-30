@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  HttpException,
   InternalServerErrorException,
   Post,
   UseGuards,
@@ -22,7 +21,7 @@ import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
 import { User } from 'src/user/entities';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
-
+import { JwtAuthGuard } from './guards/jwt.guard';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -58,7 +57,7 @@ export class AuthController {
   @Post('validate-otp')
   @ApiBearerAuth("jwt")
   @ApiBody({ type: CreateOtpDto })
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(new JwtAuthGuard())
   async validateOtp(
     @CurrentUser() currentUser,
     @Body(new ValidationPipe()) otpDto: CreateOtpDto,

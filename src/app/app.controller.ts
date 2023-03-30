@@ -4,7 +4,7 @@ import { ApiResponseProperty, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
 import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
 import { User } from 'src/user/entities';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('App')
 @Controller()
@@ -19,7 +19,7 @@ export class AppController {
     return this.appService.getServerDetails();
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(new JwtAuthGuard())
   @Get('me')
   @ApiResponseProperty({ type: User })
   async getProfile(@CurrentUser() currentUser) {

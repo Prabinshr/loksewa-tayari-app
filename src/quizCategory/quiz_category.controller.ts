@@ -11,14 +11,14 @@ import {
 import { QuizCategoryService } from './quiz_category.service';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateQuizCategoryDto, UpdateQuizCategoryDto } from './dto';
-import { RolesGuard } from 'src/auth/guard/role.guard';
-import { AuthGuard } from '@nestjs/passport';
-import { Roles } from 'src/auth/guard/roles.decorator';
+import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { RolesGuard } from 'src/auth/guards/role.guard';
 
 @ApiTags('Quiz Category')
 @Controller('quiz-category')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(new JwtAuthGuard(), RolesGuard)
 export class QuizCategoryController {
   constructor(private readonly quizCategoryService: QuizCategoryService) {}
 

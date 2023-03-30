@@ -17,7 +17,7 @@ import { AuthService } from './auth.service';
 import { LoginDTO } from './dto/login.dto';
 import { CreateOtpDto } from 'src/otp/dto';
 import { OtpService } from 'src/otp/otp.service';
-import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/user/entities';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
@@ -63,14 +63,17 @@ export class AuthController {
     @CurrentUser() currentUser,
     @Body(new ValidationPipe()) otpDto: CreateOtpDto,
   ) {
+    // Verify the OTP code sent to the user is correct
     const validOTP = await this.otpService.validateOtp(
       currentUser.id,
       otpDto.code,
       otpDto.type,
     );
+    // If the OTP code is not valid, throw an error
     if (!validOTP) {
       throw new InternalServerErrorException('Invalid OTP');
     }
+    // If the OTP code is valid, return the authenticated user
     return this.authService.validateUser(currentUser);
   }
 }

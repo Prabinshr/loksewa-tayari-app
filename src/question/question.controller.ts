@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
-import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 @ApiTags('Question')
 @Controller('question')

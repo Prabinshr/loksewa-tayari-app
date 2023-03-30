@@ -10,7 +10,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
-import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
 
 @ApiTags('User Progress')
 @UseGuards(RolesGuard)

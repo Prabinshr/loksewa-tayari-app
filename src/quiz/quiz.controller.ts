@@ -14,11 +14,10 @@ import { CreateQuizDto, UpdateQuizDto } from './dto/';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('quiz')
 @ApiBearerAuth("jwt")
-@UseGuards(new JwtAuthGuard(), RolesGuard)
+@UseGuards(RolesGuard)
 @Controller('quiz')
 export class QuizController {
   constructor(private readonly quizService: QuizService) {}

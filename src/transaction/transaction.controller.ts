@@ -7,9 +7,8 @@ import {
 import { TransactionService } from './transaction.service';
 import { ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 @ApiTags('Transaction')
-@UseGuards(new JwtAuthGuard(), RolesGuard)
+@UseGuards(RolesGuard)
 @Controller('transaction')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}

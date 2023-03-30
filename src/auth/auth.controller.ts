@@ -21,7 +21,7 @@ import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
 import { User } from 'src/user/entities';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
-import { JwtAuthGuard } from './guards/jwt.guard';
+import { Public } from 'src/decorators/public.decorator';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -32,7 +32,7 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  @ApiBody({ type: LoginDTO })
+  @Public()
   @UseGuards(AuthGuard('local')) // <---- This is important. It handles the authentication.
   async login(
     @CurrentUser() user,
@@ -47,6 +47,7 @@ export class AuthController {
     }
   }
 
+  @Public()
   @Post('register')
   @ApiCreatedResponse({ type: User })
   @ApiBody({ type: CreateUserDto })
@@ -57,7 +58,7 @@ export class AuthController {
   @Post('validate-otp')
   @ApiBearerAuth("jwt")
   @ApiBody({ type: CreateOtpDto })
-  @UseGuards(new JwtAuthGuard())
+  
   async validateOtp(
     @CurrentUser() currentUser,
     @Body(new ValidationPipe()) otpDto: CreateOtpDto,

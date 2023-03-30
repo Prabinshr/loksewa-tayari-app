@@ -11,10 +11,9 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('User Progress')
-@UseGuards(new JwtAuthGuard(), RolesGuard)
+@UseGuards(RolesGuard)
 @Controller('user-progress')
 export class UserProgressController {
   constructor(private readonly userProgressService: UserProgressService) {}

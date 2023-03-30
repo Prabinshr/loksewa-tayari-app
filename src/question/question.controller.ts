@@ -15,11 +15,10 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
-import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 @ApiTags('Question')
 @Controller('question')
 @ApiBearerAuth("jwt")
-@UseGuards(new JwtAuthGuard(), RolesGuard)
+@UseGuards(RolesGuard)
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 

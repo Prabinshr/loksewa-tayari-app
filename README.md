@@ -9,6 +9,7 @@
 
 DATABASE_URL="postgresql://DB_USERNAME:DB_PASSWORD@HOST:PORT/DATABASE_NAME?schema=public"
 JWT_SECRET=YOUR_SECRET_JWT_SECRET_CODE
+BACKEND_URL=http://localhost:3000
 ```
 ## Steps to run the server
 - `yarn` to install dependencies.

@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { OnlineStatus, Role } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
@@ -9,6 +9,11 @@ export class UserDto {
   first_name: string;
   @ApiProperty()
   middle_name: string | null;
+  @ApiProperty({
+    enum: OnlineStatus,
+    default: OnlineStatus.OFFLINE,
+  })
+  onlineStatus: OnlineStatus;
   @ApiProperty()
   last_name: string;
   @ApiProperty()

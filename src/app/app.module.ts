@@ -12,6 +12,7 @@ import { AuthModule } from 'src/auth/auth.module';
 import { QuizCategoryModule } from 'src/quizCategory/quiz_category.module';
 import { UserService } from 'src/user/user.service';
 import { OtpModule } from 'src/otp/otp.module';
+import { SocketModule } from 'src/socket/socket.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { OtpModule } from 'src/otp/otp.module';
     QuestionCategoryModule,
     AuthModule,
     OtpModule,
+    SocketModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

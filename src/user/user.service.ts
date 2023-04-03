@@ -135,14 +135,32 @@ export class UserService {
     return withoutPassword;
   }
   async findByUsername(username: string) {
-    // returns a single user without the password
-    const user = await this.prisma.user.findUnique({
-      where: {
-        username,
-      },
-    });
-    // const { password, ...withoutPassword } = user;
-    return user;
+    try {
+      // returns a single user without the password
+      const user = await this.prisma.user.findUnique({
+        where: {
+          username,
+        },
+      });
+      // const { password, ...withoutPassword } = user;
+      return user;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async findByEmail(email: string) {
+    try {
+      // returns a single user without the password
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email,
+        },
+      });
+      // const { password, ...withoutPassword } = user;
+      return user;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

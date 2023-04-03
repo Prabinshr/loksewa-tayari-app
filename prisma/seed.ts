@@ -1,8 +1,9 @@
 import { PrismaClient, Role } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { hash } from 'argon2';
 const prisma = new PrismaClient();
 async function main() {
-  for (let i = 0; i <= 100; i++) {
+  for (let i = 0; i <= 5; i++) {
     await prisma.user.create({
       data: {
         username: faker.internet.userName(),
@@ -10,8 +11,25 @@ async function main() {
         first_name: faker.name.firstName(),
         middle_name: faker.name.middleName(),
         last_name: faker.name.lastName(),
-        password: faker.internet.password(),
+        password: await hash(faker.internet.password()),
         role: Role[faker.datatype.number({ min: 0, max: 2 })],
+        transactions: {
+          create: {
+            amount: faker.datatype.number({ min: 0, max: 10000 }),
+            transaction_date: faker.date.past(),
+            quiz: {
+              create: {
+                name: faker.lorem.word(),
+                cost: faker.datatype.number({ min: 0, max: 1000 }),
+                category: {
+                  create: {
+                    name: faker.lorem.word(),
+                  }
+                }
+              },
+            },
+          },
+        },
         progress: {
           create: {
             score: faker.datatype.number({ min: 0, max: 1000 }),
@@ -21,9 +39,23 @@ async function main() {
                 name: faker.lorem.word(),
                 cost: faker.datatype.number({ min: 0, max: 1000 }),
                 negative_mark_value: faker.datatype.float({ min: 0, max: 1 }),
+                Question: {
+                  create: {
+                    text: 'What is the capital of the Philippines?',
+                    correct_answer: 'Manila',
+                    options: ['Manila', 'Cebu', 'Davao', 'Baguio'],
+                    answer_explanation:
+                      'Manila is the capital of the Philippines',
+                    Question_Category: {
+                      create: {
+                        name: 'Geography',
+                      },
+                    },
+                  },
+                },
                 category: {
                   create: {
-                    name: faker.lorem.word(),
+                    name: "Nirdesh's Quiz",
                   },
                 },
               },
@@ -33,53 +65,6 @@ async function main() {
       },
     });
   }
-
-  const users = (await prisma.user.findMany()).map((user) => user.email);
-  prisma.quiz.findMany().then(async (quizzes) => {
-    for (let i = 0; i < 100; i++) {
-      await prisma.transaction.create({
-        data: {
-          amount: faker.datatype.number({ min: 0, max: 1000 }),
-          transaction_date: faker.date.past(),
-          quiz: {
-            connect: {
-              id: quizzes[
-                faker.datatype.number({ min: 0, max: quizzes.length })
-              ].id,
-            },
-          },
-          user: {
-            connect: {
-              email:
-                users[faker.datatype.number({ min: 0, max: users.length })],
-            },
-          },
-        },
-      });
-    }
-    for (let i = 0; i <= 100; i++) {
-      await prisma.question.create({
-        data: {
-          text: faker.lorem.sentence(),
-          answer_explanation: faker.lorem.paragraph(),
-          correct_answer: faker.lorem.word(),
-          options: [
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-            faker.lorem.word(),
-          ],
-          quiz: {
-            connect: {
-              id: quizzes[
-                faker.datatype.number({ min: 0, max: quizzes.length })
-              ].id,
-            },
-          },
-        },
-      });
-    }
-  });
 }
 
 main()

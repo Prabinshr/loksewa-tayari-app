@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { OTPType, Role } from '@prisma/client';
+import { OTPType, OnlineStatus, Role } from '@prisma/client';
 import * as argon from 'argon2';
 import { OtpService } from 'src/otp/otp.service';
 
@@ -24,6 +24,21 @@ export class UserService {
       });
       return user;
     } catch (error) {}
+  }
+  async updateOnlineStatus(id: string, status: OnlineStatus) {
+    try {
+      const user = await this.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          onlineStatus: status,
+        },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
   }
   async create(createUserDto: CreateUserDto) {
     // Check if the username contains spaces or any special characters
@@ -141,6 +156,22 @@ export class UserService {
     // returns the updated user without the password
     const { password, ...withoutPassword } = updatedUser;
     return withoutPassword;
+  }
+  async getOnlineUsers() {
+    try {
+      const users = await this.prisma.user.findMany({
+        where: {
+          onlineStatus: OnlineStatus.ONLINE,
+        },
+      });
+      const userData = users.map((user) => {
+        const { password, ...passwordLessUser } = user;
+        return passwordLessUser;
+      });
+      return userData;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
   }
 
   remove(id: string) {

@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { OnlineStatus, Role } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transaction } from '../../transaction/entities/transaction.entity';
 import { UserProgress } from '../../userProgress/entities/userProgress.entity';
@@ -35,4 +35,10 @@ export class User {
   transactions?: Transaction[];
   progress?: UserProgress[];
   otps?: Otp[];
+
+  @ApiProperty({
+    enum: OnlineStatus,
+    default: OnlineStatus.OFFLINE,
+  })
+  onlineStatus: OnlineStatus;
 }

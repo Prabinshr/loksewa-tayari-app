@@ -2,12 +2,16 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Role } from '@prisma/client';
+import { OTPType, OnlineStatus, Role } from '@prisma/client';
 import * as argon from 'argon2';
+import { OtpService } from 'src/otp/otp.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly otpService: OtpService,
+  ) {}
   async changeRole(id: string, role: Role) {
     try {
       const user = await this.prisma.user.update({
@@ -15,11 +19,26 @@ export class UserService {
           id,
         },
         data: {
-          role
+          role,
         },
       });
       return user;
     } catch (error) {}
+  }
+  async updateOnlineStatus(id: string, status: OnlineStatus) {
+    try {
+      const user = await this.prisma.user.update({
+        where: {
+          id,
+        },
+        data: {
+          onlineStatus: status,
+        },
+      });
+      return user;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
   }
   async create(createUserDto: CreateUserDto) {
     // Check if the username contains spaces or any special characters
@@ -38,15 +57,22 @@ export class UserService {
       },
     });
     if (user) throw new HttpException('User already exists', 400);
+    const hashedPassword = await argon.hash(createUserDto.password);
+    createUserDto.password = hashedPassword;
+    console.log(hashedPassword);
     const { password, ...newUser } = await this.prisma.user.create({
       data: {
         email: createUserDto.email.toLowerCase(),
         username: createUserDto.username.toLowerCase(),
-        password: await argon.hash(createUserDto.password),
         role: Role.USER,
+        verified: false,
         ...createUserDto,
       },
     });
+    if (newUser) {
+      await this.otpService.createOtp(newUser.id, OTPType.EMAIL_VERIFICATION);
+      // TODO : Mechanism to send OTP to user by EMAIL or PHONE.
+    }
     // Return user without password
     return newUser;
   }
@@ -109,14 +135,32 @@ export class UserService {
     return withoutPassword;
   }
   async findByUsername(username: string) {
-    // returns a single user without the password
-    const user = await this.prisma.user.findUnique({
-      where: {
-        username,
-      },
-    });
-    // const { password, ...withoutPassword } = user;
-    return user;
+    try {
+      // returns a single user without the password
+      const user = await this.prisma.user.findUnique({
+        where: {
+          username,
+        },
+      });
+      // const { password, ...withoutPassword } = user;
+      return user;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
+  }
+  async findByEmail(email: string) {
+    try {
+      // returns a single user without the password
+      const user = await this.prisma.user.findUnique({
+        where: {
+          email,
+        },
+      });
+      // const { password, ...withoutPassword } = user;
+      return user;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -130,6 +174,22 @@ export class UserService {
     // returns the updated user without the password
     const { password, ...withoutPassword } = updatedUser;
     return withoutPassword;
+  }
+  async getOnlineUsers() {
+    try {
+      const users = await this.prisma.user.findMany({
+        where: {
+          onlineStatus: OnlineStatus.ONLINE,
+        },
+      });
+      const userData = users.map((user) => {
+        const { password, ...passwordLessUser } = user;
+        return passwordLessUser;
+      });
+      return userData;
+    } catch (error) {
+      throw new HttpException('User not found', 404);
+    }
   }
 
   remove(id: string) {

@@ -1,6 +1,6 @@
 
-import {Role} from '@prisma/client'
-import {IsIn,IsOptional,IsString} from 'class-validator'
+import {OnlineStatus, Role} from '@prisma/client'
+import {IsBoolean, IsIn,IsOptional,IsString} from 'class-validator'
 import {ApiProperty} from '@nestjs/swagger'
 
 
@@ -31,6 +31,15 @@ password?: string;
 @IsOptional()
 @IsString()
 email?: string;
+@ApiProperty({
+  enum: OnlineStatus,
+  default: OnlineStatus.OFFLINE,
+})
+@IsOptional()
+onlineStatus?: OnlineStatus;
+@ApiProperty()
+@IsBoolean()
+verified: boolean;
 @ApiProperty({
   enum: Role,
   default: `USER`,

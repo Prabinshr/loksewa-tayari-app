@@ -1,13 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService,
+  ) {}
 
   async generateJWT(userPayload: Partial<User>) {
     return await this.jwtService.signAsync(userPayload);
+  }
+
+  async validateUser(payload: Partial<User>) {
+    return this.userService.update(payload.id, { ...payload, verified: true });
   }
 }
 // export class AuthService {

@@ -23,7 +23,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
-    "@nestjs/common": "^9.2.1",
+    "@nestjs/common": "^9.3.12",
     "@nestjs/core": "^9.2.1",
     "@nestjs/jwt": "^10.0.2",
     "@nestjs/mapped-types": "*",

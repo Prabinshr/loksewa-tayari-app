@@ -2,6 +2,13 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator dbml {
+  provider            = "prisma-dbml-generator"
+  projectName         = "Loksewa Server"
+  projectDatabaseType = "PostgreSQL"
+  projectNote         = "By Nep Tech Pal Pvt. Ltd."
+}
+
 // generator nestjsDto {
 //   provider                        = "prisma-generator-nestjs-dto"
 //   output                          = "../src"
@@ -32,9 +39,9 @@ enum Role {
 model User {
   id           String          @id @default(cuid())
   username     String          @unique
-  first_name   String          
-  middle_name  String?         
-  last_name    String          
+  first_name   String
+  middle_name  String?
+  last_name    String
   /// @DtoEntityHidden
   password     String
   email        String          @unique

@@ -11,15 +11,14 @@ import {
 import { QuestionService } from './question.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/auth/guard/role.guard';
-import { Roles } from 'src/auth/guard/roles.decorator';
+import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
-import { CurrentUser } from 'src/helpers/decorator/current-user.decorator';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { RolesGuard } from 'src/auth/guards/role.guard';
 @ApiTags('Question')
 @Controller('question')
 @ApiBearerAuth("jwt")
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+@UseGuards(RolesGuard)
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 

@@ -9,6 +9,9 @@ import { AuthService } from './auth.service';
 import { TOKENS } from 'config';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { OtpService } from 'src/otp/otp.service';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt.guard';
 
 @Module({
   imports: [
@@ -20,7 +23,17 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       verifyOptions: { issuer: 'https://neptechpal.com' },
     }),
   ],
-  providers: [LocalStrategy, JwtStrategy, UserService, AuthService],
+  providers: [
+    LocalStrategy,
+    JwtStrategy,
+    UserService,
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    OtpService,
+  ],
   controllers: [AuthController],
   exports: [],
 })

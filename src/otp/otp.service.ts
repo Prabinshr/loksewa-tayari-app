@@ -44,16 +44,23 @@ export class OtpService {
 
   async validateOtp(user_id: string, code: string, type: OTPType) {
     // OTP is valid for 15 minutes only
+    // 1. Define the expiry time for the OTP
     const expiryTime = 1000 * 60 * 15;
 
+    // 2. Retrieve the OTP from the database
     const otp = await this.prismaService.oTP.findFirst({
       where: { user_id, code, type },
     });
+
+    // 3. Check if the OTP exists
     if (!otp) throw new NotFoundException('Invalid OTP');
 
+    // 4. If the OTP exists, check if it has expired
     if (otp.createdAt.getTime() + expiryTime < Date.now()) {
       throw new BadRequestException('OTP has expired!');
     }
+
+    // 5. Return true if the OTP exists and has not expired
     return true;
   }
 

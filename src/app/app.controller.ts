@@ -29,7 +29,6 @@ export class AppController {
   @Roles(Role.ADMIN, Role.MODERATOR, Role.SUBSCRIBED_USER, Role.USER)
   @Get('me')
   async getProfile(@CurrentUser() currentUser: User) {
-    console.log('Current User %d', currentUser.email);
-    return await this.userService.findByEmail(currentUser.email);
+    return await this.userService.findOne(currentUser.id);
   }
 }

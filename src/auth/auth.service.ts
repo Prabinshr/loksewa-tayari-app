@@ -20,6 +20,7 @@ export class AuthService {
         },
         {
           secret: TOKENS.JWT_ACCESS_TOKEN_SECRET,
+          expiresIn: TOKENS.JWT_ACCESS_TOKEN_EXPIRES_IN,
         },
       ),
       refresh_token: await this.jwtService.signAsync(
@@ -29,6 +30,7 @@ export class AuthService {
         },
         {
           secret: TOKENS.JWT_REFRESH_TOKEN_SECRET,
+          expiresIn: TOKENS.JWT_REFRESH_TOKEN_EXPIRES_IN,
         },
       ),
     };

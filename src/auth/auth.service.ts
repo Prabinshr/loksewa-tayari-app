@@ -1,21 +1,49 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-import { UserService } from 'src/user/user.service';
+import { TOKENS } from 'config';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
-    private readonly userService: UserService,
   ) {}
 
   async generateJWT(userPayload: Partial<User>) {
-    return await this.jwtService.signAsync(userPayload);
+    return {
+      access_token: await this.jwtService.signAsync(
+        {
+          sub: userPayload.id,
+          role: userPayload.role,
+        },
+        {
+          secret: TOKENS.JWT_ACCESS_TOKEN_SECRET,
+        },
+      ),
+      refresh_token: await this.jwtService.signAsync(
+        {
+          sub: userPayload.id,
+          role: userPayload.role,
+        },
+        {
+          secret: TOKENS.JWT_REFRESH_TOKEN_SECRET,
+        },
+      ),
+    };
   }
 
   async validateUser(payload: Partial<User>) {
-    return this.userService.update(payload.id, { ...payload, verified: true });
+    return this.prismaService.user.update({
+      where: {
+        id: payload.id,
+      },
+      data: {
+        ...payload,
+        verified: true,
+      },
+    });
   }
 }
 // export class AuthService {

@@ -16,17 +16,17 @@ import { SocketModule } from 'src/socket/socket.module';
 
 @Module({
   imports: [
+    AuthModule,
     PrismaModule,
     UserModule,
+    OtpModule,
+    SocketModule,
     QuizCategoryModule,
     QuizModule,
     QuestionModule,
     UserProgressModule,
     TransactionModule,
     QuestionCategoryModule,
-    AuthModule,
-    OtpModule,
-    SocketModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

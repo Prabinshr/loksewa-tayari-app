@@ -1,7 +1,9 @@
 import { config } from 'dotenv';
 config();
 export const TOKENS = {
-  JWT_SECRET: process.env.JWT_SECRET,
+JWT_ACCESS_TOKEN_SECRET:process.env.JWT_ACCESS_TOKEN_SECRET,
+JWT_REFRESH_TOKEN_SECRET:process.env.JWT_REFRESH_TOKEN_SECRET,
+REFRESH_TOKEN_HASH_SECRET:process.env.REFRESH_TOKEN_HASH_SECRET,
 };
 
 export const BASE_URL = {

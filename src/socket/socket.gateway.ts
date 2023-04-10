@@ -6,19 +6,16 @@ import {
   OnGatewayDisconnect,
   OnGatewayInit,
   WebSocketServer,
-  WsException,
-  ConnectedSocket,
+  WsException
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from './socket.service';
 import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TOKENS } from 'config';
-import { CheckUsername } from './dto/check-username';
 import { UserService } from 'src/user/user.service';
 import { OnlineStatus, User } from '@prisma/client';
-import { AsyncApiPub, AsyncApiService } from 'nestjs-asyncapi';
-import { CheckEmail } from './dto/check-email';
+import { AsyncApiService } from 'nestjs-asyncapi';
 
 @AsyncApiService()
 @WebSocketGateway({
@@ -44,7 +41,7 @@ export class SocketGateway
     try {
       const token = client.handshake.headers.authorization.split(' ')[1];
       const decoded: Partial<User> = await this.jwtService.verify(token, {
-        secret: TOKENS.JWT_SECRET,
+        secret: TOKENS.JWT_ACCESS_TOKEN_SECRET,
       });
       // set user's active status to true
       await this.userService.updateOnlineStatus(

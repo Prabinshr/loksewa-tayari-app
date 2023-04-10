@@ -1,9 +1,13 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Logger, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiResponseProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponseProperty, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'src/user/user.service';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from 'src/user/entities';
+import { Public } from 'src/decorators/public.decorator';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('App')
 @Controller()
@@ -14,14 +18,17 @@ export class AppController {
   ) {}
 
   @Get()
+  @Public()
   getHello() {
     return this.appService.getServerDetails();
   }
 
-  
-  @Get('me')
+  @ApiBearerAuth('jwt')
   @ApiResponseProperty({ type: User })
-  async getProfile(@CurrentUser() currentUser) {
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN, Role.MODERATOR, Role.SUBSCRIBED_USER, Role.USER)
+  @Get('me')
+  async getProfile(@CurrentUser() currentUser: User) {
     return await this.userService.findOne(currentUser.id);
   }
 }

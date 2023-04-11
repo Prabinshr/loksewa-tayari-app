@@ -5,12 +5,14 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { OTPType, OnlineStatus, Role } from '@prisma/client';
 import * as argon from 'argon2';
 import { OtpService } from 'src/otp/otp.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     private prisma: PrismaService,
     private readonly otpService: OtpService,
+    private readonly authService: AuthService,
   ) {}
   async changeRole(id: string, role: Role) {
     try {
@@ -59,7 +61,6 @@ export class UserService {
     if (user) throw new HttpException('User already exists', 400);
     const hashedPassword = await argon.hash(createUserDto.password);
     createUserDto.password = hashedPassword;
-    console.log(hashedPassword);
     const { password, ...newUser } = await this.prisma.user.create({
       data: {
         email: createUserDto.email.toLowerCase(),
@@ -73,8 +74,34 @@ export class UserService {
       await this.otpService.createOtp(newUser.id, OTPType.EMAIL_VERIFICATION);
       // TODO : Mechanism to send OTP to user by EMAIL or PHONE.
     }
+    // Generate JWT tokens
+    const userTokens = await this.authService.generateJWT(newUser);
+
+    const hashPresent = await this.prisma.refreshTokenHash.findFirst({
+      where: {
+        user_id: newUser.id,
+      },
+    });
+    let hashedRefreshToken = await argon.hash(userTokens.refresh_token);
+    if (hashPresent) {
+      await this.prisma.refreshTokenHash.update({
+        where: {
+          id: hashPresent.id,
+        },
+        data: {
+          token_hash: hashedRefreshToken,
+          user_id: newUser.id,
+        },
+      });
+    }
+    await this.prisma.refreshTokenHash.create({
+      data: {
+        token_hash: hashedRefreshToken,
+        user_id: newUser.id,
+      },
+    });
     // Return user without password
-    return newUser;
+    return userTokens;
   }
 
   async findAll(page: number, limit: number) {
@@ -137,15 +164,21 @@ export class UserService {
   async findByUsername(username: string) {
     try {
       // returns a single user without the password
-      const user = await this.prisma.user.findUnique({
+      const user = await this.prisma.user.findUniqueOrThrow({
         where: {
-          username,
+          username: username
         },
       });
+      console.log(user);
+      
       // const { password, ...withoutPassword } = user;
       return user;
     } catch (error) {
-      throw new HttpException('User not found', 404);
+      console.log(error);
+      
+      throw new HttpException('User not found', 404, {
+        description: error as string
+      });
     }
   }
   async findByEmail(email: string) {

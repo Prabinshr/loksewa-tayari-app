@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
-import { UserService } from 'src/user/user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 
@@ -12,22 +11,24 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { OtpService } from 'src/otp/otp.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { UserService } from 'src/user/user.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
   imports: [
     PassportModule,
-    UserModule,
     JwtModule.register({
-      secret: TOKENS.JWT_SECRET,
+      secret: TOKENS.JWT_ACCESS_TOKEN_SECRET,
       signOptions: { expiresIn: '4d' },
       verifyOptions: { issuer: 'https://neptechpal.com' },
     }),
   ],
   providers: [
+    UserService,
     LocalStrategy,
     JwtStrategy,
-    UserService,
     AuthService,
+    PrismaService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
@@ -35,6 +36,6 @@ import { JwtAuthGuard } from './guards/jwt.guard';
     OtpService,
   ],
   controllers: [AuthController],
-  exports: [],
+  exports: [AuthService],
 })
 export class AuthModule {}

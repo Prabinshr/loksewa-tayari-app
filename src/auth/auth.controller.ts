@@ -39,9 +39,9 @@ export class AuthController {
     @Body(new ValidationPipe()) loginDto: LoginDTO,
   ) {
     // Only the authenticated user can access this route
-    const token = await this.authService.generateJWT(user);
-    if (token) {
-      return { token };
+    const tokens = await this.authService.generateJWT(user);
+    if (tokens) {
+      return tokens;
     } else {
       throw new InternalServerErrorException("Couldn't generate token.");
     }

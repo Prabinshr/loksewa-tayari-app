@@ -2,11 +2,13 @@ import {
   Body,
   Controller,
   InternalServerErrorException,
+  Param,
   Post,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import * as argon from 'argon2';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -22,6 +24,7 @@ import { User } from 'src/user/entities';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
 import { Public } from 'src/decorators/public.decorator';
+import { PrismaService } from 'src/prisma/prisma.service';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -29,6 +32,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly otpService: OtpService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   @Post('login')
@@ -40,11 +44,32 @@ export class AuthController {
   ) {
     // Only the authenticated user can access this route
     const tokens = await this.authService.generateJWT(user);
-    if (tokens) {
-      return tokens;
-    } else {
+    if (!tokens) {
       throw new InternalServerErrorException("Couldn't generate token.");
     }
+    const refreshTokenExists =
+      await this.prismaService.refreshTokenHash.findUnique({
+        where: { user_id: user.id },
+      });
+    if (refreshTokenExists) {
+      await this.prismaService.refreshTokenHash.update({
+        where: {
+          user_id: user.id,
+        },
+        data: {
+          token_hash: await argon.hash(tokens.refresh_token),
+        },
+      });
+    } else {
+      await this.prismaService.refreshTokenHash.create({
+        data: {
+          user_id: user.id,
+          token_hash: await argon.hash(tokens.refresh_token),
+        },
+      });
+    }
+
+    return tokens;
   }
 
   @Public()
@@ -56,9 +81,8 @@ export class AuthController {
   }
 
   @Post('validate-otp')
-  @ApiBearerAuth("jwt")
+  @ApiBearerAuth('jwt')
   @ApiBody({ type: CreateOtpDto })
-  
   async validateOtp(
     @CurrentUser() currentUser,
     @Body(new ValidationPipe()) otpDto: CreateOtpDto,
@@ -75,5 +99,38 @@ export class AuthController {
     }
     // If the OTP code is valid, return the authenticated user
     return this.authService.validateUser(currentUser);
+  }
+
+  /**
+   * Endpoint for refreshing the token. It takes the user from the request and generates a
+   * new refresh and access token.
+   * @param currentUser the user that is logged in.
+   * @returns a new access and refresh token.
+   */
+  @Post('refresh-token/:refresh_token')
+  @ApiBearerAuth('jwt')
+  async refreshToken(
+    @CurrentUser() currentUser: User,
+    @Param('refresh_token') refresh_token: string,
+  ) {
+    const currentUserWithHash = await this.prismaService.user.findFirst({
+      where: {
+        id: currentUser.id,
+      },
+      include: {
+        hash: true,
+      },
+    });
+
+    const hashMatched = await argon.verify(
+      currentUserWithHash.hash.token_hash,
+      refresh_token,
+    );
+
+    if (!hashMatched) {
+      throw new InternalServerErrorException('Invalid refresh token');
+    }
+    // If the refresh token is valid, generate a new access and refresh token
+    return this.authService.generateJWT(currentUser);
   }
 }

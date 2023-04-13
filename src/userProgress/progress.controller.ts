@@ -14,6 +14,7 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 
 @ApiTags('User Progress')
 @UseGuards(RolesGuard)
+
 @Controller('user-progress')
 export class UserProgressController {
   constructor(private readonly userProgressService: UserProgressService) {}

@@ -13,6 +13,7 @@ import { QuizCategoryModule } from 'src/quizCategory/quiz_category.module';
 import { UserService } from 'src/user/user.service';
 import { OtpModule } from 'src/otp/otp.module';
 import { SocketModule } from 'src/socket/socket.module';
+import { SewaserviceModule } from 'src/sewaservice/sewaservice.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { SocketModule } from 'src/socket/socket.module';
     SocketModule,
     QuizCategoryModule,
     QuizModule,
+    SewaserviceModule,
     QuestionModule,
     UserProgressModule,
     TransactionModule,

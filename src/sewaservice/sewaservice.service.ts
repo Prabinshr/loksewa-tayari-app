@@ -1,0 +1,74 @@
+import { HttpException, Injectable } from '@nestjs/common';
+import { CreateSewaserviceDto } from './dto/create-sewaservice.dto';
+import { UpdateSewaserviceDto } from './dto/update-sewaservice.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+
+@Injectable()
+export class SewaserviceService {
+  constructor(private prismaService: PrismaService) {}
+  create(createSewaserviceDto: CreateSewaserviceDto) {
+    try{
+ return this.prismaService.sewaService.create({
+      data: createSewaserviceDto,
+    });
+    }
+    catch(error){
+      throw new HttpException('SewaService creation failed',404)
+    }
+   
+  }
+  // create(createSewaserviceDto: CreateSewaserviceDto) {
+  //   return this.prismaService.sewaService.create({
+  //     data: {
+  //       description: createSewaserviceDto.description,
+  //       status: createSewaserviceDto.status,
+  //       image: createSewaserviceDto.image || null,
+  //       created_at: createSewaserviceDto.created_at || null,
+  //       updated_at: createSewaserviceDto.updated_at || null
+  //     }
+  //   })
+  // }
+
+  findAll() {
+    // return this.prismaService.sewaService.findMany()
+    try {
+      return this.prismaService.sewaService.findMany();
+    } catch (error) {
+      throw new HttpException('Cannot find SewaServices', 404);
+    }
+  }
+
+  // findOne(id: number) {
+  //   return this.prismaService.sewaService.findUnique({where: {id: id}})
+  // }
+  findOne(id: number) {
+    try {
+      return this.prismaService.sewaService.findFirst({
+        where: {
+          id: id,
+        },
+      });
+    } catch (error) {
+      throw new HttpException('SewaService not found', 404);
+    }
+  }
+
+  update(id: number, updateSewaserviceDto: UpdateSewaserviceDto) {
+    try {
+      return this.prismaService.sewaService.update({
+        data: updateSewaserviceDto,
+        where: { id },
+      });
+    } catch (error) {
+      throw new HttpException('SewaService update failed', 400);
+    }
+  }
+
+  remove(id: number) {
+    try {
+      return this.prismaService.sewaService.delete({ where: { id } });
+    } catch (error) {
+      throw new HttpException('SewaService deletion failed', 400);
+    }
+  }
+}

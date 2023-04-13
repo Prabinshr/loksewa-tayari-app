@@ -179,3 +179,18 @@ model OTP {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
+
+
+model SewaService{
+  id          Int @id @default(autoincrement())
+  description String
+  status      STATUS
+  image       String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt()
+}
+
+enum STATUS {
+  PUBLISHED
+  UNPUBLISHED
+}

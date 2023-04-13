@@ -112,6 +112,15 @@ Table OTP {
   updatedAt DateTime [not null]
 }
 
+Table SewaService {
+  id Int [pk, increment]
+  description String [not null]
+  status STATUS [not null]
+  image String
+  created_at DateTime [default: `now()`, not null]
+  updated_at DateTime [not null]
+}
+
 Enum Role {
   ADMIN
   MODERATOR
@@ -128,6 +137,11 @@ Enum OTPType {
   EMAIL_VERIFICATION
   PASSWORD_RESET
   OTHER
+}
+
+Enum STATUS {
+  PUBLISHED
+  UNPUBLISHED
 }
 
 Ref: refreshTokenHash.user_id - User.id

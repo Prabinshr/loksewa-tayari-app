@@ -198,8 +198,8 @@ enum STATUS {
 
 model SubService{
   id Int @id @default(autoincrement())
-  sewaService_id Int
-  service SewaService @relation(fields: [sewaService_id], references: [id])
+  sewaService_id Int?
+  service SewaService? @relation(fields: [sewaService_id], references: [id])
   title String
   description String?
   image String?

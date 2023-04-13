@@ -124,8 +124,8 @@ Table SewaService {
 
 Table SubService {
   id Int [pk, increment]
-  sewaService_id Int [not null]
-  service SewaService [not null]
+  sewaService_id Int
+  service SewaService
   title String [not null]
   description String
   image String

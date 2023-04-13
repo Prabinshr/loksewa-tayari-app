@@ -188,9 +188,23 @@ model SewaService{
   image       String?
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt()
+  subServices SubService[]
 }
 
 enum STATUS {
   PUBLISHED
   UNPUBLISHED
+}
+
+model SubService{
+  id Int @id @default(autoincrement())
+  sewaService_id Int
+  service SewaService @relation(fields: [sewaService_id], references: [id])
+  title String
+  description String?
+  image String?
+  status STATUS
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt()
 }

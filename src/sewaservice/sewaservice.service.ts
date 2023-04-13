@@ -17,22 +17,13 @@ export class SewaserviceService {
     }
    
   }
-  // create(createSewaserviceDto: CreateSewaserviceDto) {
-  //   return this.prismaService.sewaService.create({
-  //     data: {
-  //       description: createSewaserviceDto.description,
-  //       status: createSewaserviceDto.status,
-  //       image: createSewaserviceDto.image || null,
-  //       created_at: createSewaserviceDto.created_at || null,
-  //       updated_at: createSewaserviceDto.updated_at || null
-  //     }
-  //   })
-  // }
 
   findAll() {
     // return this.prismaService.sewaService.findMany()
     try {
-      return this.prismaService.sewaService.findMany();
+      return this.prismaService.sewaService.findMany({include: {
+        subServices: true
+      }});
     } catch (error) {
       throw new HttpException('Cannot find SewaServices', 404);
     }
@@ -46,6 +37,9 @@ export class SewaserviceService {
       return this.prismaService.sewaService.findFirst({
         where: {
           id: id,
+        },
+        include: {
+          subServices: true,
         },
       });
     } catch (error) {

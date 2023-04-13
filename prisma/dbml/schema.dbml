@@ -119,6 +119,19 @@ Table SewaService {
   image String
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime [not null]
+  subServices SubService [not null]
+}
+
+Table SubService {
+  id Int [pk, increment]
+  sewaService_id Int [not null]
+  service SewaService [not null]
+  title String [not null]
+  description String
+  image String
+  status STATUS [not null]
+  created_at DateTime [default: `now()`, not null]
+  updated_at DateTime [not null]
 }
 
 Enum Role {
@@ -161,3 +174,5 @@ Ref: Transaction.quiz_id > Quiz.id
 Ref: Transaction.user_id > User.id [delete: Cascade]
 
 Ref: OTP.user_id > User.id [delete: Cascade]
+
+Ref: SubService.sewaService_id > SewaService.id

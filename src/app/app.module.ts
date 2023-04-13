@@ -14,6 +14,7 @@ import { UserService } from 'src/user/user.service';
 import { OtpModule } from 'src/otp/otp.module';
 import { SocketModule } from 'src/socket/socket.module';
 import { SewaserviceModule } from 'src/sewaservice/sewaservice.module';
+import { SubServiceModule } from 'src/sub-service/sub-service.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SewaserviceModule } from 'src/sewaservice/sewaservice.module';
     QuizCategoryModule,
     QuizModule,
     SewaserviceModule,
+    SubServiceModule,
     QuestionModule,
     UserProgressModule,
     TransactionModule,

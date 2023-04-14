@@ -65,6 +65,6 @@ async function bootstrap() {
 
   const asyncapiDocument = AsyncApiModule.createDocument(app, asyncApiOptions);
   await AsyncApiModule.setup('/docs/socket', app, asyncapiDocument);
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

@@ -36,35 +36,39 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-
-  // Socket.io docs integration
-  const asyncApiServer: AsyncServerObject = {
-    url: BASE_URL.backend,
-    protocol: 'socket.io',
-    protocolVersion: '4',
-    description:
-      'Allows you to connect using the websocket protocol to our Socket.io server.',
-    security: [{ 'user-password': [] }],
-    variables: {
-      port: {
-        description: 'Secure connection (TLS) is available through port 443.',
-        default: '443',
+  if (process.env.NODE_ENV === 'development') {
+    // Socket.io docs integration
+    const asyncApiServer: AsyncServerObject = {
+      url: BASE_URL.backend,
+      protocol: 'socket.io',
+      protocolVersion: '4',
+      description:
+        'Allows you to connect using the websocket protocol to our Socket.io server.',
+      security: [{ 'user-password': [] }],
+      variables: {
+        port: {
+          description: 'Secure connection (TLS) is available through port 443.',
+          default: '443',
+        },
       },
-    },
-    bindings: {},
-  };
+      bindings: {},
+    };
 
-  const asyncApiOptions = new AsyncApiDocumentBuilder()
-    .setTitle('Loksewa APP Server')
-    .setDescription('The Loksewa App SocketIO documentation')
-    .setVersion('1.0')
-    .setDefaultContentType('application/json')
-    .addSecurity('user-password', { type: 'userPassword' })
-    .addServer('loksewa', asyncApiServer)
-    .build();
+    const asyncApiOptions = new AsyncApiDocumentBuilder()
+      .setTitle('Loksewa APP Server')
+      .setDescription('The Loksewa App SocketIO documentation')
+      .setVersion('1.0')
+      .setDefaultContentType('application/json')
+      .addSecurity('user-password', { type: 'userPassword' })
+      .addServer('loksewa', asyncApiServer)
+      .build();
 
-  const asyncapiDocument = AsyncApiModule.createDocument(app, asyncApiOptions);
-  await AsyncApiModule.setup('/docs/socket', app, asyncapiDocument);
+    const asyncapiDocument = AsyncApiModule.createDocument(
+      app,
+      asyncApiOptions,
+    );
+    await AsyncApiModule.setup('/docs/socket', app, asyncapiDocument);
+  }
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

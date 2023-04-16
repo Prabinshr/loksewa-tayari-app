@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { TOKENS } from 'config';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ITokens } from './interfaces/tokens.interface';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async generateJWT(userPayload: Partial<User>) {
+  async generateJWT(userPayload: Partial<User>): Promise<ITokens> {
     return {
       access_token: await this.jwtService.signAsync(
         {

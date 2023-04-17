@@ -124,14 +124,50 @@ Table SewaService {
 
 Table SubService {
   id Int [pk, increment]
-  sewaService_id Int
-  service SewaService
+  sewaService_id Int [not null]
+  service SewaService [not null]
   title String [not null]
   description String
   image String
   status STATUS [not null]
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime [not null]
+  subserviceHasSyllabus SubserviceHasSyllabus [not null]
+}
+
+Table SubserviceHasSyllabus {
+  service_id Int [pk]
+  syllabus_sub_structure_id Int [not null]
+  syllabusSubStructure SyllabusSubStructure
+  subService SubService
+}
+
+Table SyllabusStructure {
+  id Int [pk, increment]
+  title String [not null]
+  description String
+  image String
+  syllabusSubStructures SyllabusSubStructure [not null]
+}
+
+Table SyllabusSubStructure {
+  id Int [pk, increment]
+  syllabus_structure_id Int [not null]
+  syllabusStructure SyllabusStructure [not null]
+  title String [not null]
+  description String
+  image String
+  subserviceHasSyllabus SubserviceHasSyllabus [not null]
+  subStrTopics SubStrTopic [not null]
+}
+
+Table SubStrTopic {
+  id Int [pk, increment]
+  sub_struct_topic_id Int [not null]
+  title String [not null]
+  description String
+  image String
+  syllabusSubStructure SyllabusSubStructure [not null]
 }
 
 Enum Role {
@@ -176,3 +212,11 @@ Ref: Transaction.user_id > User.id [delete: Cascade]
 Ref: OTP.user_id > User.id [delete: Cascade]
 
 Ref: SubService.sewaService_id > SewaService.id
+
+Ref: SubserviceHasSyllabus.syllabus_sub_structure_id > SyllabusSubStructure.id
+
+Ref: SubserviceHasSyllabus.service_id > SubService.id
+
+Ref: SyllabusSubStructure.syllabus_structure_id > SyllabusStructure.id
+
+Ref: SubStrTopic.sub_struct_topic_id > SyllabusSubStructure.id

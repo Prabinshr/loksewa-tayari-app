@@ -3,8 +3,8 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
-  // subService: any;
-  // sewaService: any;
+  // subStrTopic: any;
+  // subStrTopic: any;
   // service: any;
   constructor() {
     super();

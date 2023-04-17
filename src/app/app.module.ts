@@ -15,6 +15,11 @@ import { OtpModule } from 'src/otp/otp.module';
 import { SocketModule } from 'src/socket/socket.module';
 import { SewaserviceModule } from 'src/sewaservice/sewaservice.module';
 import { SubServiceModule } from 'src/sub-service/sub-service.module';
+import { SyllabusStructureModule } from 'src/syllabus-structure/syllabus-structure.module';
+import { SyllabusSubStructure } from 'src/syllabus-sub-structure/entities/syllabus-sub-structure.entity';
+import { SyllabusSubStructureModule } from 'src/syllabus-sub-structure/syllabus-sub-structure.module';
+import { SubStrTopicModule } from 'src/sub-str-topic/sub-str-topic.module';
+import { SubserviceHasSyllabusModule } from 'src/subservice-has-syllabus/subservice-has-syllabus.module';
 
 @Module({
   imports: [
@@ -27,6 +32,10 @@ import { SubServiceModule } from 'src/sub-service/sub-service.module';
     QuizModule,
     SewaserviceModule,
     SubServiceModule,
+    SyllabusStructureModule,
+    SyllabusSubStructureModule,
+    SubStrTopicModule,
+    SubserviceHasSyllabusModule,
     QuestionModule,
     UserProgressModule,
     TransactionModule,

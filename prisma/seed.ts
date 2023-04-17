@@ -72,14 +72,15 @@ async function main() {
         status: 'PUBLISHED' || 'UNPUBLISHED',
       },
     });
-    await prisma.subService.create({
-      data: {
-        title: faker.internet.userName(),
-        description: faker.lorem.words(),
-        image: faker.image.animals(),
-        status: 'PUBLISHED' || 'UNPUBLISHED',
-      },
-    });
+   
+      await prisma.syllabusStructure.create({
+        data: {
+          title: faker.lorem.word(),
+          description: faker.lorem.words(),
+          image: faker.image.business(),
+        },
+      });
+     
   }
 }
 

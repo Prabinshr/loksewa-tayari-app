@@ -22,7 +22,11 @@ export class SewaserviceService {
     // return this.prismaService.sewaService.findMany()
     try {
       return this.prismaService.sewaService.findMany({include: {
-        subServices: true
+        subServices: {
+          include: {
+            subserviceHasSyllabus: true,
+          }
+        }
       }});
     } catch (error) {
       throw new HttpException('Cannot find SewaServices', 404);

@@ -198,8 +198,8 @@ enum STATUS {
 
 model SubService{
   id Int @id @default(autoincrement())
-  sewaService_id Int?
-  service SewaService? @relation(fields: [sewaService_id], references: [id])
+  sewaService_id Int
+  service SewaService @relation(fields: [sewaService_id], references: [id])
   title String
   description String?
   image String?
@@ -207,4 +207,45 @@ model SubService{
   
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt()
+
+  subserviceHasSyllabus SubserviceHasSyllabus[]
 }
+model SubserviceHasSyllabus{
+    service_id Int @id 
+    syllabus_sub_structure_id Int
+    syllabusSubStructure SyllabusSubStructure? @relation(fields: [syllabus_sub_structure_id], references: [id])
+    subService SubService? @relation(fields: [service_id], references:[id])
+}
+
+model SyllabusStructure{
+   id Int @id @default(autoincrement())
+   title String
+   description String?
+   image String?
+   syllabusSubStructures SyllabusSubStructure[] 
+}
+model SyllabusSubStructure{
+  id Int @id @default(autoincrement())
+
+  syllabus_structure_id Int
+  syllabusStructure SyllabusStructure @relation(fields: [syllabus_structure_id],references: [id])
+
+  title String
+  description String?
+  image String?
+
+  subserviceHasSyllabus SubserviceHasSyllabus[]
+  subStrTopics SubStrTopic[]
+}
+
+model SubStrTopic{
+  id Int @id @default(autoincrement())
+  sub_struct_topic_id Int
+  title String
+  description String?
+  image String?
+
+  syllabusSubStructure SyllabusSubStructure @relation(fields: [sub_struct_topic_id],references: [id])
+  // questionSets QuestionSet[]
+}
+

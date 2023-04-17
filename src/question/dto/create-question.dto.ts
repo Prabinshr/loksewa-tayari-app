@@ -21,7 +21,7 @@ export class CreateQuestionDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  quiz_id: string;
+  quiz_id?: string;
 
   @ApiProperty()
   @IsNotEmpty()
@@ -38,4 +38,6 @@ export class CreateQuestionDto {
   @IsArray()
   @ArrayNotEmpty()
   options: string[];
+
+  qsn_set_id : number
 }

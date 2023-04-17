@@ -18,7 +18,11 @@ export class QuestionSetService {
 
   findAll() {
     try {
-      return this.prismaService.questionSet.findMany();
+      return this.prismaService.questionSet.findMany({
+        include: {
+          questions: true,
+        },
+      });
     } catch (error) {
       throw new HttpException('Cannot get all question sets.', 404);
     }
@@ -26,7 +30,12 @@ export class QuestionSetService {
 
   findOne(id: number) {
     try {
-      return this.prismaService.questionSet.findUnique({ where: { id: id } });
+      return this.prismaService.questionSet.findUnique({
+        where: { id: id },
+        include: {
+          questions: true,
+        },
+      });
     } catch (error) {
       throw new HttpException('Cannot find a question set by id', 404);
     }

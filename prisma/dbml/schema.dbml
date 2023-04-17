@@ -66,7 +66,7 @@ Table Question_Category {
 
 Table Question {
   id String [pk]
-  quiz_id String [not null]
+  quiz_id String
   text String [not null]
   correct_answer String [not null]
   answer_explanation String [note: '@DtoCreateOptional']
@@ -76,6 +76,8 @@ Table Question {
   quiz Quiz [note: '@DtoCreateOptional']
   Question_Category Question_Category
   question_CategoryId String
+  qsn_set_id Int [not null]
+  questionSet QuestionSet [not null]
 }
 
 Table User_Progress {
@@ -178,6 +180,7 @@ Table QuestionSet {
   subStrTopic SubStrTopic [not null]
   title String [not null]
   description String
+  questions Question [not null]
 }
 
 Enum Role {
@@ -216,6 +219,8 @@ Ref: Quiz.category_id > Quiz_Category.id
 Ref: Question.quiz_id > Quiz.id
 
 Ref: Question.question_CategoryId > Question_Category.id
+
+Ref: Question.qsn_set_id > QuestionSet.id
 
 Ref: User_Progress.quiz_id > Quiz.id
 

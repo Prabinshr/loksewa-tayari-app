@@ -9,7 +9,7 @@ import {
   UseGuards
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
@@ -24,6 +24,7 @@ export class QuestionController {
 
   @Post()
   @Roles(Role.ADMIN)
+  @ApiOperation({summary:'Create new question'})
   create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionService.create(createQuestionDto);
   }

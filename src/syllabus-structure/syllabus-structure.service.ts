@@ -20,7 +20,19 @@ export class SyllabusStructureService {
     try {
       return this.prismaService.syllabusStructure.findMany({
         include: {
-          syllabusSubStructures: true,
+          syllabusSubStructures: {
+            include: {
+              subStrTopics: {
+                include: {
+                  questionSets: {
+                    include: {
+                      questions: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
     } catch (error) {
@@ -32,7 +44,19 @@ export class SyllabusStructureService {
     try {
       return this.prismaService.syllabusStructure.findUnique({
         include: {
-          syllabusSubStructures: true,
+          syllabusSubStructures: {
+            include: {
+              subStrTopics: {
+                include: {
+                  questionSets: {
+                    include: {
+                      questions: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         where: { id: id },
       });

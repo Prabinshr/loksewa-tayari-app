@@ -20,7 +20,11 @@ export class SyllabusSubStructureService {
         include: {
           subStrTopics: {
             include: {
-              questionSets: true
+              questionSets: {
+                include: {
+                  questions: true,
+                }
+              }
             }
           },
         },
@@ -36,7 +40,11 @@ export class SyllabusSubStructureService {
         include: {
           subStrTopics: {
             include: {
-              questionSets: true
+              questionSets: {
+                include:{
+                  questions : true
+                }
+              }
             }
           },
         },

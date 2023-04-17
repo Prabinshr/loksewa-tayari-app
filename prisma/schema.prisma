@@ -246,6 +246,23 @@ model SubStrTopic{
   image String?
 
   syllabusSubStructure SyllabusSubStructure @relation(fields: [sub_struct_topic_id],references: [id])
-  // questionSets QuestionSet[]
+  questionSets QuestionSet[]
 }
 
+
+model QuestionSet {
+  id Int @id @default(autoincrement())
+  type QSN_TYPE
+
+  topic_id Int
+  subStrTopic SubStrTopic @relation(fields: [topic_id],references: [id])
+  title String
+  description String?
+
+  // questions Question[]
+}
+enum QSN_TYPE {
+  PAID
+  FREE
+  TRIAL
+}

@@ -168,6 +168,16 @@ Table SubStrTopic {
   description String
   image String
   syllabusSubStructure SyllabusSubStructure [not null]
+  questionSets QuestionSet [not null]
+}
+
+Table QuestionSet {
+  id Int [pk, increment]
+  type QSN_TYPE [not null]
+  topic_id Int [not null]
+  subStrTopic SubStrTopic [not null]
+  title String [not null]
+  description String
 }
 
 Enum Role {
@@ -191,6 +201,12 @@ Enum OTPType {
 Enum STATUS {
   PUBLISHED
   UNPUBLISHED
+}
+
+Enum QSN_TYPE {
+  PAID
+  FREE
+  TRIAL
 }
 
 Ref: refreshTokenHash.user_id - User.id
@@ -220,3 +236,5 @@ Ref: SubserviceHasSyllabus.service_id > SubService.id
 Ref: SyllabusSubStructure.syllabus_structure_id > SyllabusStructure.id
 
 Ref: SubStrTopic.sub_struct_topic_id > SyllabusSubStructure.id
+
+Ref: QuestionSet.topic_id > SubStrTopic.id

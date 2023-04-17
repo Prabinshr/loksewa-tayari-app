@@ -20,6 +20,7 @@ import { SyllabusSubStructure } from 'src/syllabus-sub-structure/entities/syllab
 import { SyllabusSubStructureModule } from 'src/syllabus-sub-structure/syllabus-sub-structure.module';
 import { SubStrTopicModule } from 'src/sub-str-topic/sub-str-topic.module';
 import { SubserviceHasSyllabusModule } from 'src/subservice-has-syllabus/subservice-has-syllabus.module';
+import { QuestionSetModule } from 'src/question-set/question-set.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { SubserviceHasSyllabusModule } from 'src/subservice-has-syllabus/subserv
     SyllabusSubStructureModule,
     SubStrTopicModule,
     SubserviceHasSyllabusModule,
+    QuestionSetModule,
     QuestionModule,
     UserProgressModule,
     TransactionModule,

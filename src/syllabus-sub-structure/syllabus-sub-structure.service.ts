@@ -18,7 +18,11 @@ export class SyllabusSubStructureService {
     try {
       return this.prismaService.syllabusSubStructure.findMany({
         include: {
-          subStrTopics: true,
+          subStrTopics: {
+            include: {
+              questionSets: true
+            }
+          },
         },
       });
     } catch (err) {
@@ -30,7 +34,11 @@ export class SyllabusSubStructureService {
     try {
       return this.prismaService.syllabusSubStructure.findUnique({
         include: {
-          subStrTopics: true,
+          subStrTopics: {
+            include: {
+              questionSets: true
+            }
+          },
         },
         where: { id: id },
       });

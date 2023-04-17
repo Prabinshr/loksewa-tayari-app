@@ -18,7 +18,11 @@ export class SubStrTopicService {
 
   findAll() {
     try {
-      return this.prismaService.subStrTopic.findMany();
+      return this.prismaService.subStrTopic.findMany({
+        include: {
+          questionSets: true,
+        },
+      });
     } catch (err) {
       throw new HttpException('Cannot find all sub structure topics', 404);
     }
@@ -26,7 +30,12 @@ export class SubStrTopicService {
 
   findOne(id: number) {
     try {
-      return this.prismaService.subStrTopic.findUnique({ where: { id: id } });
+      return this.prismaService.subStrTopic.findUnique({
+        where: { id: id },
+        include: {
+          questionSets: true,
+        },
+      });
     } catch (err) {
       throw new HttpException('Cannot find one sub structure topic by id', 404);
     }
@@ -45,7 +54,7 @@ export class SubStrTopicService {
 
   remove(id: number) {
     try {
-      return this.prismaService.subStrTopic.delete({where: {id: id}})
+      return this.prismaService.subStrTopic.delete({ where: { id: id } });
     } catch (err) {
       throw new HttpException('Cannot delete a sub structure topic by id', 404);
     }

@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateQuestionSetDto } from './dto/create-question-set.dto';
 import { UpdateQuestionSetDto } from './dto/update-question-set.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class QuestionSetService {

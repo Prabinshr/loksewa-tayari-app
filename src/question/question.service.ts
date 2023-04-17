@@ -19,7 +19,7 @@ export class QuestionService {
       });
       if (question) return question;
       return await this.prisma.question.create({
-        data: createQuestionDto,
+      data: createQuestionDto
       });
     } catch (error) {
       console.error(error);

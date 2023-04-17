@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -17,26 +17,28 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 @ApiTags('Question')
 @Controller('question')
-@ApiBearerAuth("jwt")
+@ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Post()
   @Roles(Role.ADMIN)
-  @ApiOperation({summary:'Create new question'})
+  @ApiOperation({ summary: 'Create new question' })
   create(@Body() createQuestionDto: CreateQuestionDto) {
     return this.questionService.create(createQuestionDto);
   }
 
   @Get()
   @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Create all questions' })
   findAll() {
     return this.questionService.findAll();
   }
 
   @Get(':id')
   @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+  @ApiOperation({ summary: 'Get a question by id' })
   findOne(@Param('id') id: string, @CurrentUser() user: User) {
     const quizQuestion = this.questionService.findOne(id);
     // if(quizQuestion.quiz.cost >=0 && user.role === Role.USER){
@@ -46,6 +48,7 @@ export class QuestionController {
 
   @Patch(':id')
   @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Update a question' })
   update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
@@ -55,6 +58,7 @@ export class QuestionController {
 
   @Delete(':id')
   @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Delete a question' })
   remove(@Param('id') id: string) {
     return this.questionService.remove(id);
   }

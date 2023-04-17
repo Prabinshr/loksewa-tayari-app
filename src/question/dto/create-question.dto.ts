@@ -14,13 +14,13 @@ export class CreateQuestionDto {
   text: string;
 
   @ApiProperty()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
-  question_CategoryId: string;
+  question_CategoryId?: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
+  // @IsNotEmpty()
+  // @IsString()
   quiz_id?: string;
 
   @ApiProperty()
@@ -39,5 +39,7 @@ export class CreateQuestionDto {
   @ArrayNotEmpty()
   options: string[];
 
-  qsn_set_id : number
+  @ApiProperty()
+  @IsNotEmpty()
+  qsn_set_id: number;
 }

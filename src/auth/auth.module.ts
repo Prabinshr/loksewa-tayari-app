@@ -19,7 +19,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
     PassportModule,
     JwtModule.register({
       secret: TOKENS.JWT_ACCESS_TOKEN_SECRET,
-      signOptions: { expiresIn: '4d' },
+      signOptions: { expiresIn: '24h' },
       verifyOptions: { issuer: 'https://neptechpal.com' },
     }),
   ],

@@ -25,6 +25,7 @@ import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
 import { Public } from 'src/decorators/public.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {

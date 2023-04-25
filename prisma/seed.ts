@@ -1,17 +1,19 @@
 import { PrismaClient, Role } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { hash } from 'argon2';
+
 const prisma = new PrismaClient();
+
 async function main() {
   for (let i = 0; i <= 5; i++) {
     await prisma.user.create({
       data: {
-        username: "admin",
+        username: 'admin',
         email: faker.internet.email(),
         first_name: faker.name.firstName(),
         middle_name: faker.name.middleName(),
         last_name: faker.name.lastName(),
-        password: await hash("admin"),
+        password: await hash('admin'),
         role: Role[faker.datatype.number({ min: 0, max: 2 })],
         transactions: {
           create: {
@@ -24,8 +26,8 @@ async function main() {
                 category: {
                   create: {
                     name: faker.lorem.word(),
-                  }
-                }
+                  },
+                },
               },
             },
           },

@@ -6,7 +6,7 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -15,9 +15,10 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
+
 @ApiTags('Question')
 @Controller('question')
-@ApiBearerAuth("jwt")
+@ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
@@ -25,6 +26,7 @@ export class QuestionController {
   @Post()
   @Roles(Role.ADMIN)
   create(@Body() createQuestionDto: CreateQuestionDto) {
+    // console.log(createQuestionDto);
     return this.questionService.create(createQuestionDto);
   }
 

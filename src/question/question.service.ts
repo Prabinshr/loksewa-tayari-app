@@ -9,6 +9,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class QuestionService {
   constructor(private prisma: PrismaService) {}
+
   async create(createQuestionDto: CreateQuestionDto) {
     try {
       // Check if the question already exists.

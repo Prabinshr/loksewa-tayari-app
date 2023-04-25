@@ -12,6 +12,7 @@ import { BASE_URL } from 'config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('Quiz Platform API')
     .setDescription(

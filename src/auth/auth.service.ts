@@ -35,6 +35,7 @@ export class AuthService {
       ),
     };
   }
+
   async validateUser(payload: Partial<User>) {
     return this.prismaService.user.update({
       where: {

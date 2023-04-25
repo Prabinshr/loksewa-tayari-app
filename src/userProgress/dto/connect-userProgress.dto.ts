@@ -1,5 +1,3 @@
-
-  export class ConnectUserProgressDto {
-    id: string;
-  }
-  
+export class ConnectUserProgressDto {
+  id: string;
+}

@@ -43,6 +43,7 @@ const emailTemplate = `
                                                     following link and follow the instructions.
                                                 </p>
                                                 <a href="{link}"
+                                                    target="_blank"
                                                     style="background:#20e277;text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff;text-transform:uppercase; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
                                                     Password</a>
                                             </td>
@@ -57,7 +58,7 @@ const emailTemplate = `
                             </tr>
                             <tr>
                                 <td style="text-align:center;">
-                                    <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <strong>www.realstate.com</strong></p>
+                                    <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <strong>NepTechPal Pvt Ltd.</strong></p>
                                 </td>
                             </tr>
                             <tr>

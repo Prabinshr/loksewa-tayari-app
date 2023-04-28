@@ -84,7 +84,7 @@ export class AuthService {
     try {
       await this.mailerService.sendMail({
         to: email,
-        from: 'no-reply@neptechpal.com',
+        from: 'NepTechPal <no-reply@neptechpal.com>',
         subject: 'Reset Password Link',
         text: 'Click On The Button Below To Reset Password',
         html: `${sendResetEmail(newResetPassword.pass_reset_token)}`,

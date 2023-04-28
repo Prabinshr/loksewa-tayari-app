@@ -190,6 +190,8 @@ export class UserService {
           email,
         },
       });
+      // If User Doesn't Exists
+      if (!user) throw new HttpException('User not found', 404);
       // const { password, ...withoutPassword } = user;
       return user;
     } catch (error) {

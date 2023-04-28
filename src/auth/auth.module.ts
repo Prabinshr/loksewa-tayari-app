@@ -4,8 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
-
-import { TOKENS } from 'config';
+import { SMTP, TOKENS } from 'config';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { OtpService } from 'src/otp/otp.service';
@@ -25,11 +24,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     MailerModule.forRoot({
       transport: {
-        host: 'smtp.ethereal.email',
-        port: 587,
+        host: SMTP.HOST,
+        port: 465,
         auth: {
-          user: 'magnus85@ethereal.email',
-          pass: 'Z3613BzrnyRjQy73DX',
+          user: SMTP.USER,
+          pass: SMTP.PASS,
         },
       },
     }),

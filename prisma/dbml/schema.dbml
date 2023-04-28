@@ -72,7 +72,7 @@ Table Question_Category {
 
 Table Question {
   id String [pk]
-  quiz_id String [not null]
+  quiz_id String
   text String [not null]
   correct_answer String [not null]
   answer_explanation String [note: '@DtoCreateOptional']
@@ -82,6 +82,8 @@ Table Question {
   quiz Quiz [note: '@DtoCreateOptional']
   Question_Category Question_Category
   question_CategoryId String
+  qsn_set_id Int [not null]
+  questionSet QuestionSet [not null]
 }
 
 Table User_Progress {
@@ -118,6 +120,75 @@ Table OTP {
   updatedAt DateTime [not null]
 }
 
+Table SewaService {
+  id Int [pk, increment]
+  description String [not null]
+  status STATUS [not null]
+  image String
+  created_at DateTime [default: `now()`, not null]
+  updated_at DateTime [not null]
+  subServices SubService [not null]
+}
+
+Table SubService {
+  id Int [pk, increment]
+  sewaService_id Int [not null]
+  service SewaService [not null]
+  title String [not null]
+  description String
+  image String
+  status STATUS [not null]
+  created_at DateTime [default: `now()`, not null]
+  updated_at DateTime [not null]
+  subserviceHasSyllabus SubserviceHasSyllabus [not null]
+}
+
+Table SubserviceHasSyllabus {
+  service_id Int [pk]
+  syllabus_sub_structure_id Int [not null]
+  syllabusSubStructure SyllabusSubStructure
+  subService SubService
+}
+
+Table SyllabusStructure {
+  id Int [pk, increment]
+  title String [not null]
+  description String
+  image String
+  syllabusSubStructures SyllabusSubStructure [not null]
+}
+
+Table SyllabusSubStructure {
+  id Int [pk, increment]
+  syllabus_structure_id Int [not null]
+  syllabusStructure SyllabusStructure [not null]
+  title String [not null]
+  description String
+  image String
+  subserviceHasSyllabus SubserviceHasSyllabus [not null]
+  subStrTopics SubStrTopic [not null]
+}
+
+Table SubStrTopic {
+  id Int [pk, increment]
+  sub_struct_topic_id Int [not null]
+  title String [not null]
+  description String
+  image String
+  syllabusSubStructure SyllabusSubStructure [not null]
+  questionSets QuestionSet [not null]
+}
+
+Table QuestionSet {
+  id Int [pk, increment]
+  type QSN_TYPE [not null]
+  topic_id Int [not null]
+  subStrTopic SubStrTopic [not null]
+  title String [not null]
+  description String
+  questions Question [not null]
+}
+
 Enum Role {
   ADMIN
   MODERATOR
@@ -136,6 +207,17 @@ Enum OTPType {
   OTHER
 }
 
+Enum STATUS {
+  PUBLISHED
+  UNPUBLISHED
+}
+
+Enum QSN_TYPE {
+  PAID
+  FREE
+  TRIAL
+}
+
 Ref: refreshTokenHash.user_id - User.id
 
 Ref: Quiz.category_id > Quiz_Category.id
@@ -143,6 +225,8 @@ Ref: Quiz.category_id > Quiz_Category.id
 Ref: Question.quiz_id > Quiz.id
 
 Ref: Question.question_CategoryId > Question_Category.id
+
+Ref: Question.qsn_set_id > QuestionSet.id
 
 Ref: User_Progress.quiz_id > Quiz.id
 
@@ -153,3 +237,15 @@ Ref: Transaction.quiz_id > Quiz.id
 Ref: Transaction.user_id > User.id [delete: Cascade]
 
 Ref: OTP.user_id > User.id [delete: Cascade]
+
+Ref: SubService.sewaService_id > SewaService.id
+
+Ref: SubserviceHasSyllabus.syllabus_sub_structure_id > SyllabusSubStructure.id
+
+Ref: SubserviceHasSyllabus.service_id > SubService.id
+
+Ref: SyllabusSubStructure.syllabus_structure_id > SyllabusStructure.id
+
+Ref: SubStrTopic.sub_struct_topic_id > SyllabusSubStructure.id
+
+Ref: QuestionSet.topic_id > SubStrTopic.id

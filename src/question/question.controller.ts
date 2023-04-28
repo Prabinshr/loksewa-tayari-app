@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { QuestionService } from './question.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateQuestionDto, UpdateQuestionDto } from './dto';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
@@ -25,6 +25,7 @@ export class QuestionController {
 
   @Post()
   @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Create new question' })
   create(@Body() createQuestionDto: CreateQuestionDto) {
     // console.log(createQuestionDto);
     return this.questionService.create(createQuestionDto);
@@ -32,12 +33,14 @@ export class QuestionController {
 
   @Get()
   @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Create all questions' })
   findAll() {
     return this.questionService.findAll();
   }
 
   @Get(':id')
   @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+  @ApiOperation({ summary: 'Get a question by id' })
   findOne(@Param('id') id: string, @CurrentUser() user: User) {
     const quizQuestion = this.questionService.findOne(id);
     // if(quizQuestion.quiz.cost >=0 && user.role === Role.USER){
@@ -47,6 +50,7 @@ export class QuestionController {
 
   @Patch(':id')
   @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Update a question' })
   update(
     @Param('id') id: string,
     @Body() updateQuestionDto: UpdateQuestionDto,
@@ -56,6 +60,7 @@ export class QuestionController {
 
   @Delete(':id')
   @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Delete a question' })
   remove(@Param('id') id: string) {
     return this.questionService.remove(id);
   }

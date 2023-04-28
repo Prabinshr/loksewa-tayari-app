@@ -18,4 +18,6 @@ createdAt: Date ;
 })
 updatedAt: Date ;
 options: string[] ;
+
+// qsn_set_id:  number;
 }

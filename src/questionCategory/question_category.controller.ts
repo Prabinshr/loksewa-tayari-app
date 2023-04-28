@@ -6,15 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { QuestionCategoryService } from './question_category.service';
 import {
   CreateQuestionCategoryDto,
   UpdateQuestionCategoryDto,
 } from './dto';
+import { RolesGuard } from 'src/auth/guards/role.guard';
+import { Roles } from 'src/auth/guards/roles.decorator';
+import { Role } from '@prisma/client';
 
 @ApiTags('Question Category')
+@ApiBearerAuth('jwt')
+@UseGuards(RolesGuard)
 @Controller('question-category')
 export class QuestionCategoryController {
   constructor(
@@ -22,6 +28,7 @@ export class QuestionCategoryController {
   ) {}
 
   @Post()
+  @Roles(Role.ADMIN)
   create(@Body() createQuestionCategoryDto: CreateQuestionCategoryDto) {
     return this.questionCategoryService.create(createQuestionCategoryDto);
   }

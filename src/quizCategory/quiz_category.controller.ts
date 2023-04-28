@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { QuizCategoryService } from './quiz_category.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CreateQuizCategoryDto, UpdateQuizCategoryDto } from './dto';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
@@ -17,6 +17,8 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 
 @ApiTags('Quiz Category')
 @Controller('quiz-category')
+@ApiBearerAuth('jwt')
+// @UseGuards(RolesGuard)
 @UseGuards(RolesGuard)
 export class QuizCategoryController {
   constructor(private readonly quizCategoryService: QuizCategoryService) {}

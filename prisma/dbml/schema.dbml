@@ -27,6 +27,12 @@ Table User {
   hash refreshTokenHash
 }
 
+Table ResetPassword {
+  email String [unique, not null]
+  pass_reset_token BigInt [not null]
+  pass_reset_token_expires BigInt [not null]
+}
+
 Table refreshTokenHash {
   id String [pk]
   user_id String [unique, not null]

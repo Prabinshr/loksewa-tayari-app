@@ -3,6 +3,7 @@ import {
   Controller,
   InternalServerErrorException,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
   ValidationPipe,
@@ -13,6 +14,8 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
@@ -25,6 +28,8 @@ import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto';
 import { Public } from 'src/decorators/public.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ITokens } from './interfaces/tokens.interface';
+
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
@@ -78,6 +83,33 @@ export class AuthController {
   @ApiBody({ type: CreateUserDto })
   async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
+  }
+
+  @Public()
+  @Post('forget-password')
+  @ApiOperation({ summary: 'Auth Forget Password' })
+  @ApiCreatedResponse({
+    status: 201,
+    description: 'Password Reset Link Has Been Sent To Your Email.',
+  })
+  async forgetPassword(@Body() body: { email: string }): Promise<Object> {
+    return await this.authService.forgetPassword(body.email);
+  }
+
+  @Public()
+  @Post('reset-password/:reset_token')
+  @ApiOperation({ summary: 'Auth Reset Password' })
+  @ApiResponse({
+    status: 201,
+    description: 'Password Reset Successfully.',
+  })
+  async resetPassword(
+    @Param('reset_token', ParseIntPipe) reset_token: bigint,
+    @Body() body: { newPassword: string },
+  ): Promise<ITokens> {
+    const { newPassword } = body;
+
+    return await this.authService.resetPassword(reset_token, newPassword);
   }
 
   @Post('validate-otp')

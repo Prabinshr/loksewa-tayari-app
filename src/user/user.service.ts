@@ -14,6 +14,7 @@ export class UserService {
     private readonly otpService: OtpService,
     private readonly authService: AuthService,
   ) {}
+
   async changeRole(id: string, role: Role) {
     try {
       const user = await this.prisma.user.update({
@@ -166,18 +167,18 @@ export class UserService {
       // returns a single user without the password
       const user = await this.prisma.user.findUniqueOrThrow({
         where: {
-          username: username
+          username: username,
         },
       });
       console.log(user);
-      
+
       // const { password, ...withoutPassword } = user;
       return user;
     } catch (error) {
       console.log(error);
-      
+
       throw new HttpException('User not found', 404, {
-        description: error as string
+        description: error as string,
       });
     }
   }
@@ -189,6 +190,8 @@ export class UserService {
           email,
         },
       });
+      // If User Doesn't Exists
+      if (!user) throw new HttpException('User not found', 404);
       // const { password, ...withoutPassword } = user;
       return user;
     } catch (error) {

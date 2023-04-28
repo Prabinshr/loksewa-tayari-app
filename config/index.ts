@@ -14,3 +14,10 @@ export const BASE_URL = {
   frontend: process.env.FRONTEND_URL,
   backend: process.env.BACKEND_URL,
 };
+
+export const SMTP = {
+  HOST: process.env.SMTP_HOST,
+  PORT: process.env.SMTP_PORT,
+  USER: process.env.SMTP_USER,
+  PASS: process.env.SMTP_PASS,
+};

@@ -10,7 +10,6 @@ import { TransactionModule } from 'src/transaction/transaction.module';
 import { QuestionCategoryModule } from 'src/questionCategory/question_category.module';
 import { AuthModule } from 'src/auth/auth.module';
 import { QuizCategoryModule } from 'src/quizCategory/quiz_category.module';
-import { UserService } from 'src/user/user.service';
 import { OtpModule } from 'src/otp/otp.module';
 import { SocketModule } from 'src/socket/socket.module';
 import { SewaserviceModule } from 'src/sewaservice/sewaservice.module';
@@ -21,6 +20,7 @@ import { SyllabusSubStructureModule } from 'src/syllabus-sub-structure/syllabus-
 import { SubStrTopicModule } from 'src/sub-str-topic/sub-str-topic.module';
 import { SubserviceHasSyllabusModule } from 'src/subservice-has-syllabus/subservice-has-syllabus.module';
 import { QuestionSetModule } from 'src/question-set/question-set.module';
+
 
 @Module({
   imports: [

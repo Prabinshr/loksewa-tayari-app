@@ -1,7 +1,9 @@
 import { PrismaClient, Role, STATUS } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { hash } from 'argon2';
+
 const prisma = new PrismaClient();
+
 async function main() {
   for (let i = 0; i <= 5; i++) {
     // await prisma.user.create({
@@ -80,7 +82,6 @@ async function main() {
     //       image: faker.image.business(),
     //     },
     //   });
-     
   }
 }
 

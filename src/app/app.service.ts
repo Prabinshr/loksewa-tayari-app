@@ -11,6 +11,7 @@ export class AppService {
       mail: 'admin@neptechpal.com',
     };
   }
+
   getHello(): string {
     return 'Hello World!';
   }

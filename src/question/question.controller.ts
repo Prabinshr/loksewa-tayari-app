@@ -15,6 +15,7 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
+
 @ApiTags('Question')
 @Controller('question')
 @ApiBearerAuth('jwt')
@@ -26,6 +27,7 @@ export class QuestionController {
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Create new question' })
   create(@Body() createQuestionDto: CreateQuestionDto) {
+    // console.log(createQuestionDto);
     return this.questionService.create(createQuestionDto);
   }
 

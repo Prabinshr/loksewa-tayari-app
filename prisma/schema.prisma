@@ -42,29 +42,36 @@ enum OnlineStatus {
 }
 
 model User {
-  id           String              @id @default(cuid())
-  username     String              @unique
+  id           String            @id @default(cuid())
+  username     String            @unique
   first_name   String
   middle_name  String?
   last_name    String
-  onlineStatus OnlineStatus?       @default(OFFLINE)
+  onlineStatus OnlineStatus?     @default(OFFLINE)
   /// @DtoEntityHidden
   password     String
-  email        String              @unique
-  verified     Boolean?            @default(false)
+  email        String            @unique
+  verified     Boolean?          @default(false)
   /// @DtoCreateOptional
-  role         Role?               @default(USER)
+  role         Role?             @default(USER)
   /// @DtoCreateOptional
   /// @DtoReadOnly
-  createdAt    DateTime            @default(now()) @map("created_at")
+  createdAt    DateTime          @default(now()) @map("created_at")
   /// @DtoReadOnly
-  updatedAt    DateTime            @updatedAt @map("updated_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
   /// @DtoCreateOptional
   transactions Transaction[]
   /// @DtoCreateOptional
   progress     User_Progress[]
   otps         OTP[]
   hash         refreshTokenHash?
+}
+
+model ResetPassword {
+  email String @unique
+
+  pass_reset_token         BigInt
+  pass_reset_token_expires BigInt
 }
 
 model refreshTokenHash {

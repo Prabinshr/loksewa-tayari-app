@@ -13,6 +13,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -21,6 +22,16 @@ import { PrismaService } from 'src/prisma/prisma.service';
       secret: TOKENS.JWT_ACCESS_TOKEN_SECRET,
       signOptions: { expiresIn: '24h' },
       verifyOptions: { issuer: 'https://neptechpal.com' },
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: 'smtp.ethereal.email',
+        port: 587,
+        auth: {
+          user: 'magnus85@ethereal.email',
+          pass: 'Z3613BzrnyRjQy73DX',
+        },
+      },
     }),
   ],
   providers: [

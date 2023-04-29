@@ -92,7 +92,9 @@ export class AuthController {
     status: 201,
     description: 'Password Reset Link Has Been Sent To Your Email.',
   })
-  async forgetPassword(@Body() body: { email: string }): Promise<Object> {
+  async forgetPassword(
+    @Body() body: { email: string },
+  ): Promise<{ success: boolean; message: string }> {
     return await this.authService.forgetPassword(body.email);
   }
 

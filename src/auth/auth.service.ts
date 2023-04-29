@@ -56,7 +56,9 @@ export class AuthService {
     });
   }
 
-  async forgetPassword(email: string): Promise<object> {
+  async forgetPassword(
+    email: string,
+  ): Promise<{ success: boolean; message: string }> {
     await this.userService.findByEmail(email);
 
     // Insert Email, Password Reset Token & Password Reset Token Expiration Date

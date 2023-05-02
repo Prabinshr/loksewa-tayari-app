@@ -20,6 +20,9 @@ import { SyllabusSubStructureModule } from 'src/syllabus-sub-structure/syllabus-
 import { SubStrTopicModule } from 'src/sub-str-topic/sub-str-topic.module';
 import { SubserviceHasSyllabusModule } from 'src/subservice-has-syllabus/subservice-has-syllabus.module';
 import { QuestionSetModule } from 'src/question-set/question-set.module';
+import { UserService } from 'src/user/user.service';
+import { PackageModule } from 'src/package/package.module';
+import { CouponModule } from 'src/coupon/coupon.module';
 
 
 @Module({
@@ -42,6 +45,8 @@ import { QuestionSetModule } from 'src/question-set/question-set.module';
     UserProgressModule,
     TransactionModule,
     QuestionCategoryModule,
+    PackageModule,
+    CouponModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

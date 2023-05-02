@@ -21,6 +21,8 @@ import { SubStrTopicModule } from 'src/sub-str-topic/sub-str-topic.module';
 import { SubserviceHasSyllabusModule } from 'src/subservice-has-syllabus/subservice-has-syllabus.module';
 import { QuestionSetModule } from 'src/question-set/question-set.module';
 import { UserService } from 'src/user/user.service';
+import { ForumModule } from 'src/forum/forum.module';
+import { CommentModule } from 'src/comment/comment.module';
 
 
 @Module({
@@ -43,6 +45,8 @@ import { UserService } from 'src/user/user.service';
     UserProgressModule,
     TransactionModule,
     QuestionCategoryModule,
+    ForumModule,
+    CommentModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

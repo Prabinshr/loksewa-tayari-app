@@ -25,6 +25,8 @@ Table User {
   progress User_Progress [not null, note: '@DtoCreateOptional']
   otps OTP [not null]
   hash refreshTokenHash
+  posts Post [not null]
+  comment Comments [not null]
 }
 
 Table ResetPassword {
@@ -189,6 +191,37 @@ Table QuestionSet {
   questions Question [not null]
 }
 
+Table Forum {
+  id String [pk]
+  title String [not null]
+  posts Post [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Post {
+  id String [pk]
+  content String [not null]
+  comments Comments [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Forum Forum [not null]
+  forumId String [not null]
+  User User [not null]
+  userId String [not null]
+}
+
+Table Comments {
+  id String [pk]
+  content String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Post Post [not null]
+  postId String [not null]
+  User User [not null]
+  userId String [not null]
+}
+
 Enum Role {
   ADMIN
   MODERATOR
@@ -249,3 +282,9 @@ Ref: SyllabusSubStructure.syllabus_structure_id > SyllabusStructure.id
 Ref: SubStrTopic.sub_struct_topic_id > SyllabusSubStructure.id
 
 Ref: QuestionSet.topic_id > SubStrTopic.id
+
+Ref: Post.forumId > Forum.id
+
+Ref: Post.userId > User.id
+
+Ref: Comments.userId > User.id

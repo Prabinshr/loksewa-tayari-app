@@ -29,22 +29,22 @@ export class SubServiceController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a SubService by id' })
-  findOne(@Param('id') id: number) {
-    return this.subServiceService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.subServiceService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a SubService' })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSubServiceDto: UpdateSubServiceDto,
   ) {
-    return this.subServiceService.update(+id, updateSubServiceDto);
+    return this.subServiceService.update(id, updateSubServiceDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a SubService' })
-  remove(@Param('id') id: number) {
-    return this.subServiceService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.subServiceService.remove(id);
   }
 }

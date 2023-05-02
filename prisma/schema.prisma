@@ -142,7 +142,7 @@ model Question {
   Question_Category   Question_Category? @relation(fields: [question_CategoryId], references: [id])
   question_CategoryId String?
 
-  qsn_set_id Int
+  qsn_set_id String
   questionSet QuestionSet @relation(fields: [qsn_set_id], references: [id])
 }
 
@@ -192,7 +192,7 @@ model OTP {
 
 
 model SewaService{
-  id          Int @id @default(autoincrement())
+  id          String @id @default(cuid())
   description String
   status      STATUS
   image       String?
@@ -207,8 +207,8 @@ enum STATUS {
 }
 
 model SubService{
-  id Int @id @default(autoincrement())
-  sewaService_id Int
+  id String @id @default(cuid())
+  sewaService_id String
   service SewaService @relation(fields: [sewaService_id], references: [id])
   title String
   description String?
@@ -221,23 +221,23 @@ model SubService{
   subserviceHasSyllabus SubserviceHasSyllabus[]
 }
 model SubserviceHasSyllabus{
-    service_id Int @id 
-    syllabus_sub_structure_id Int
+    service_id String @id 
+    syllabus_sub_structure_id String
     syllabusSubStructure SyllabusSubStructure? @relation(fields: [syllabus_sub_structure_id], references: [id])
     subService SubService? @relation(fields: [service_id], references:[id])
 }
 
 model SyllabusStructure{
-   id Int @id @default(autoincrement())
+   id String @id @default(cuid())
    title String
    description String?
    image String?
    syllabusSubStructures SyllabusSubStructure[] 
 }
 model SyllabusSubStructure{
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
-  syllabus_structure_id Int
+  syllabus_structure_id String
   syllabusStructure SyllabusStructure @relation(fields: [syllabus_structure_id],references: [id])
 
   title String
@@ -249,8 +249,8 @@ model SyllabusSubStructure{
 }
 
 model SubStrTopic{
-  id Int @id @default(autoincrement())
-  sub_struct_topic_id Int
+  id String @id @default(cuid())
+  sub_struct_topic_id String
   title String
   description String?
   image String?
@@ -261,10 +261,10 @@ model SubStrTopic{
 
 
 model QuestionSet {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
   type QSN_TYPE
 
-  topic_id Int
+  topic_id String
   subStrTopic SubStrTopic @relation(fields: [topic_id],references: [id])
   title String
   description String?

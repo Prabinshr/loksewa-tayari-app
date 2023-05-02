@@ -34,7 +34,7 @@ export class SyllabusSubStructureService {
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
       return this.prismaService.syllabusSubStructure.findUnique({
         include: {
@@ -55,7 +55,7 @@ export class SyllabusSubStructureService {
     }
   }
 
-  update(id: number, updateSyllabusSubStructureDto: UpdateSyllabusSubStructureDto) {
+  update(id: string, updateSyllabusSubStructureDto: UpdateSyllabusSubStructureDto) {
     try {
       return this.prismaService.syllabusSubStructure.update({data: updateSyllabusSubStructureDto,where:{id}})
     } catch (err) {
@@ -63,7 +63,7 @@ export class SyllabusSubStructureService {
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     try {
       return this.prismaService.syllabusSubStructure.delete({where:{id: id}})
     } catch (err) {

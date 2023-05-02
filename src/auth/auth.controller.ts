@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Param,
   ParseIntPipe,
   Post,
   UseGuards,
   ValidationPipe,
+  Request
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import * as argon from 'argon2';
@@ -29,6 +31,7 @@ import { CreateUserDto } from 'src/user/dto';
 import { Public } from 'src/decorators/public.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ITokens } from './interfaces/tokens.interface';
+import { Me } from './guards/me.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -166,5 +169,11 @@ export class AuthController {
     }
     // If the refresh token is valid, generate a new access and refresh token
     return this.authService.generateJWT(currentUser);
+  }
+
+  @Get('profile')
+  @UseGuards(AuthGuard('jwt'))
+  profile(@Me() me){
+    return me
   }
 }

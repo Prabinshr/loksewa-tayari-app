@@ -1,5 +1,16 @@
-export class CreateCouponDto {
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
 
-  code     :    string
-  discountValue  : number
+export class CreateCouponDto {
+  @ApiProperty()
+  @IsString()
+  code: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  discountValue: number;
+  @ApiProperty()
+  @IsNotEmpty()
+  maxUses: number;
+  @ApiProperty()
+  usedCount: number;
 }

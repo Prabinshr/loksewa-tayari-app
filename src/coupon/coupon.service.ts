@@ -7,12 +7,15 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class CouponService {
   constructor(private prismaService: PrismaService) {}
 
-  async createCoupon(discountValue: number): Promise<string> {
+  async createCoupon(discountValue: number, maxUses: number, usedCount : number) : Promise<string> {
     const code = this.generateCouponCode(8);
     const coupon = await this.prismaService.coupon.create({
       data: {
         code,
         discountValue,
+        maxUses,
+        usedCount
+      
       },
     });
     return coupon.code;
@@ -44,8 +47,9 @@ export class CouponService {
       },
     });
     // if (!coupon || coupon.expiration < new Date() || coupon.usedCount >= coupon.maxUses) {
-    //   throw new Error('Invalid coupon');
-    // }
+    if (!coupon || coupon.usedCount >= coupon.maxUses) {
+      throw new Error('Invalid coupon');
+    }
     const discountedAmount = transaction.amount - coupon.discountValue;
     await this.prismaService.transaction.update({
       where: {
@@ -56,14 +60,16 @@ export class CouponService {
         amount: discountedAmount,
       },
     });
-    // await this.prismaService.coupon.update({
-    //   where: {
-    //     id: coupon.id,
-    //   },
-    //   data: {
-    //     usedCount: coupon.usedCount + 1,
-    //   },
-    // });
+
+    //updates usedCount after you used the coupon
+    await this.prismaService.coupon.update({
+      where: {
+        id: coupon.id,
+      },
+      data: {
+        usedCount: coupon.usedCount + 1,
+      },
+    });
   }
 
   findAll() {

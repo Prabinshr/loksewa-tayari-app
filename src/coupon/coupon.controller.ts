@@ -25,8 +25,10 @@ export class CouponController {
   @Post()
   async createCoupon(
     @Body('discountValue') discountValue: number,
+    @Body('maxUses') maxUses: number,
+    @Body('usedCount') usedCount: number,
   ): Promise<{ code: string }> {
-    const code = await this.couponService.createCoupon(discountValue);
+    const code = await this.couponService.createCoupon(discountValue,maxUses,usedCount);
     return { code };
   }
 

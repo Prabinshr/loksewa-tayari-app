@@ -33,7 +33,7 @@ export class QuestionController {
 
   @Get()
   @Roles(Role.ADMIN)
-  @ApiOperation({ summary: 'Create all questions' })
+  @ApiOperation({ summary: 'Get all questions' })
   findAll() {
     return this.questionService.findAll();
   }

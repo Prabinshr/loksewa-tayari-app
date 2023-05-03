@@ -163,11 +163,40 @@ model User_Progress {
   user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
+
+// model Package{
+// title
+// desc
+// amount
+// sub days
+// }
+
+model Package {
+  id        String   @id @default(cuid())
+  title      String @unique
+  description String
+  amount     Int
+  subscriptionDays String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  transactions Transaction[]
+
+}
+
 model Transaction {
   id               String   @id @default(cuid())
   user_id          String
   quiz_id          String
   amount           Int
+
+  couponCode       String?
+  coupon           Coupon?  @relation(fields: [couponCode], references: [code])
+
+  package_title String?
+  package Package?  @relation(fields: [package_title], references: [title])
+
   transaction_date DateTime
   /// @DtoReadOnly
   createdAt        DateTime @default(now()) @map("created_at")
@@ -176,6 +205,29 @@ model Transaction {
   quiz             Quiz     @relation(fields: [quiz_id], references: [id])
   user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
+
+
+model Coupon {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  discountValue      Int
+   maxUses       Int
+  usedCount     Int     @default(0)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  transactions Transaction[]
+}
+// model Coupon {
+//   id            String   @id @default(cuid())
+//   code          String   @unique
+//   discountValue      Float
+//   expiration    DateTime
+//   maxUses       Int
+//   usedCount     Int     @default(0)
+//   createdAt     DateTime @default(now()) @map("created_at")
+//   updatedAt     DateTime @updatedAt @map("updated_at")
+// }
 
 enum OTPType {
   EMAIL_VERIFICATION

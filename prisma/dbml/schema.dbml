@@ -100,16 +100,42 @@ Table User_Progress {
   user User [not null]
 }
 
+Table Package {
+  id String [pk]
+  title String [unique, not null]
+  description String [not null]
+  amount Int [not null]
+  subscriptionDays String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  transactions Transaction [not null]
+}
+
 Table Transaction {
   id String [pk]
   user_id String [not null]
   quiz_id String [not null]
   amount Int [not null]
+  couponCode String
+  coupon Coupon
+  package_title String
+  package Package
   transaction_date DateTime [not null]
   createdAt DateTime [default: `now()`, not null, note: '@DtoReadOnly']
   updatedAt DateTime [not null, note: '@DtoReadOnly']
   quiz Quiz [not null]
   user User [not null]
+}
+
+Table Coupon {
+  id String [pk]
+  code String [unique, not null]
+  discountValue Int [not null]
+  maxUses Int [not null]
+  usedCount Int [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  transactions Transaction [not null]
 }
 
 Table OTP {
@@ -264,6 +290,10 @@ Ref: Question.qsn_set_id > QuestionSet.id
 Ref: User_Progress.quiz_id > Quiz.id
 
 Ref: User_Progress.user_id > User.id [delete: Cascade]
+
+Ref: Transaction.couponCode > Coupon.code
+
+Ref: Transaction.package_title > Package.title
 
 Ref: Transaction.quiz_id > Quiz.id
 

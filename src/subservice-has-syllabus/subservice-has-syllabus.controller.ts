@@ -32,23 +32,23 @@ export class SubserviceHasSyllabusController {
   }
 
   @Get(':service_id')
-  findOne(@Param('service_id') service_id: number) {
-    return this.subserviceHasSyllabusService.findOne(+service_id);
+  findOne(@Param('service_id') service_id: string) {
+    return this.subserviceHasSyllabusService.findOne(service_id);
   }
 
   @Patch(':service_id')
   update(
-    @Param('service_id') service_id: number,
+    @Param('service_id') service_id: string,
     @Body() updateSubserviceHasSyllabusDto: UpdateSubserviceHasSyllabusDto,
   ) {
     return this.subserviceHasSyllabusService.update(
-      +service_id,
+      service_id,
       updateSubserviceHasSyllabusDto,
     );
   }
 
   @Delete(':service_id')
-  remove(@Param('service_id') service_id: number) {
-    return this.subserviceHasSyllabusService.remove(+service_id);
+  remove(@Param('service_id') service_id: string) {
+    return this.subserviceHasSyllabusService.remove(service_id);
   }
 }

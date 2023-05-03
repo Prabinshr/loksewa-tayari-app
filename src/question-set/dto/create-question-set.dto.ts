@@ -9,7 +9,7 @@ export class CreateQuestionSetDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  topic_id: number;
+  topic_id: string;
 
   @ApiProperty()
   @IsNotEmpty()

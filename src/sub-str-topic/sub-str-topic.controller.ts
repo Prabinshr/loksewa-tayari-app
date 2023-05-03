@@ -39,22 +39,22 @@ export class SubStrTopicController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Find a Sub-structure-topic by id' })
-  findOne(@Param('id') id: number) {
-    return this.subStrTopicService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.subStrTopicService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a Sub-structure-topic by id' })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSubStrTopicDto: UpdateSubStrTopicDto,
   ) {
-    return this.subStrTopicService.update(+id, updateSubStrTopicDto);
+    return this.subStrTopicService.update(id, updateSubStrTopicDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a Sub-structure-topic by id' })
-  remove(@Param('id') id: number) {
-    return this.subStrTopicService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.subStrTopicService.remove(id);
   }
 }

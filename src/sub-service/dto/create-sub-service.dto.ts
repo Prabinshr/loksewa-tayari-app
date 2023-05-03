@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class CreateSubServiceDto {
   @ApiProperty()
   @IsNotEmpty()
-  sewaService_id: number;
+  sewaService_id: string;
 
   @ApiProperty()
   @IsNotEmpty()

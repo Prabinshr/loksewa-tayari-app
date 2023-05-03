@@ -23,6 +23,8 @@ import { QuestionSetModule } from 'src/question-set/question-set.module';
 import { UserService } from 'src/user/user.service';
 import { PackageModule } from 'src/package/package.module';
 import { CouponModule } from 'src/coupon/coupon.module';
+import { ForumModule } from 'src/forum/forum.module';
+import { CommentModule } from 'src/comment/comment.module';
 
 
 @Module({
@@ -47,6 +49,8 @@ import { CouponModule } from 'src/coupon/coupon.module';
     QuestionCategoryModule,
     PackageModule,
     CouponModule
+    ForumModule,
+    CommentModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

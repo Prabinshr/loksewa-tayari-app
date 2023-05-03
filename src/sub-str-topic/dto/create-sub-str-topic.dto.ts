@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class CreateSubStrTopicDto {
   @ApiProperty()
   @IsNotEmpty()
-  sub_struct_topic_id: number;
+  sub_struct_topic_id: string;
 
   @ApiProperty()
   @IsString()

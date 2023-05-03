@@ -2,11 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { CouponService } from './coupon.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from '@prisma/client';
 import { Roles } from 'src/auth/guards/roles.decorator';
 
+
+@ApiTags('Coupon')
 @Controller('coupon')
 @ApiBearerAuth('jwt')
 @Controller('user')

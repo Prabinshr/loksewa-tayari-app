@@ -170,12 +170,16 @@ model User_Progress {
 
 model Package {
   id        String   @id @default(cuid())
-  title      String
+  title      String @unique
   description String
   amount     Int
   subscriptionDays String
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  transactions Transaction[]
+
 }
 
 model Transaction {
@@ -186,6 +190,9 @@ model Transaction {
 
   couponCode       String?
   coupon           Coupon?  @relation(fields: [couponCode], references: [code])
+
+  package_title String?
+  package Package?  @relation(fields: [package_title], references: [title])
 
   transaction_date DateTime
   /// @DtoReadOnly

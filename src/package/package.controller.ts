@@ -1,12 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { PackageService } from './package.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from '@prisma/client';
 
+
+@ApiTags('package')
 @Controller('package')
 @ApiBearerAuth('jwt')
 @Controller('user')
@@ -20,15 +31,23 @@ export class PackageController {
     return this.packageService.create(createPackageDto);
   }
 
+   @Post('/apply')
+  async applyPackage(
+    @Body('transactionId') transactionId: string,
+    @Body('package_title') package_title: string,
+  ): Promise<void> {
+    await this.packageService.applyPackage(transactionId, package_title);
+  }
+
   @Get()
   findAll() {
     return this.packageService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.packageService.findOne(id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.packageService.findOne(id);
+  // }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updatePackageDto: UpdatePackageDto) {

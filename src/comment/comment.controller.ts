@@ -1,9 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Me } from 'src/auth/guards/me.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { User } from '@prisma/client';
 
 @Controller('comment')
 export class CommentController {
@@ -11,9 +21,14 @@ export class CommentController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  create(@Body() createCommentDto: CreateCommentDto,@Me() me) {
-
-    return this.commentService.create({...createCommentDto,userId:me.id});
+  create(
+    @Body() createCommentDto: CreateCommentDto,
+    @CurrentUser() currentUser: User,
+  ) {
+    return this.commentService.create({
+      ...createCommentDto,
+      userId: currentUser.id,
+    });
   }
 
   @Get()

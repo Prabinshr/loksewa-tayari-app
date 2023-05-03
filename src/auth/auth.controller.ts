@@ -8,7 +8,6 @@ import {
   Post,
   UseGuards,
   ValidationPipe,
-  Request
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import * as argon from 'argon2';
@@ -31,7 +30,6 @@ import { CreateUserDto } from 'src/user/dto';
 import { Public } from 'src/decorators/public.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ITokens } from './interfaces/tokens.interface';
-import { Me } from './guards/me.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -173,7 +171,7 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(AuthGuard('jwt'))
-  profile(@Me() me){
-    return me
+  profile(@CurrentUser() currentUser) {
+    return currentUser;
   }
 }

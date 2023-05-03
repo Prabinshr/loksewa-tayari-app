@@ -33,25 +33,25 @@ export class SyllabusSubStructureController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Create a syllabus-sub-structure by id' })
-  findOne(@Param('id') id: number) {
-    return this.syllabusSubStructureService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.syllabusSubStructureService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a syllabus-sub-structure by id' })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSyllabusSubStructureDto: UpdateSyllabusSubStructureDto,
   ) {
     return this.syllabusSubStructureService.update(
-      +id,
+      id,
       updateSyllabusSubStructureDto,
     );
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a syllabus-sub-structure by id' })
-  remove(@Param('id') id: number) {
-    return this.syllabusSubStructureService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.syllabusSubStructureService.remove(id);
   }
 }

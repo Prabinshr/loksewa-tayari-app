@@ -65,8 +65,9 @@ model User {
   progress     User_Progress[]
   otps         OTP[]
   hash         refreshTokenHash?
-  posts        Post[]
-  comments     Comments[]
+
+  posts   Post[]
+  comment Comments[]
 }
 
 model ResetPassword {
@@ -144,7 +145,7 @@ model Question {
   Question_Category   Question_Category? @relation(fields: [question_CategoryId], references: [id])
   question_CategoryId String?
 
-  qsn_set_id  Int
+  qsn_set_id  String
   questionSet QuestionSet @relation(fields: [qsn_set_id], references: [id])
 }
 
@@ -162,11 +163,38 @@ model User_Progress {
   user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model Transaction {
-  id               String   @id @default(cuid())
-  user_id          String
-  quiz_id          String
+// model Package{
+// title
+// desc
+// amount
+// sub days
+// }
+
+model Package {
+  id               String @id @default(cuid())
+  title            String @unique
+  description      String
   amount           Int
+  subscriptionDays String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  transactions Transaction[]
+}
+
+model Transaction {
+  id      String @id @default(cuid())
+  user_id String
+  quiz_id String
+  amount  Int
+
+  couponCode String?
+  coupon     Coupon? @relation(fields: [couponCode], references: [code])
+
+  package_title String?
+  package       Package? @relation(fields: [package_title], references: [title])
+
   transaction_date DateTime
   /// @DtoReadOnly
   createdAt        DateTime @default(now()) @map("created_at")
@@ -175,6 +203,29 @@ model Transaction {
   quiz             Quiz     @relation(fields: [quiz_id], references: [id])
   user             User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
+
+model Coupon {
+  id            String   @id @default(cuid())
+  code          String   @unique
+  discountValue Int
+  maxUses       Int
+  usedCount     Int      @default(0)
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  transactions Transaction[]
+}
+
+// model Coupon {
+//   id            String   @id @default(cuid())
+//   code          String   @unique
+//   discountValue      Float
+//   expiration    DateTime
+//   maxUses       Int
+//   usedCount     Int     @default(0)
+//   createdAt     DateTime @default(now()) @map("created_at")
+//   updatedAt     DateTime @updatedAt @map("updated_at")
+// }
 
 enum OTPType {
   EMAIL_VERIFICATION
@@ -193,7 +244,7 @@ model OTP {
 }
 
 model SewaService {
-  id          Int          @id @default(autoincrement())
+  id          String       @id @default(cuid())
   description String
   status      STATUS
   image       String?
@@ -208,8 +259,8 @@ enum STATUS {
 }
 
 model SubService {
-  id             Int         @id @default(autoincrement())
-  sewaService_id Int
+  id             String      @id @default(cuid())
+  sewaService_id String
   service        SewaService @relation(fields: [sewaService_id], references: [id])
   title          String
   description    String?
@@ -223,14 +274,14 @@ model SubService {
 }
 
 model SubserviceHasSyllabus {
-  service_id                Int                   @id
-  syllabus_sub_structure_id Int
+  service_id                String                @id
+  syllabus_sub_structure_id String
   syllabusSubStructure      SyllabusSubStructure? @relation(fields: [syllabus_sub_structure_id], references: [id])
   subService                SubService?           @relation(fields: [service_id], references: [id])
 }
 
 model SyllabusStructure {
-  id                    Int                    @id @default(autoincrement())
+  id                    String                 @id @default(cuid())
   title                 String
   description           String?
   image                 String?
@@ -238,9 +289,9 @@ model SyllabusStructure {
 }
 
 model SyllabusSubStructure {
-  id Int @id @default(autoincrement())
+  id String @id @default(cuid())
 
-  syllabus_structure_id Int
+  syllabus_structure_id String
   syllabusStructure     SyllabusStructure @relation(fields: [syllabus_structure_id], references: [id])
 
   title       String
@@ -252,8 +303,8 @@ model SyllabusSubStructure {
 }
 
 model SubStrTopic {
-  id                  Int     @id @default(autoincrement())
-  sub_struct_topic_id Int
+  id                  String  @id @default(cuid())
+  sub_struct_topic_id String
   title               String
   description         String?
   image               String?
@@ -263,20 +314,14 @@ model SubStrTopic {
 }
 
 model QuestionSet {
-  id   Int      @id @default(autoincrement())
+  id   String   @id @default(cuid())
   type QSN_TYPE
 
-  topic_id    Int
+  topic_id    String
   subStrTopic SubStrTopic @relation(fields: [topic_id], references: [id])
   title       String
   description String?
   questions   Question[]
-}
-
-enum QSN_TYPE {
-  PAID
-  FREE
-  TRIAL
 }
 
 model Forum {
@@ -293,10 +338,10 @@ model Post {
   content  String
   comments Comments[]
 
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  String?
-  Forum   Forum?  @relation(fields: [forumId], references: [id])
-  forumId String?
+  Forum   Forum  @relation(fields: [forumId], references: [id])
+  forumId String
+  User    User   @relation(fields: [userId], references: [id])
+  userId  String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -305,11 +350,18 @@ model Post {
 model Comments {
   id      String @id @default(cuid())
   content String
-  Post    Post   @relation(fields: [postId], references: [id])
-  postId  String
-  User    User   @relation(fields: [userId], references: [id])
-  userId  String
+
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+  Post   Post   @relation(fields: [postId], references: [id])
+  postId String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+enum QSN_TYPE {
+  PAID
+  FREE
+  TRIAL
 }

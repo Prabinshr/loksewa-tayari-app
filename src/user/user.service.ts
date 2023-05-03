@@ -117,7 +117,7 @@ export class UserService {
             transactions: true,
             progress: true,
             posts: true,
-            comments: true,
+            comment: true,
           },
         },
       },

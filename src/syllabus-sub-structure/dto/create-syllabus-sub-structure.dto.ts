@@ -11,7 +11,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 export class CreateSyllabusSubStructureDto {
   @ApiProperty()
   @IsNotEmpty()
-  syllabus_structure_id: number;
+  syllabus_structure_id: string;
   
 
   @ApiProperty()

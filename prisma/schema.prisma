@@ -65,6 +65,8 @@ model User {
   progress     User_Progress[]
   otps         OTP[]
   hash         refreshTokenHash?
+  posts        Post[]
+  comments     Comments[]
 }
 
 model ResetPassword {
@@ -142,7 +144,7 @@ model Question {
   Question_Category   Question_Category? @relation(fields: [question_CategoryId], references: [id])
   question_CategoryId String?
 
-  qsn_set_id Int
+  qsn_set_id  Int
   questionSet QuestionSet @relation(fields: [qsn_set_id], references: [id])
 }
 
@@ -190,14 +192,13 @@ model OTP {
   updatedAt DateTime @updatedAt @map("updated_at")
 }
 
-
-model SewaService{
-  id          Int @id @default(autoincrement())
+model SewaService {
+  id          Int          @id @default(autoincrement())
   description String
   status      STATUS
   image       String?
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt()
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt()
   subServices SubService[]
 }
 
@@ -206,72 +207,109 @@ enum STATUS {
   UNPUBLISHED
 }
 
-model SubService{
-  id Int @id @default(autoincrement())
+model SubService {
+  id             Int         @id @default(autoincrement())
   sewaService_id Int
-  service SewaService @relation(fields: [sewaService_id], references: [id])
-  title String
-  description String?
-  image String?
-  status STATUS
-  
+  service        SewaService @relation(fields: [sewaService_id], references: [id])
+  title          String
+  description    String?
+  image          String?
+  status         STATUS
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt()
 
   subserviceHasSyllabus SubserviceHasSyllabus[]
 }
-model SubserviceHasSyllabus{
-    service_id Int @id 
-    syllabus_sub_structure_id Int
-    syllabusSubStructure SyllabusSubStructure? @relation(fields: [syllabus_sub_structure_id], references: [id])
-    subService SubService? @relation(fields: [service_id], references:[id])
+
+model SubserviceHasSyllabus {
+  service_id                Int                   @id
+  syllabus_sub_structure_id Int
+  syllabusSubStructure      SyllabusSubStructure? @relation(fields: [syllabus_sub_structure_id], references: [id])
+  subService                SubService?           @relation(fields: [service_id], references: [id])
 }
 
-model SyllabusStructure{
-   id Int @id @default(autoincrement())
-   title String
-   description String?
-   image String?
-   syllabusSubStructures SyllabusSubStructure[] 
+model SyllabusStructure {
+  id                    Int                    @id @default(autoincrement())
+  title                 String
+  description           String?
+  image                 String?
+  syllabusSubStructures SyllabusSubStructure[]
 }
-model SyllabusSubStructure{
+
+model SyllabusSubStructure {
   id Int @id @default(autoincrement())
 
   syllabus_structure_id Int
-  syllabusStructure SyllabusStructure @relation(fields: [syllabus_structure_id],references: [id])
+  syllabusStructure     SyllabusStructure @relation(fields: [syllabus_structure_id], references: [id])
 
-  title String
+  title       String
   description String?
-  image String?
+  image       String?
 
   subserviceHasSyllabus SubserviceHasSyllabus[]
-  subStrTopics SubStrTopic[]
+  subStrTopics          SubStrTopic[]
 }
 
-model SubStrTopic{
-  id Int @id @default(autoincrement())
+model SubStrTopic {
+  id                  Int     @id @default(autoincrement())
   sub_struct_topic_id Int
-  title String
-  description String?
-  image String?
+  title               String
+  description         String?
+  image               String?
 
-  syllabusSubStructure SyllabusSubStructure @relation(fields: [sub_struct_topic_id],references: [id])
-  questionSets QuestionSet[]
+  syllabusSubStructure SyllabusSubStructure @relation(fields: [sub_struct_topic_id], references: [id])
+  questionSets         QuestionSet[]
 }
-
 
 model QuestionSet {
-  id Int @id @default(autoincrement())
+  id   Int      @id @default(autoincrement())
   type QSN_TYPE
 
-  topic_id Int
-  subStrTopic SubStrTopic @relation(fields: [topic_id],references: [id])
-  title String
+  topic_id    Int
+  subStrTopic SubStrTopic @relation(fields: [topic_id], references: [id])
+  title       String
   description String?
-  questions  Question[]
+  questions   Question[]
 }
+
 enum QSN_TYPE {
   PAID
   FREE
   TRIAL
+}
+
+model Forum {
+  id    String @id @default(cuid())
+  title String
+  posts Post[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Post {
+  id       String     @id @default(cuid())
+  content  String
+  comments Comments[]
+
+  User    User?   @relation(fields: [userId], references: [id])
+  userId  String?
+  Forum   Forum?  @relation(fields: [forumId], references: [id])
+  forumId String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Comments {
+  id      String @id @default(cuid())
+  content String
+  Post    Post   @relation(fields: [postId], references: [id])
+  postId  String
+  User    User   @relation(fields: [userId], references: [id])
+  userId  String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }

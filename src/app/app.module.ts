@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
+import { UserService } from 'src/user/user.service';
 import { QuizModule } from 'src/quiz/quiz.module';
 import { QuestionModule } from 'src/question/question.module';
 import { UserProgressModule } from 'src/userProgress/progress.module';
@@ -20,7 +21,9 @@ import { SyllabusSubStructureModule } from 'src/syllabus-sub-structure/syllabus-
 import { SubStrTopicModule } from 'src/sub-str-topic/sub-str-topic.module';
 import { SubserviceHasSyllabusModule } from 'src/subservice-has-syllabus/subservice-has-syllabus.module';
 import { QuestionSetModule } from 'src/question-set/question-set.module';
-
+import { PostModule } from 'src/post/post.module';
+import { ForumModule } from 'src/forum/forum.module';
+import { CommentModule } from 'src/comment/comment.module';
 
 @Module({
   imports: [
@@ -42,6 +45,9 @@ import { QuestionSetModule } from 'src/question-set/question-set.module';
     UserProgressModule,
     TransactionModule,
     QuestionCategoryModule,
+    ForumModule,
+    PostModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

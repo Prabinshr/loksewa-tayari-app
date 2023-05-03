@@ -25,6 +25,8 @@ Table User {
   progress User_Progress [not null, note: '@DtoCreateOptional']
   otps OTP [not null]
   hash refreshTokenHash
+  posts Post [not null]
+  comment Comments [not null]
 }
 
 Table ResetPassword {
@@ -82,7 +84,7 @@ Table Question {
   quiz Quiz [note: '@DtoCreateOptional']
   Question_Category Question_Category
   question_CategoryId String
-  qsn_set_id Int [not null]
+  qsn_set_id String [not null]
   questionSet QuestionSet [not null]
 }
 
@@ -121,7 +123,7 @@ Table OTP {
 }
 
 Table SewaService {
-  id Int [pk, increment]
+  id String [pk]
   description String [not null]
   status STATUS [not null]
   image String
@@ -131,8 +133,8 @@ Table SewaService {
 }
 
 Table SubService {
-  id Int [pk, increment]
-  sewaService_id Int [not null]
+  id String [pk]
+  sewaService_id String [not null]
   service SewaService [not null]
   title String [not null]
   description String
@@ -144,14 +146,14 @@ Table SubService {
 }
 
 Table SubserviceHasSyllabus {
-  service_id Int [pk]
-  syllabus_sub_structure_id Int [not null]
+  service_id String [pk]
+  syllabus_sub_structure_id String [not null]
   syllabusSubStructure SyllabusSubStructure
   subService SubService
 }
 
 Table SyllabusStructure {
-  id Int [pk, increment]
+  id String [pk]
   title String [not null]
   description String
   image String
@@ -159,8 +161,8 @@ Table SyllabusStructure {
 }
 
 Table SyllabusSubStructure {
-  id Int [pk, increment]
-  syllabus_structure_id Int [not null]
+  id String [pk]
+  syllabus_structure_id String [not null]
   syllabusStructure SyllabusStructure [not null]
   title String [not null]
   description String
@@ -170,8 +172,8 @@ Table SyllabusSubStructure {
 }
 
 Table SubStrTopic {
-  id Int [pk, increment]
-  sub_struct_topic_id Int [not null]
+  id String [pk]
+  sub_struct_topic_id String [not null]
   title String [not null]
   description String
   image String
@@ -180,13 +182,44 @@ Table SubStrTopic {
 }
 
 Table QuestionSet {
-  id Int [pk, increment]
+  id String [pk]
   type QSN_TYPE [not null]
-  topic_id Int [not null]
+  topic_id String [not null]
   subStrTopic SubStrTopic [not null]
   title String [not null]
   description String
   questions Question [not null]
+}
+
+Table Forum {
+  id String [pk]
+  title String [not null]
+  posts Post [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table Post {
+  id String [pk]
+  content String [not null]
+  comments Comments [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Forum Forum [not null]
+  forumId String [not null]
+  User User [not null]
+  userId String [not null]
+}
+
+Table Comments {
+  id String [pk]
+  content String [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  Post Post [not null]
+  postId String [not null]
+  User User [not null]
+  userId String [not null]
 }
 
 Enum Role {
@@ -249,3 +282,9 @@ Ref: SyllabusSubStructure.syllabus_structure_id > SyllabusStructure.id
 Ref: SubStrTopic.sub_struct_topic_id > SyllabusSubStructure.id
 
 Ref: QuestionSet.topic_id > SubStrTopic.id
+
+Ref: Post.forumId > Forum.id
+
+Ref: Post.userId > User.id
+
+Ref: Comments.userId > User.id

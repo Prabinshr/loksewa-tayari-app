@@ -36,7 +36,7 @@ export class SewaserviceService {
   // findOne(id: number) {
   //   return this.prismaService.sewaService.findUnique({where: {id: id}})
   // }
-  findOne(id: number) {
+  findOne(id: string) {
     try {
       return this.prismaService.sewaService.findFirst({
         where: {
@@ -51,7 +51,7 @@ export class SewaserviceService {
     }
   }
 
-  update(id: number, updateSewaserviceDto: UpdateSewaserviceDto) {
+  update(id: string, updateSewaserviceDto: UpdateSewaserviceDto) {
     try {
       return this.prismaService.sewaService.update({
         data: updateSewaserviceDto,
@@ -62,7 +62,7 @@ export class SewaserviceService {
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     try {
       return this.prismaService.sewaService.delete({ where: { id } });
     } catch (error) {

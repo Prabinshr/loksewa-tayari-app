@@ -30,22 +30,22 @@ export class QuestionSetController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a single Question-Set by id' })
-  findOne(@Param('id') id: number) {
-    return this.questionSetService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.questionSetService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a Question-Set by id' })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateQuestionSetDto: UpdateQuestionSetDto,
   ) {
-    return this.questionSetService.update(+id, updateQuestionSetDto);
+    return this.questionSetService.update(id, updateQuestionSetDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a Question-Set by id' })
-  remove(@Param('id') id: number) {
-    return this.questionSetService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.questionSetService.remove(id);
   }
 }

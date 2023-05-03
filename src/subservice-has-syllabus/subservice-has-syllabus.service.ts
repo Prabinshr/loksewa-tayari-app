@@ -24,7 +24,7 @@ export class SubserviceHasSyllabusService {
     }
   }
 
-  findOne(service_id: number) {
+  findOne(service_id: string) {
     try {
       return this.prismaService.subserviceHasSyllabus.findUnique({
         where: { service_id: service_id },
@@ -35,7 +35,7 @@ export class SubserviceHasSyllabusService {
   }
 
   update(
-    service_id: number,
+    service_id: string,
     updateSubserviceHasSyllabusDto: UpdateSubserviceHasSyllabusDto,
   ) {
     try {
@@ -48,7 +48,7 @@ export class SubserviceHasSyllabusService {
     }
   }
 
-  remove(service_id: number) {
+  remove(service_id: string) {
     try {
       return this.prismaService.subserviceHasSyllabus.delete({
         where: { service_id },

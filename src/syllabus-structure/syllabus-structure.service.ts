@@ -40,7 +40,7 @@ export class SyllabusStructureService {
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
       return this.prismaService.syllabusStructure.findUnique({
         include: {
@@ -65,7 +65,7 @@ export class SyllabusStructureService {
     }
   }
 
-  update(id: number, updateSyllabusStructureDto: UpdateSyllabusStructureDto) {
+  update(id: string, updateSyllabusStructureDto: UpdateSyllabusStructureDto) {
     try {
       return this.prismaService.syllabusStructure.update({
         where: { id },
@@ -76,7 +76,7 @@ export class SyllabusStructureService {
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     try {
       return this.prismaService.syllabusStructure.delete({ where: { id } });
     } catch (error) {

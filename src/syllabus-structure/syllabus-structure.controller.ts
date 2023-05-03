@@ -32,25 +32,25 @@ export class SyllabusStructureController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get a syllabus-structure by id' })
-  findOne(@Param('id') id: number) {
-    return this.syllabusStructureService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.syllabusStructureService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update a syllabus-structure' })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSyllabusStructureDto: UpdateSyllabusStructureDto,
   ) {
     return this.syllabusStructureService.update(
-      +id,
+      id,
       updateSyllabusStructureDto,
     );
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a syllabus-structure' })
-  remove(@Param('id') id: number) {
-    return this.syllabusStructureService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.syllabusStructureService.remove(id);
   }
 }

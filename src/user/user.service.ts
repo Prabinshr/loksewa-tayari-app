@@ -116,6 +116,8 @@ export class UserService {
           select: {
             transactions: true,
             progress: true,
+            posts: true,
+            comment: true,
           },
         },
       },

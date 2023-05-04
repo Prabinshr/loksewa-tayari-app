@@ -66,6 +66,7 @@ async function main() {
     //     },
     //   },
     // });
+    //
     // await prisma.sewaService.create({
     //   data: {
     //     description: faker.lorem.word(),
@@ -74,7 +75,6 @@ async function main() {
     //     status: 'PUBLISHED' || 'UNPUBLISHED',
     //   },
     // });
-   
     //   await prisma.syllabusStructure.create({
     //     data: {
     //       title: faker.lorem.word(),

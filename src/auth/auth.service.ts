@@ -1,6 +1,5 @@
 import { HttpException, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 import { TOKENS } from 'config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ITokens } from './interfaces/tokens.interface';
@@ -8,6 +7,7 @@ import { sendResetEmail } from './email';
 import { MailerService } from '@nestjs-modules/mailer';
 import { UserService } from 'src/user/user.service';
 import * as argon from 'argon2';
+import { User } from 'src/user/entities';
 
 @Injectable()
 export class AuthService {
@@ -50,7 +50,6 @@ export class AuthService {
         id: payload.id,
       },
       data: {
-        ...payload,
         verified: true,
       },
     });

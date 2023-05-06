@@ -1,5 +1,5 @@
 import { OTPType } from '@prisma/client';
-import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateOtpDto {
@@ -12,5 +12,7 @@ export class CreateOtpDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
+  @MinLength(6,{message: "The OTP code must be 6 digits."})
+  @MaxLength(6,{message: "The OTP code must be 6 digits."})
   code: string;
 }

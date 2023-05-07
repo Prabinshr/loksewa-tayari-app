@@ -11,4 +11,7 @@ export class CreateSewaserviceDto {
   @IsNotEmpty()
   @IsString()
   status: STATUS;
+  @ApiProperty()
+  @IsString()
+  image?: string;
 }

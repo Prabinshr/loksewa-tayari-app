@@ -28,6 +28,7 @@ export class UserService {
       return user;
     } catch (error) {}
   }
+
   async updateOnlineStatus(id: string, status: OnlineStatus) {
     try {
       const user = await this.prisma.user.update({
@@ -43,6 +44,18 @@ export class UserService {
       throw new HttpException('User not found', 404);
     }
   }
+
+   async uploadUserImage(
+    id: string,
+    userImage: Express.Multer.File,
+  ) {
+    try {
+      console.log(userImage);
+    } catch (err) {
+      throw new HttpException(err, 500);
+    }
+  }
+  
   async create(createUserDto: CreateUserDto) {
     // Check if the username contains spaces or any special characters
     if (createUserDto.username.includes(' ')) {

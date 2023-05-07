@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { SewaserviceService } from './sewaservice.service';
 import { CreateSewaserviceDto } from './dto/create-sewaservice.dto';
 import { UpdateSewaserviceDto } from './dto/update-sewaservice.dto';
@@ -6,6 +6,10 @@ import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagg
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from '@prisma/client';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from 'src/auth/guards/jwt.guard';
 
 @ApiTags('sewaservice')
 @ApiBearerAuth('jwt')
@@ -24,6 +28,44 @@ export class SewaserviceController {
   // })
   create(@Body() createSewaserviceDto: CreateSewaserviceDto) {
     return this.sewaserviceService.create(createSewaserviceDto);
+  }
+
+  //upload image
+  @Post('upload')
+  @Roles(Role.USER)
+  @UseGuards(RolesGuard)
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'sewaservice',
+          maxCount: 1,
+        },
+      ],
+      {
+        storage: diskStorage({
+          destination: './images',
+          filename: (req, file, callback) => {
+            console.log(file);
+
+            const filename = file.originalname;
+            const ext = extname(file.originalname);
+            callback(null, `${filename}${ext}`);
+          },
+        }),
+      },
+    ),
+  )
+  uploadFiles(
+    @UploadedFiles()
+    file: {
+      sewaService?: Express.Multer.File[];
+    },
+  ): object {
+    console.log(file);
+    return {
+      message: 'File Upload successful.',
+    };
   }
 
   @Get()

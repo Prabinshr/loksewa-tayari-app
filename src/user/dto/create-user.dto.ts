@@ -33,4 +33,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
   email: string;
+  @ApiProperty()
+  @IsString()
+  image?: string;
 }

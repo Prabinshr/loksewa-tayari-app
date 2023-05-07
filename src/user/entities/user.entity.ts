@@ -21,7 +21,7 @@ export class User {
   @ApiProperty({
     enum: Role,
   })
-  type: Role | null;
+  role: Role | null;
   @ApiProperty({
     type: `string`,
     format: `date-time`,

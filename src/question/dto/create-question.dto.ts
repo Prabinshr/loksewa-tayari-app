@@ -41,5 +41,5 @@ export class CreateQuestionDto {
 
   @ApiProperty()
   @IsNotEmpty()
-  qsn_set_id: number;
+  qsn_set_id: string;
 }

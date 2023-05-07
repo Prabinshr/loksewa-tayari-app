@@ -24,7 +24,7 @@ export class SubServiceService {
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
       return this.prismaService.subService.findUnique({ where: { id: id } });
     } catch (err) {
@@ -32,10 +32,10 @@ export class SubServiceService {
     }
   }
 
-  update(id: number, updateSubServiceDto: UpdateSubServiceDto) {
+  update(id: string, updateSubServiceDto: UpdateSubServiceDto) {
     try {
       return this.prismaService.subService.update({
-        where: { id: id },
+        where: { id },
         data: updateSubServiceDto,
       });
     } catch (err) {
@@ -43,7 +43,7 @@ export class SubServiceService {
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     try {
       return this.prismaService.subService.delete({where: {id: id}});
     } catch (err) {

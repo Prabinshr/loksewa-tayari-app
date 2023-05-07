@@ -34,22 +34,22 @@ export class SewaserviceController {
 
   @Get(':id')
   @ApiOperation({ summary: 'get a sewaservive by id' })
-  findOne(@Param('id') id: number) {
-    return this.sewaserviceService.findOne(+id);
+  findOne(@Param('id') id: string) {
+    return this.sewaserviceService.findOne(id);
   }
 
   @Patch(':id')
   @ApiOperation({ summary: 'update a sewaservive' })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateSewaserviceDto: UpdateSewaserviceDto,
   ) {
-    return this.sewaserviceService.update(+id, updateSewaserviceDto);
+    return this.sewaserviceService.update(id, updateSewaserviceDto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'delete a sewaservive' })
-  remove(@Param('id') id: number) {
-    return this.sewaserviceService.remove(+id);
+  remove(@Param('id') id: string) {
+    return this.sewaserviceService.remove(id);
   }
 }

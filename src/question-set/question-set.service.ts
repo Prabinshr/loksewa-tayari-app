@@ -28,7 +28,7 @@ export class QuestionSetService {
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
       return this.prismaService.questionSet.findUnique({
         where: { id: id },
@@ -41,7 +41,7 @@ export class QuestionSetService {
     }
   }
 
-  update(id: number, updateQuestionSetDto: UpdateQuestionSetDto) {
+  update(id: string, updateQuestionSetDto: UpdateQuestionSetDto) {
     try {
       return this.prismaService.questionSet.update({
         data: updateQuestionSetDto,
@@ -52,7 +52,7 @@ export class QuestionSetService {
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     try {
       return this.prismaService.questionSet.delete({ where: { id: id } });
     } catch (error) {

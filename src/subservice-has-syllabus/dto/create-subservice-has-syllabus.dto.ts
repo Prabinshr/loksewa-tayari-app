@@ -4,8 +4,8 @@ import { IsNotEmpty } from "class-validator";
 export class CreateSubserviceHasSyllabusDto {
   @ApiProperty()
   @IsNotEmpty()
-  service_id: number;
+  service_id: string;
   @ApiProperty()
   @IsNotEmpty()
-  syllabus_sub_structure_id: number;
+  syllabus_sub_structure_id: string;
 }

@@ -28,7 +28,7 @@ export class SubStrTopicService {
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try {
       return this.prismaService.subStrTopic.findUnique({
         where: { id: id },
@@ -41,7 +41,7 @@ export class SubStrTopicService {
     }
   }
 
-  update(id: number, updateSubStrTopicDto: UpdateSubStrTopicDto) {
+  update(id: string, updateSubStrTopicDto: UpdateSubStrTopicDto) {
     try {
       return this.prismaService.subStrTopic.update({
         data: updateSubStrTopicDto,
@@ -52,7 +52,7 @@ export class SubStrTopicService {
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     try {
       return this.prismaService.subStrTopic.delete({ where: { id: id } });
     } catch (err) {

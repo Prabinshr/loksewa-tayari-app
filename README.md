@@ -16,10 +16,17 @@ REFRESH_TOKEN_HASH_SECRET=therefreshtokenhashsecret
 JWT_ACCESS_TOKEN_EXPIRES_IN=15m
 JWT_REFRESH_TOKEN_EXPIRES_IN=7d
 
+# SMTP
+SMTP_HOST="smtp.neptechpal.com"
+SMTP_USER="no-reply@neptechpal.com"
+SMTP_PASS="no-replyloksewa"
+
 BACKEND_URL=http://localhost:3000
 ```
+
 ## Steps to run the server
+
 - `yarn` to install dependencies.
 - Then run `yarn prisma migrate dev` to generate the Prisma Client.
-- `yarn prisma db seed` to seed the database with some initial data.  _<---- This might produce error._
-- `yarn  start:dev` to start the server in __dev__ mode.
+- `yarn prisma db seed` to seed the database with some initial data. _<---- This might produce error._
+- `yarn  start:dev` to start the server in **dev** mode.

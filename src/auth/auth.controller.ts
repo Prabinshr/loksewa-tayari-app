@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Param,
   ParseIntPipe,
@@ -166,5 +167,11 @@ export class AuthController {
     }
     // If the refresh token is valid, generate a new access and refresh token
     return this.authService.generateJWT(currentUser);
+  }
+
+  @Get('profile')
+  @UseGuards(AuthGuard('jwt'))
+  profile(@CurrentUser() currentUser) {
+    return currentUser;
   }
 }

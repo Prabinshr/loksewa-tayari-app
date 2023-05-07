@@ -16,25 +16,29 @@ export class QuestionSetController {
   constructor(private readonly questionSetService: QuestionSetService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Create a new Question-Set' })
   create(@Body() createQuestionSetDto: CreateQuestionSetDto) {
     return this.questionSetService.create(createQuestionSetDto);
   }
 
   @Get()
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get all Question-Sets' })
   findAll() {
     return this.questionSetService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get a single Question-Set by id' })
   findOne(@Param('id') id: string) {
     return this.questionSetService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Update a Question-Set by id' })
   update(
     @Param('id') id: string,
@@ -44,6 +48,7 @@ export class QuestionSetController {
   }
 
   @Delete(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Delete a Question-Set by id' })
   remove(@Param('id') id: string) {
     return this.questionSetService.remove(id);

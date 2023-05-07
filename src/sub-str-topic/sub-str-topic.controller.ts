@@ -25,25 +25,29 @@ export class SubStrTopicController {
   constructor(private readonly subStrTopicService: SubStrTopicService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Create a new Sub-structure-topic' })
   create(@Body() createSubStrTopicDto: CreateSubStrTopicDto) {
     return this.subStrTopicService.create(createSubStrTopicDto);
   }
 
   @Get()
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get all Sub-structure-topics' })
   findAll() {
     return this.subStrTopicService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Find a Sub-structure-topic by id' })
   findOne(@Param('id') id: string) {
     return this.subStrTopicService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Update a Sub-structure-topic by id' })
   update(
     @Param('id') id: string,
@@ -53,6 +57,7 @@ export class SubStrTopicController {
   }
 
   @Delete(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Delete a Sub-structure-topic by id' })
   remove(@Param('id') id: string) {
     return this.subStrTopicService.remove(id);

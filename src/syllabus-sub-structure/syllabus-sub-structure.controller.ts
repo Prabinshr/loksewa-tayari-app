@@ -16,7 +16,8 @@ export class SyllabusSubStructureController {
     private readonly syllabusSubStructureService: SyllabusSubStructureService,
   ) {}
 
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Post()
   @ApiOperation({ summary: 'Create a new syllabus-sub-structure' })
   create(@Body() createSyllabusSubStructureDto: CreateSyllabusSubStructureDto) {
@@ -26,18 +27,21 @@ export class SyllabusSubStructureController {
   }
 
   @Get()
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get a syllabus-sub-structure' })
   findAll() {
     return this.syllabusSubStructureService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Create a syllabus-sub-structure by id' })
   findOne(@Param('id') id: string) {
     return this.syllabusSubStructureService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Update a syllabus-sub-structure by id' })
   update(
     @Param('id') id: string,
@@ -50,6 +54,7 @@ export class SyllabusSubStructureController {
   }
 
   @Delete(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Delete a syllabus-sub-structure by id' })
   remove(@Param('id') id: string) {
     return this.syllabusSubStructureService.remove(id);

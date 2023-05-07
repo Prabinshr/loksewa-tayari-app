@@ -22,7 +22,8 @@ export class CouponController {
   // }
 
   @Post()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   async createCoupon(
     @Body('discountValue') discountValue: number,
     @Body('maxUses') maxUses: number,
@@ -45,6 +46,7 @@ export class CouponController {
     await this.couponService.applyCoupon(transactionId, couponCode);
   }
   @Get()
+  @Roles(Role.USER)
   findAll() {
     return this.couponService.findAll();
   }

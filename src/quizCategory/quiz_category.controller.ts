@@ -18,31 +18,33 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 @ApiTags('Quiz Category')
 @Controller('quiz-category')
 @ApiBearerAuth('jwt')
-// @UseGuards(RolesGuard)
 @UseGuards(RolesGuard)
 export class QuizCategoryController {
   constructor(private readonly quizCategoryService: QuizCategoryService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   create(@Body() createQuizCategoryDto: CreateQuizCategoryDto) {
     return this.quizCategoryService.create(createQuizCategoryDto);
   }
 
   @Get()
-  @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
+  // @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
+  @Roles(Role.USER)
   findAll() {
     return this.quizCategoryService.findAll();
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
+  // @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
+  @Roles(Role.USER)
   findOne(@Param('id') id: string) {
     return this.quizCategoryService.findOne(id);
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   update(
     @Param('id') id: string,
     @Body() updateQuizCategoryDto: UpdateQuizCategoryDto,
@@ -51,7 +53,8 @@ export class QuizCategoryController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   remove(@Param('id') id: string) {
     return this.quizCategoryService.remove(id);
   }

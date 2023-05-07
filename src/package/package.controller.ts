@@ -22,16 +22,18 @@ import { Role } from '@prisma/client';
 @ApiBearerAuth('jwt')
 @Controller('user')
 @UseGuards(RolesGuard)
-@Roles(Role.ADMIN)
+// @Roles(Role.ADMIN)
 export class PackageController {
   constructor(private readonly packageService: PackageService) {}
 
   @Post()
+  @Roles(Role.USER)
   create(@Body() createPackageDto: CreatePackageDto) {
     return this.packageService.create(createPackageDto);
   }
 
-   @Post('/apply')
+  @Post('/apply')
+  @Roles(Role.USER)
   async applyPackage(
     @Body('transactionId') transactionId: string,
     @Body('package_title') package_title: string,
@@ -40,6 +42,7 @@ export class PackageController {
   }
 
   @Get()
+  @Roles(Role.USER)
   findAll() {
     return this.packageService.findAll();
   }

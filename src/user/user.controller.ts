@@ -23,7 +23,9 @@ import { User } from './entities';
 @ApiBearerAuth('jwt')
 @Controller('user')
 @UseGuards(RolesGuard)
-@Roles(Role.ADMIN)
+// @Roles(Role.ADMIN)
+@Roles(Role.USER)
+
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

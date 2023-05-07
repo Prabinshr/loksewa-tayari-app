@@ -20,11 +20,12 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 @ApiTags('Comment')
 @ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
-@Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+// @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+@Roles(Role.USER)
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
-  
+
   @Post(':postId')
   @ApiOperation({ summary: 'Comment On Post' })
   create(

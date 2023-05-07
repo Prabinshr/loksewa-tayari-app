@@ -24,7 +24,9 @@ export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  // @ApiBearerAuth('jwt')
+  // @UseGuards(RolesGuard)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Create new question' })
   create(@Body() createQuestionDto: CreateQuestionDto) {
     // console.log(createQuestionDto);
@@ -32,14 +34,16 @@ export class QuestionController {
   }
 
   @Get()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get all questions' })
   findAll() {
     return this.questionService.findAll();
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+  @Roles(Role.USER)
+  // @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
   @ApiOperation({ summary: 'Get a question by id' })
   findOne(@Param('id') id: string, @CurrentUser() user: User) {
     const quizQuestion = this.questionService.findOne(id);
@@ -49,7 +53,8 @@ export class QuestionController {
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Update a question' })
   update(
     @Param('id') id: string,
@@ -59,7 +64,8 @@ export class QuestionController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Delete a question' })
   remove(@Param('id') id: string) {
     return this.questionService.remove(id);

@@ -14,7 +14,8 @@ import { Role } from '@prisma/client';
 export class SewaserviceController {
   constructor(private readonly sewaserviceService: SewaserviceService) {}
 
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Post()
   @ApiOperation({ summary: 'Create a new sewaservive' })
   // @ApiResponse({
@@ -26,18 +27,21 @@ export class SewaserviceController {
   }
 
   @Get()
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'get all sewaservive' })
   findAll() {
     return this.sewaserviceService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'get a sewaservive by id' })
   findOne(@Param('id') id: string) {
     return this.sewaserviceService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'update a sewaservive' })
   update(
     @Param('id') id: string,
@@ -47,6 +51,7 @@ export class SewaserviceController {
   }
 
   @Delete(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'delete a sewaservive' })
   remove(@Param('id') id: string) {
     return this.sewaserviceService.remove(id);

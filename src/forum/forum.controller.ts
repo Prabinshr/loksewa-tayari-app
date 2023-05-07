@@ -26,35 +26,40 @@ export class ForumController {
   constructor(private readonly forumService: ForumService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Create New Forum' })
   create(@Body() createForumDto: CreateForumDto) {
     return this.forumService.create(createForumDto);
   }
 
   @Get()
-  @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+  // @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get All Forums' })
   findAll() {
     return this.forumService.findAll();
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+  // @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get Forum By Forum ID' })
   findOne(@Param('id') id: string) {
     return this.forumService.findOne(id);
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Update Forum' })
   update(@Param('id') id: string, @Body() updateForumDto: UpdateForumDto) {
     return this.forumService.update(id, updateForumDto);
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Delete Forum' })
   remove(@Param('id') id: string) {
     return this.forumService.remove(id);

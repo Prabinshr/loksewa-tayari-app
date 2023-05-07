@@ -6,15 +6,15 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { UserProgressService } from './progress.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 
 @ApiTags('User Progress')
+@ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
-
 @Controller('user-progress')
 export class UserProgressController {
   constructor(private readonly userProgressService: UserProgressService) {}
@@ -32,15 +32,17 @@ export class UserProgressController {
   //     user_id,
   //   );
   // }
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Get()
   findAll() {
     return this.userProgressService.findAll();
   }
 
-  @Roles(Role.SUBSCRIBED_USER, Role.ADMIN)
+  // @Roles(Role.SUBSCRIBED_USER, Role.ADMIN)
+  @Roles(Role.USER)
   @Get(':id')
-  findOne(@Param('id') id: string, @CurrentUser() user: User) {    
+  findOne(@Param('id') id: string, @CurrentUser() user: User) {
     if (user.role === Role.ADMIN || user.id === id) {
       return this.userProgressService.findOne(id);
     }

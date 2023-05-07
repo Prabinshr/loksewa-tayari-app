@@ -23,7 +23,8 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 @ApiTags('Post')
 @ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
-@Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+// @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
+@Roles(Role.USER)
 @Controller('post')
 export class PostController {
   constructor(private postService: PostService) {}

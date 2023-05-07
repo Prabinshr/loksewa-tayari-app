@@ -28,13 +28,15 @@ export class TransactionController {
   // }
 
   @Get()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   findAll() {
     return this.transactionService.findAll();
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   findOne(@Param('id') id: string) {
     return this.transactionService.findOne(id);
   }

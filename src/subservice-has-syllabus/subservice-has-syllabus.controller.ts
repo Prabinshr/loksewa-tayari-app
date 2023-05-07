@@ -16,7 +16,8 @@ export class SubserviceHasSyllabusController {
     private readonly subserviceHasSyllabusService: SubserviceHasSyllabusService,
   ) {}
 
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Post()
   create(
     @Body() createSubserviceHasSyllabusDto: CreateSubserviceHasSyllabusDto,
@@ -27,16 +28,19 @@ export class SubserviceHasSyllabusController {
   }
 
   @Get()
+  @Roles(Role.USER)
   findAll() {
     return this.subserviceHasSyllabusService.findAll();
   }
 
   @Get(':service_id')
+  @Roles(Role.USER)
   findOne(@Param('service_id') service_id: string) {
     return this.subserviceHasSyllabusService.findOne(service_id);
   }
 
   @Patch(':service_id')
+  @Roles(Role.USER)
   update(
     @Param('service_id') service_id: string,
     @Body() updateSubserviceHasSyllabusDto: UpdateSubserviceHasSyllabusDto,
@@ -48,6 +52,7 @@ export class SubserviceHasSyllabusController {
   }
 
   @Delete(':service_id')
+  @Roles(Role.USER)
   remove(@Param('service_id') service_id: string) {
     return this.subserviceHasSyllabusService.remove(service_id);
   }

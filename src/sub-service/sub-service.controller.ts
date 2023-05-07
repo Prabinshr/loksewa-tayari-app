@@ -14,7 +14,8 @@ import { Role } from '@prisma/client';
 export class SubServiceController {
   constructor(private readonly subServiceService: SubServiceService) {}
 
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Post()
   @ApiOperation({ summary: 'Create a new SubService' })
   create(@Body() createSubServiceDto: CreateSubServiceDto) {
@@ -22,18 +23,21 @@ export class SubServiceController {
   }
 
   @Get()
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get all SubServices' })
   findAll() {
     return this.subServiceService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get a SubService by id' })
   findOne(@Param('id') id: string) {
     return this.subServiceService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Update a SubService' })
   update(
     @Param('id') id: string,
@@ -43,6 +47,7 @@ export class SubServiceController {
   }
 
   @Delete(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Delete a SubService' })
   remove(@Param('id') id: string) {
     return this.subServiceService.remove(id);

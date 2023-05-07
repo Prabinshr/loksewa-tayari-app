@@ -28,22 +28,26 @@ export class QuestionCategoryController {
   ) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   create(@Body() createQuestionCategoryDto: CreateQuestionCategoryDto) {
     return this.questionCategoryService.create(createQuestionCategoryDto);
   }
 
   @Get()
+  @Roles(Role.USER)
   findAll() {
     return this.questionCategoryService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.USER)
   findOne(@Param('id') id: string) {
     return this.questionCategoryService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(Role.USER)
   update(
     @Param('id') id: string,
     @Body() updateQuestionCategoryDto: UpdateQuestionCategoryDto,
@@ -52,6 +56,7 @@ export class QuestionCategoryController {
   }
 
   @Delete(':id')
+  @Roles(Role.USER)
   remove(@Param('id') id: string) {
     return this.questionCategoryService.remove(id);
   }

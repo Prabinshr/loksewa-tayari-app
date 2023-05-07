@@ -13,7 +13,6 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 @ApiBearerAuth('jwt')
 @Controller('user')
 @UseGuards(RolesGuard)
-@Roles(Role.ADMIN)
 export class CouponController {
   constructor(private readonly couponService: CouponService) {}
 
@@ -23,16 +22,22 @@ export class CouponController {
   // }
 
   @Post()
+  @Roles(Role.ADMIN)
   async createCoupon(
     @Body('discountValue') discountValue: number,
     @Body('maxUses') maxUses: number,
     @Body('usedCount') usedCount: number,
   ): Promise<{ code: string }> {
-    const code = await this.couponService.createCoupon(discountValue,maxUses,usedCount);
+    const code = await this.couponService.createCoupon(
+      discountValue,
+      maxUses,
+      usedCount,
+    );
     return { code };
   }
 
   @Post('/apply')
+  @Roles(Role.USER)
   async applyCoupon(
     @Body('transactionId') transactionId: string,
     @Body('couponCode') couponCode: string,

@@ -18,12 +18,14 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 
 @ApiTags('Question')
 @Controller('question')
-@ApiBearerAuth('jwt')
-@UseGuards(RolesGuard)
+// @ApiBearerAuth('jwt')
+// @UseGuards(RolesGuard)
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Post()
+  @ApiBearerAuth('jwt')
+  @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Create new question' })
   create(@Body() createQuestionDto: CreateQuestionDto) {
@@ -32,7 +34,7 @@ export class QuestionController {
   }
 
   @Get()
-  @Roles(Role.ADMIN)
+  // @Roles(Role.USER)
   @ApiOperation({ summary: 'Get all questions' })
   findAll() {
     return this.questionService.findAll();

@@ -26,6 +26,7 @@ export class SewaserviceController {
   }
 
   @Get()
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'get all sewaservive' })
   findAll() {
     return this.sewaserviceService.findAll();

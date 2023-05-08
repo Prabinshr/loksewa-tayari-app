@@ -9,10 +9,21 @@ export class SubServiceService {
   create(createSubServiceDto: CreateSubServiceDto) {
     try {
       return this.prismaService.subService.create({
-        data: createSubServiceDto
-      })
+        data: createSubServiceDto,
+      });
     } catch (err) {
       throw new HttpException('Cannot create new sub service', 404);
+    }
+  }
+
+  async uploadSubServiceImage(
+    id: string,
+    subServiceImage: Express.Multer.File,
+  ) {
+    try {
+      console.log(subServiceImage);
+    } catch (err) {
+      throw new HttpException(err, 500);
     }
   }
 
@@ -45,9 +56,9 @@ export class SubServiceService {
 
   remove(id: string) {
     try {
-      return this.prismaService.subService.delete({where: {id: id}});
+      return this.prismaService.subService.delete({ where: { id: id } });
     } catch (err) {
-      throw new HttpException('Cannot delete',404)
+      throw new HttpException('Cannot delete', 404);
     }
-}
+  }
 }

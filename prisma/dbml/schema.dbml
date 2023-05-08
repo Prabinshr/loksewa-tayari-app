@@ -13,6 +13,7 @@ Table User {
   first_name String [not null]
   middle_name String
   last_name String [not null]
+  image String
   onlineStatus OnlineStatus [default: 'OFFLINE']
   password String [not null, note: '@DtoEntityHidden']
   email String [unique, not null]

@@ -47,6 +47,7 @@ model User {
   first_name   String
   middle_name  String?
   last_name    String
+  image        String?
   onlineStatus OnlineStatus?     @default(OFFLINE)
   /// @DtoEntityHidden
   password     String

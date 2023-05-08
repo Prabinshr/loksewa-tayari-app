@@ -14,6 +14,19 @@ export class SyllabusSubStructureService {
     }
   }
 
+
+    async uploadSyllabusSubStructureImage(
+    id: string,
+    syllabusSubStructureImage: Express.Multer.File,
+  ) {
+    try {
+      console.log(syllabusSubStructureImage);
+      // const uploadImage = await this.prisma.sewaService.update({where:{id},data:{image:`/land/image/${String{landImage}}`}})
+    } catch (err) {
+      throw new HttpException(err, 500);
+    }
+  }
+
   findAll() {
     try {
       return this.prismaService.syllabusSubStructure.findMany({

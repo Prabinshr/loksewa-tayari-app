@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { SubStrTopicService } from './sub-str-topic.service';
 import { CreateSubStrTopicDto } from './dto/create-sub-str-topic.dto';
@@ -16,6 +18,9 @@ import { LocalStrategy } from 'src/auth/strategies/local.strategy';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
 
 @ApiTags('subStrTopic')
 @ApiBearerAuth('jwt')
@@ -30,6 +35,44 @@ export class SubStrTopicController {
   @ApiOperation({ summary: 'Create a new Sub-structure-topic' })
   create(@Body() createSubStrTopicDto: CreateSubStrTopicDto) {
     return this.subStrTopicService.create(createSubStrTopicDto);
+  }
+
+  //upload image
+  @Post('upload')
+  @Roles(Role.USER)
+  @UseGuards(RolesGuard)
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'substrtopic',
+          maxCount: 1,
+        },
+      ],
+      {
+        storage: diskStorage({
+          destination: './images',
+          filename: (req, file, callback) => {
+            console.log(file);
+
+            const filename = file.originalname;
+            const ext = extname(file.originalname);
+            callback(null, `${filename}${ext}`);
+          },
+        }),
+      },
+    ),
+  )
+  uploadFiles(
+    @UploadedFiles()
+    file: {
+      substrtopic?: Express.Multer.File[];
+    },
+  ): object {
+    console.log(file);
+    return {
+      message: 'File Upload successful.',
+    };
   }
 
   @Get()

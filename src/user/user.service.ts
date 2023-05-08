@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { Pagination } from 'src/interface/Pagination.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,6 +6,9 @@ import { OTPType, OnlineStatus, Role } from '@prisma/client';
 import * as argon from 'argon2';
 import { OtpService } from 'src/otp/otp.service';
 import { AuthService } from 'src/auth/auth.service';
+import { User } from './entities';
+import { sendOTPEmail } from './email/otp';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UserService {
@@ -13,6 +16,7 @@ export class UserService {
     private prisma: PrismaService,
     private readonly otpService: OtpService,
     private readonly authService: AuthService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async changeRole(id: string, role: Role) {
@@ -28,6 +32,7 @@ export class UserService {
       return user;
     } catch (error) {}
   }
+
   async updateOnlineStatus(id: string, status: OnlineStatus) {
     try {
       const user = await this.prisma.user.update({
@@ -43,6 +48,24 @@ export class UserService {
       throw new HttpException('User not found', 404);
     }
   }
+
+  async sendOTPEmail(email: string, first_name: string, code: string) {
+    try {
+      await this.mailerService.sendMail({
+        to: email,
+        from: 'NepTechPal <no-reply@neptechpal.com>',
+        subject: 'OTP',
+        text: 'OTP Email Verification',
+        html: `${sendOTPEmail(first_name, code)}`,
+      });
+    } catch (e) {
+      throw new HttpException(
+        'Something Went Wrong Sending Email',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async create(createUserDto: CreateUserDto) {
     // Check if the username contains spaces or any special characters
     if (createUserDto.username.includes(' ')) {
@@ -59,9 +82,12 @@ export class UserService {
         ],
       },
     });
+
     if (user) throw new HttpException('User already exists', 400);
+
     const hashedPassword = await argon.hash(createUserDto.password);
     createUserDto.password = hashedPassword;
+
     const { password, ...newUser } = await this.prisma.user.create({
       data: {
         email: createUserDto.email.toLowerCase(),
@@ -71,10 +97,18 @@ export class UserService {
         ...createUserDto,
       },
     });
+
     if (newUser) {
-      await this.otpService.createOtp(newUser.id, OTPType.EMAIL_VERIFICATION);
+      const { code, ...OTP } = await this.otpService.createOtp(
+        newUser.id,
+        OTPType.EMAIL_VERIFICATION,
+      );
       // TODO : Mechanism to send OTP to user by EMAIL or PHONE.
+
+      // Sending OTP In Email
+      await this.sendOTPEmail(newUser.email, newUser.first_name, code);
     }
+
     // Generate JWT tokens
     const userTokens = await this.authService.generateJWT(newUser);
 
@@ -164,6 +198,7 @@ export class UserService {
     const { password, ...withoutPassword } = user;
     return withoutPassword;
   }
+
   async findByUsername(username: string) {
     try {
       // returns a single user without the password
@@ -184,6 +219,7 @@ export class UserService {
       });
     }
   }
+
   async findByEmail(email: string) {
     try {
       // returns a single user without the password
@@ -213,6 +249,7 @@ export class UserService {
     const { password, ...withoutPassword } = updatedUser;
     return withoutPassword;
   }
+
   async getOnlineUsers() {
     try {
       const users = await this.prisma.user.findMany({
@@ -228,6 +265,25 @@ export class UserService {
     } catch (error) {
       throw new HttpException('User not found', 404);
     }
+  }
+
+  async verifyUser(payload: Partial<User>) {
+    // Checking if user is verified or not
+    const user = this.prisma.user.findFirst({
+      where: {
+        id: payload.id,
+        verified: true,
+      },
+    });
+
+    // If user not verified
+    if (!user)
+      throw new HttpException(
+        'Email Not Verified! Please Verify Your Email!',
+        HttpStatus.UNAUTHORIZED,
+      );
+
+    return true;
   }
 
   remove(id: string) {

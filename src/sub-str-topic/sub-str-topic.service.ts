@@ -16,6 +16,16 @@ export class SubStrTopicService {
     }
   }
 
+  async uploadSubStrTopicImage(
+    id: string,
+    subStrTopicImage: Express.Multer.File,
+  ) {
+    try {
+      console.log(subStrTopicImage);
+    } catch (err) {
+      throw new HttpException(err, 500);
+    }
+  }
   findAll() {
     try {
       return this.prismaService.subStrTopic.findMany({

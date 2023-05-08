@@ -16,6 +16,17 @@ export class SyllabusStructureService {
     }
   }
 
+  async uploadSyllabusStructureImage(
+    id: string,
+    syllabusStructureImage: Express.Multer.File,
+  ) {
+    try {
+      console.log(syllabusStructureImage);
+    } catch (err) {
+      throw new HttpException(err, 500);
+    }
+  }
+
   findAll() {
     try {
       return this.prismaService.syllabusStructure.findMany({

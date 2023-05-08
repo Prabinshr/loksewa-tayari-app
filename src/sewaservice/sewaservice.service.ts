@@ -7,27 +7,36 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class SewaserviceService {
   constructor(private prismaService: PrismaService) {}
   create(createSewaserviceDto: CreateSewaserviceDto) {
-    try{
- return this.prismaService.sewaService.create({
-      data: createSewaserviceDto,
-    });
+    try {
+      return this.prismaService.sewaService.create({
+        data: createSewaserviceDto,
+      });
+    } catch (error) {
+      throw new HttpException('SewaService creation failed', 404);
     }
-    catch(error){
-      throw new HttpException('SewaService creation failed',404)
-    }
-   
   }
 
+  async uploadSewaServiceImage(id: string, sewaServiceImage: Express.Multer.File) {
+    try {
+      console.log(sewaServiceImage);
+      // const uploadImage = await this.prisma.sewaService.update({where:{id},data:{image:`/land/image/${String{landImage}}`}})
+    } catch (err) {
+      throw new HttpException(err, 500);
+    }
+  }
+  
   findAll() {
     // return this.prismaService.sewaService.findMany()
     try {
-      return this.prismaService.sewaService.findMany({include: {
-        subServices: {
-          include: {
-            subserviceHasSyllabus: true,
-          }
-        }
-      }});
+      return this.prismaService.sewaService.findMany({
+        include: {
+          subServices: {
+            include: {
+              subserviceHasSyllabus: true,
+            },
+          },
+        },
+      });
     } catch (error) {
       throw new HttpException('Cannot find SewaServices', 404);
     }

@@ -31,7 +31,7 @@ const emailTemplate = `
     </html>
 `;
 
-export const sendOTPEmail = (name: string, code: string): string => {
+export const sendOTPEmailHtml = (name: string, code: string): string => {
   const html = emailTemplate.replace('{name}', name).replace('{code}', code);
 
   return html;

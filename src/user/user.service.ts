@@ -7,7 +7,7 @@ import * as argon from 'argon2';
 import { OtpService } from 'src/otp/otp.service';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from './entities';
-import { sendOTPEmail } from './email/otp';
+import { sendOTPEmailHtml } from './email/otp';
 import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
@@ -56,13 +56,21 @@ export class UserService {
         from: 'NepTechPal <no-reply@neptechpal.com>',
         subject: 'OTP',
         text: 'OTP Email Verification',
-        html: `${sendOTPEmail(first_name, code)}`,
+        html: `${sendOTPEmailHtml(first_name, code)}`,
       });
     } catch (e) {
       throw new HttpException(
         'Something Went Wrong Sending Email',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
+    }
+  }
+
+  async uploadUserImage(id: string, userImage: Express.Multer.File) {
+    try {
+      console.log(userImage);
+    } catch (err) {
+      throw new HttpException(err, 500);
     }
   }
 

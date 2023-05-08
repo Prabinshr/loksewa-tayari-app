@@ -10,6 +10,8 @@ import {
   Query,
   BadRequestException,
   UseGuards,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
@@ -18,6 +20,9 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
 import { User } from './entities';
+import { extname } from 'path';
+import { diskStorage } from 'multer';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('User')
 @ApiBearerAuth('jwt')
@@ -25,7 +30,6 @@ import { User } from './entities';
 @UseGuards(RolesGuard)
 // @Roles(Role.ADMIN)
 @Roles(Role.USER)
-
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -38,6 +42,44 @@ export class UserController {
   @ApiCreatedResponse({ type: User })
   async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
+  }
+
+  //upload image
+  @Post('upload')
+  @Roles(Role.USER)
+  @UseGuards(RolesGuard)
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        {
+          name: 'user',
+          maxCount: 1,
+        },
+      ],
+      {
+        storage: diskStorage({
+          destination: './images',
+          filename: (req, file, callback) => {
+            console.log(file);
+
+            const filename = file.originalname;
+            const ext = extname(file.originalname);
+            callback(null, `${filename}${ext}`);
+          },
+        }),
+      },
+    ),
+  )
+  uploadFiles(
+    @UploadedFiles()
+    file: {
+      user?: Express.Multer.File[];
+    },
+  ): object {
+    console.log(file);
+    return {
+      message: 'File Upload successful.',
+    };
   }
 
   @Get()

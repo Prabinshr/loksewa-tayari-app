@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString, IsUrl } from "class-validator";
 
 export class CreateSubStrTopicDto {
   @ApiProperty()
@@ -15,5 +15,7 @@ export class CreateSubStrTopicDto {
   description?: string;
 
   @ApiProperty()
+  @IsString()
+  @IsUrl()
   image?: string;
 }

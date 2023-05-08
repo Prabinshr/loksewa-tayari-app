@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { STATUS } from '@prisma/client';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class CreateSewaserviceDto {
   @ApiProperty()
@@ -13,5 +13,6 @@ export class CreateSewaserviceDto {
   status: STATUS;
   @ApiProperty()
   @IsString()
+  @IsUrl()
   image?: string;
 }

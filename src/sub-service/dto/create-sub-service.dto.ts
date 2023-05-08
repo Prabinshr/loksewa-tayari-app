@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { STATUS } from '@prisma/client';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class CreateSubServiceDto {
   @ApiProperty()
@@ -16,6 +16,8 @@ export class CreateSubServiceDto {
   description?: string;
 
   @ApiProperty()
+  @IsUrl()
+  @IsString()
   image?: string;
 
   @ApiProperty()

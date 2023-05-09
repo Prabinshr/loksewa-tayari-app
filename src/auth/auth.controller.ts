@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
   ValidationPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import * as argon from 'argon2';
@@ -30,6 +31,7 @@ import { CreateUserDto } from 'src/user/dto';
 import { Public } from 'src/decorators/public.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ITokens } from './interfaces/tokens.interface';
+import { OTPType } from '@prisma/client';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -136,6 +138,32 @@ export class AuthController {
     return this.authService.validateUser(currentUser);
   }
 
+  @Post('resend-otp')
+  @ApiBearerAuth('jwt')
+  @ApiOperation({ summary: 'Resend OTP' })
+  async resendOTP(@CurrentUser() currentUser): Promise<{ message: string }> {
+    // If User Is VERIFIED USER then cannot resend OTP
+    if (currentUser.verified)
+      throw new BadRequestException(
+        "You're already a Verified User! Cannot Send OTP!",
+      );
+
+    const { code, ...OTP } = await this.otpService.createOtp(
+      currentUser.id,
+      OTPType.EMAIL_VERIFICATION,
+    );
+
+    // Send OTP In Email
+    await this.userService.sendOTPEmail(
+      currentUser.email,
+      currentUser.first_name,
+      code,
+    );
+
+    return {
+      message: 'Your OTP code has been sent to your email',
+    };
+  }
   /**
    * Endpoint for refreshing the token. It takes the user from the request and generates a
    * new refresh and access token.

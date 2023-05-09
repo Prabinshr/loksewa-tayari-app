@@ -70,6 +70,6 @@ async function bootstrap() {
     );
     await AsyncApiModule.setup('/docs/socket', app, asyncapiDocument);
   }
-  await app.listen(process.env.PORT || 3000);
+  await app.listen(process.env.PORT || 4000);
 }
 bootstrap();

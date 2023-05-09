@@ -28,6 +28,7 @@ Table User {
   hash refreshTokenHash
   posts Post [not null]
   comment Comments [not null]
+  subServices SubService [not null]
 }
 
 Table ResetPassword {
@@ -110,6 +111,7 @@ Table Package {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   transactions Transaction [not null]
+  subService SubService [not null]
 }
 
 Table Transaction {
@@ -164,9 +166,13 @@ Table SubService {
   sewaService_id String [not null]
   service SewaService [not null]
   title String [not null]
+  user_id String [not null]
+  user User [not null]
   description String
   image String
   status STATUS [not null]
+  package_title String
+  package Package
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime [not null]
   subserviceHasSyllabus SubserviceHasSyllabus [not null]
@@ -303,6 +309,10 @@ Ref: Transaction.user_id > User.id [delete: Cascade]
 Ref: OTP.user_id > User.id [delete: Cascade]
 
 Ref: SubService.sewaService_id > SewaService.id
+
+Ref: SubService.user_id > User.id
+
+Ref: SubService.package_title > Package.title
 
 Ref: SubserviceHasSyllabus.syllabus_sub_structure_id > SyllabusSubStructure.id
 

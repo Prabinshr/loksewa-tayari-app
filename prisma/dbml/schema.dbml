@@ -19,7 +19,6 @@ Table User {
   email String [unique, not null]
   verified Boolean [default: false]
   role Role [default: 'USER', note: '@DtoCreateOptional']
-  subserviceTitle String [unique]
   createdAt DateTime [default: `now()`, not null, note: '@DtoCreateOptional
 @DtoReadOnly']
   updatedAt DateTime [not null, note: '@DtoReadOnly']
@@ -167,12 +166,13 @@ Table SubService {
   sewaService_id String [not null]
   service SewaService [not null]
   title String [not null]
+  user_id String [not null]
+  user User [not null]
   description String
   image String
   status STATUS [not null]
   package_title String
   package Package
-  user User [not null]
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime [not null]
   subserviceHasSyllabus SubserviceHasSyllabus [not null]
@@ -310,9 +310,9 @@ Ref: OTP.user_id > User.id [delete: Cascade]
 
 Ref: SubService.sewaService_id > SewaService.id
 
-Ref: SubService.package_title > Package.title
+Ref: SubService.user_id > User.id
 
-Ref: SubService.title > User.subserviceTitle
+Ref: SubService.package_title > Package.title
 
 Ref: SubserviceHasSyllabus.syllabus_sub_structure_id > SyllabusSubStructure.id
 

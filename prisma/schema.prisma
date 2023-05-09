@@ -56,7 +56,6 @@ model User {
   /// @DtoCreateOptional
   role         Role?             @default(USER)
 
-  subserviceTitle String? @unique
   /// @DtoCreateOptional
   /// @DtoReadOnly
   createdAt    DateTime          @default(now()) @map("created_at")
@@ -249,7 +248,12 @@ model SubService {
   id             String      @id @default(cuid())
   sewaService_id String
   service        SewaService @relation(fields: [sewaService_id], references: [id])
+
   title          String
+
+  user_id String
+  user User @relation(fields: [user_id], references: [id])
+
   description    String?
   image          String?
   status         STATUS
@@ -257,7 +261,6 @@ model SubService {
   package_title  String?
   package Package? @relation(fields: [package_title], references: [title])
 
-  user User @relation(fields: [title], references: [subserviceTitle])
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt()
 

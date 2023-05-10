@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { QuizCategoryService } from './quiz_category.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateQuizCategoryDto, UpdateQuizCategoryDto } from './dto';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
@@ -23,12 +23,14 @@ export class QuizCategoryController {
   constructor(private readonly quizCategoryService: QuizCategoryService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create quiz-category.' })
   @Roles(Role.USER)
   create(@Body() createQuizCategoryDto: CreateQuizCategoryDto) {
     return this.quizCategoryService.create(createQuizCategoryDto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get quiz-categories.' })
   // @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
   @Roles(Role.USER)
   findAll() {
@@ -36,6 +38,7 @@ export class QuizCategoryController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get quiz-category by id.' })
   // @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
   @Roles(Role.USER)
   findOne(@Param('id') id: string) {
@@ -43,6 +46,7 @@ export class QuizCategoryController {
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update quiz-category by id.' })
   // @Roles(Role.ADMIN)
   @Roles(Role.USER)
   update(
@@ -53,6 +57,7 @@ export class QuizCategoryController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete quiz-category by id.' })
   // @Roles(Role.ADMIN)
   @Roles(Role.USER)
   remove(@Param('id') id: string) {

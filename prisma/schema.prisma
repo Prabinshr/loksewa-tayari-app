@@ -42,19 +42,20 @@ enum OnlineStatus {
 }
 
 model User {
-  id           String            @id @default(cuid())
-  username     String            @unique
+  id           String        @id @default(cuid())
+  username     String        @unique
   first_name   String
   middle_name  String?
   last_name    String
   image        String?
-  onlineStatus OnlineStatus?     @default(OFFLINE)
+  onlineStatus OnlineStatus? @default(OFFLINE)
   /// @DtoEntityHidden
   password     String
-  email        String            @unique
-  verified     Boolean?          @default(false)
+  email        String        @unique
+  verified     Boolean?      @default(false)
   /// @DtoCreateOptional
-  role         Role?             @default(USER)
+  role         Role?         @default(USER)
+
   /// @DtoCreateOptional
   /// @DtoReadOnly
   createdAt    DateTime          @default(now()) @map("created_at")
@@ -67,11 +68,9 @@ model User {
   otps         OTP[]
   hash         refreshTokenHash?
 
-  posts   Post[]
-  comment Comments[]
-
-  @@index([username])
-  @@index([email])
+  posts       Post[]
+  comment     Comments[]
+  subServices SubService[]
 }
 
 model ResetPassword {
@@ -170,13 +169,6 @@ model User_Progress {
   user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-// model Package{
-// title
-// desc
-// amount
-// sub days
-// }
-
 model Package {
   id               String @id @default(cuid())
   title            String @unique
@@ -188,6 +180,7 @@ model Package {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   transactions Transaction[]
+  subService   SubService[]
 }
 
 model Transaction {
@@ -222,17 +215,6 @@ model Coupon {
 
   transactions Transaction[]
 }
-
-// model Coupon {
-//   id            String   @id @default(cuid())
-//   code          String   @unique
-//   discountValue      Float
-//   expiration    DateTime
-//   maxUses       Int
-//   usedCount     Int     @default(0)
-//   createdAt     DateTime @default(now()) @map("created_at")
-//   updatedAt     DateTime @updatedAt @map("updated_at")
-// }
 
 enum OTPType {
   EMAIL_VERIFICATION
@@ -269,10 +251,18 @@ model SubService {
   id             String      @id @default(cuid())
   sewaService_id String
   service        SewaService @relation(fields: [sewaService_id], references: [id])
-  title          String
-  description    String?
-  image          String?
-  status         STATUS
+
+  title String
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  description String?
+  image       String?
+  status      STATUS
+
+  package_title String?
+  package       Package? @relation(fields: [package_title], references: [title])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt()

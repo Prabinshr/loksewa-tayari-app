@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
 
 export class CreateSyllabusStructureDto {
   @ApiProperty()
@@ -7,9 +7,11 @@ export class CreateSyllabusStructureDto {
   @IsString()
   title: string;
   @ApiProperty()
+  @IsOptional()
   description?: string;
   @ApiProperty()
   @IsUrl()
   @IsString()
+  @IsOptional()
   image?: string;
 }

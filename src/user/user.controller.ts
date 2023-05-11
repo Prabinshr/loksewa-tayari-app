@@ -14,7 +14,12 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserDto, UpdateUserDto } from './dto';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
@@ -34,11 +39,13 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Patch(':id/role')
+  @ApiOperation({ summary: 'Update user role by id.' })
   changeRole(@Param('id') id: string, @Body('role') role: Role) {
     return this.userService.changeRole(id, role);
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create new user.' })
   @ApiCreatedResponse({ type: User })
   async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
@@ -83,6 +90,7 @@ export class UserController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get users.' })
   // Generate a findAll method that takes a page and limit as optional query parameter
   findAll(@Query('page') page?: number, @Query('limit') limit?: number) {
     page = parseInt(page?.toString()) || 1;
@@ -96,16 +104,19 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get user by id.' })
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update user by id.' })
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete user by id.' })
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }

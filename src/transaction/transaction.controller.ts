@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
@@ -30,6 +30,7 @@ export class TransactionController {
   @Get()
   // @Roles(Role.ADMIN)
   @Roles(Role.USER)
+  @ApiOperation({ summary: 'Get transactions.' })
   findAll() {
     return this.transactionService.findAll();
   }
@@ -37,6 +38,7 @@ export class TransactionController {
   @Get(':id')
   // @Roles(Role.ADMIN)
   @Roles(Role.USER)
+  @ApiOperation({ summary: 'Get transaction by id.' })
   findOne(@Param('id') id: string) {
     return this.transactionService.findOne(id);
   }

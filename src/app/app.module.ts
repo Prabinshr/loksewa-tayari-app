@@ -26,6 +26,8 @@ import { CouponModule } from 'src/coupon/coupon.module';
 import { ForumModule } from 'src/forum/forum.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { PostModule } from 'src/post/post.module';
+import { ExamModule } from 'src/exam/exam.module';
+import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
 
 @Module({
   imports: [
@@ -52,6 +54,8 @@ import { PostModule } from 'src/post/post.module';
     ForumModule,
     PostModule,
     CommentModule,
+    ExamModule,
+    ExamCategoryModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

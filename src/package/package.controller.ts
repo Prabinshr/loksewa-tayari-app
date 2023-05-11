@@ -11,11 +11,10 @@ import {
 import { PackageService } from './package.service';
 import { CreatePackageDto } from './dto/create-package.dto';
 import { UpdatePackageDto } from './dto/update-package.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from '@prisma/client';
-
 
 @ApiTags('package')
 @Controller('package')
@@ -27,12 +26,14 @@ export class PackageController {
   constructor(private readonly packageService: PackageService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create Package.' })
   @Roles(Role.USER)
   create(@Body() createPackageDto: CreatePackageDto) {
     return this.packageService.create(createPackageDto);
   }
 
   @Post('/apply')
+  @ApiOperation({ summary: 'Apply Package.' })
   @Roles(Role.USER)
   async applyPackage(
     @Body('transactionId') transactionId: string,
@@ -42,6 +43,7 @@ export class PackageController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all Packages.' })
   @Roles(Role.USER)
   findAll() {
     return this.packageService.findAll();

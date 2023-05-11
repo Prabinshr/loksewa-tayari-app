@@ -6,7 +6,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { UserProgressService } from './progress.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
@@ -34,6 +34,7 @@ export class UserProgressController {
   // }
   // @Roles(Role.ADMIN)
   @Roles(Role.USER)
+  @ApiOperation({ summary: 'Get User-Progress.' })
   @Get()
   findAll() {
     return this.userProgressService.findAll();
@@ -41,6 +42,7 @@ export class UserProgressController {
 
   // @Roles(Role.SUBSCRIBED_USER, Role.ADMIN)
   @Roles(Role.USER)
+  @ApiOperation({ summary: 'Get User-Progress by id.' })
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUser() user: User) {
     if (user.role === Role.ADMIN || user.id === id) {

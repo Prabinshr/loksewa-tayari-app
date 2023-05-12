@@ -17,34 +17,34 @@ export class ExamQuestionService {
 
   findAll() {
     try{
-      return `This action returns all examQuestion`;
+      return this.prisma.examQuestion.findMany()
 
     }catch(err){
       throw new HttpException(err,500)
     }
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     try{
-      return `This action returns a #${id} examQuestion`;
+      return this.prisma.examQuestion.findUnique({where:{id}})
 
     }catch(err){
       throw new HttpException(err,500)
     }
   }
 
-  update(id: number, updateExamQuestionDto: UpdateExamQuestionDto) {
+  update(id: string, updateExamQuestionDto: UpdateExamQuestionDto) {
     try{
-      return `This action updates a #${id} examQuestion`;
+      return this.prisma.examQuestion.update({data:updateExamQuestionDto,where:{id}})
 
     }catch(err){
       throw new HttpException(err,500)
     }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     try{
-      return `This action removes a #${id} examQuestion`;
+      return this.prisma.examQuestion.delete({where:{id}})
 
     }catch(err){
       throw new HttpException(err,500)

@@ -29,7 +29,9 @@ export class SubServiceService {
 
   findAll() {
     try {
-      return this.prismaService.subService.findMany({});
+      return this.prismaService.subService.findMany({
+        include: { examSets: { include: { examCategories: true } } },
+      });
     } catch (err) {
       throw new HttpException('Cannot find', 404);
     }

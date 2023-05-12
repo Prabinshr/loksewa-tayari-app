@@ -16,7 +16,9 @@ export class ExamCategoryService {
 
   findAll() {
     try {
-      return this.prisma.examCategory.findMany();
+      return this.prisma.examCategory.findMany({
+        include: { questions: true },
+      });
     } catch (error) {
       throw new HttpException('Cannot find Exam-Categories.', 404);
     }
@@ -43,7 +45,7 @@ export class ExamCategoryService {
 
   remove(id: string) {
     try {
-      return this.prisma.examCategory.delete({where: {id: id}});
+      return this.prisma.examCategory.delete({ where: { id: id } });
     } catch (error) {
       throw new HttpException('Cannot delete Exam-Category.', 404);
     }

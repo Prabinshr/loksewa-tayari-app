@@ -5,13 +5,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ExamQuestionService {
-  constructor(private prisma:PrismaService){}
+  constructor(private prisma: PrismaService) {}
   create(createExamQuestionDto: CreateExamQuestionDto) {
-    try{
-      return this.prisma.examQuestion.create({data:createExamQuestionDto})
-
-    }catch(err){
-      throw new HttpException(err,500)
+    try {
+      return this.prisma.examQuestion.create({ data: createExamQuestionDto });
+    } catch (err) {
+      throw new HttpException(err, 500);
     }
   }
 

@@ -19,16 +19,16 @@ export class ExamsetController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.examsetService.findOne(+id);
+    return this.examsetService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateExamsetDto: UpdateExamsetDto) {
-    return this.examsetService.update(+id, updateExamsetDto);
+    return this.examsetService.update(id, updateExamsetDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.examsetService.remove(+id);
+    return this.examsetService.remove(id);
   }
 }

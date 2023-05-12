@@ -319,7 +319,7 @@ model QuestionSet {
   subStrTopic SubStrTopic @relation(fields: [topic_id], references: [id])
   title       String
   description String?
-  Question    Question[]
+  questions    Question[]
 }
 
 model Forum {
@@ -377,8 +377,8 @@ model ExamSet {
   negative_mark_value Float?         @default(0)
   examCategories      ExamCategory[]
 
-  subService_id String
-  subService    SubService @relation(fields: [subService_id], references: [id])
+  subService_id String?
+  subService    SubService? @relation(fields: [subService_id], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -387,18 +387,18 @@ model ExamSet {
 model ExamCategory {
   id         String  @id @default(cuid())
   title      String
-  examSet_id String
-  exam       ExamSet @relation(fields: [examSet_id], references: [id])
+  examSet_id String?
+  exam       ExamSet? @relation(fields: [examSet_id], references: [id])
 
-  createdAt    DateTime       @default(now()) @map("created_at")
-  updatedAt    DateTime       @updatedAt @map("updated_at")
-  ExamQuestion ExamQuestion[]
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  questions ExamQuestion[]
 }
 
 model ExamQuestion {
   id              String       @id @default(cuid())
-  examCategory_id String
-  examCategory    ExamCategory @relation(fields: [examCategory_id], references: [id])
+  examCategory_id String?
+  examCategory    ExamCategory? @relation(fields: [examCategory_id], references: [id])
 
   syllabusStr    String
   syllabusSubStr String

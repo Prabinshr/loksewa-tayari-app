@@ -88,6 +88,8 @@ Table Question {
   question_CategoryId String
   qsn_set_id String [not null]
   questionSet QuestionSet [not null]
+  examSet ExamSet
+  examSetId String
 }
 
 Table User_Progress {
@@ -262,6 +264,7 @@ Table Exam {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   examCategories ExamCategory [not null]
+  examSet ExamSet [not null]
 }
 
 Table ExamCategory {
@@ -269,6 +272,16 @@ Table ExamCategory {
   title String [not null]
   exam_id String [not null]
   exam Exam [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+}
+
+Table ExamSet {
+  id String [pk]
+  title String [not null]
+  exam Exam
+  examId String
+  questions Question [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -312,6 +325,8 @@ Ref: Question.question_CategoryId > Question_Category.id
 
 Ref: Question.qsn_set_id > QuestionSet.id
 
+Ref: Question.examSetId > ExamSet.id
+
 Ref: User_Progress.quiz_id > Quiz.id
 
 Ref: User_Progress.user_id > User.id [delete: Cascade]
@@ -351,3 +366,5 @@ Ref: Comments.userId > User.id
 Ref: Comments.postId > Post.id
 
 Ref: ExamCategory.exam_id > Exam.id
+
+Ref: ExamSet.examId > Exam.id

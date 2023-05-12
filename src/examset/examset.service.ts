@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateExamsetDto } from './dto/create-examset.dto';
 import { UpdateExamsetDto } from './dto/update-examset.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ExamsetService {
+  constructor(private prisma: PrismaService) {}
   create(createExamsetDto: CreateExamsetDto) {
-    return 'This action adds a new examset';
+    
+    try {
+      return this.prisma.exam.create({ data: createExamsetDto });
+    } catch (error) {
+      throw new HttpException('Cannot create Exam.', 404);
+    }
   }
 
   findAll() {
-    return `This action returns all examset`;
+    try{
+      return this.prisma.exam.findMany()
+    }catch(error){
+      throw new HttpException(error, 404);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} examset`;
+  findOne(id: string) {
+    try{
+      return this.prisma.exam.findUnique({where:{id}})
+    }catch(error){
+      throw new HttpException(error, 404);
+    }
   }
 
-  update(id: number, updateExamsetDto: UpdateExamsetDto) {
-    return `This action updates a #${id} examset`;
+  update(id: string, updateExamsetDto: UpdateExamsetDto) {
+    try{
+      return this.prisma.exam.update({data:updateExamsetDto,where:{id}})
+    }catch(error){
+      throw new HttpException(error, 404);
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} examset`;
+    try{
+      return this.prisma.exam.
+    }catch(error){
+      throw new HttpException(error, 404);
+    }
   }
 }

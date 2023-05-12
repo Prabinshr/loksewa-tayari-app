@@ -153,10 +153,6 @@ model Question {
 
   qsn_set_id  String
   questionSet QuestionSet @relation(fields: [qsn_set_id], references: [id])
-
-
-  examSet     ExamSet?    @relation(fields: [examSetId], references: [id])
-  examSetId   String?
 }
 
 model User_Progress {
@@ -272,6 +268,7 @@ model SubService {
   updated_at DateTime @updatedAt()
 
   subserviceHasSyllabus SubserviceHasSyllabus[]
+  examSets              ExamSet[]
 }
 
 model SubserviceHasSyllabus {
@@ -322,7 +319,7 @@ model QuestionSet {
   subStrTopic SubStrTopic @relation(fields: [topic_id], references: [id])
   title       String
   description String?
-  questions   Question[]
+  Question    Question[]
 }
 
 model Forum {
@@ -367,33 +364,48 @@ enum QSN_TYPE {
   TRIAL
 }
 
-model Exam {
-  id                  String   @id @default(cuid())
-  title               String
-  negative_mark_value Float?   @default(0)
-  createdAt           DateTime @default(now()) @map("created_at")
-  updatedAt           DateTime @updatedAt @map("updated_at")
-
-  examCategories ExamCategory[]
-  examSet        ExamSet[]
+enum LEVEL {
+  EASY
+  MEDIUM
+  HARD
 }
 
-model ExamCategory {
-  id    String @id @default(cuid())
-  title String
+model ExamSet {
+  id                  String         @id @default(cuid())
+  title               String
+  level               LEVEL
+  negative_mark_value Float?         @default(0)
+  examCategories      ExamCategory[]
 
-  exam_id   String
-  exam      Exam     @relation(fields: [exam_id], references: [id])
+  subService_id String
+  subService    SubService @relation(fields: [subService_id], references: [id])
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
 
-model ExamSet {
-  id        String     @id @default(cuid())
-  title     String
-  exam      Exam?      @relation(fields: [examId], references: [id])
-  examId    String?
-  questions Question[]
+model ExamCategory {
+  id         String  @id @default(cuid())
+  title      String
+  examSet_id String
+  exam       ExamSet @relation(fields: [examSet_id], references: [id])
+
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  ExamQuestion ExamQuestion[]
+}
+
+model ExamQuestion {
+  id              String       @id @default(cuid())
+  examCategory_id String
+  examCategory    ExamCategory @relation(fields: [examCategory_id], references: [id])
+
+  syllabusStr    String
+  syllabusSubStr String
+  question       String
+  options        String[]
+  correct_ans    String
+  explaination   String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

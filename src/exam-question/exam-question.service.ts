@@ -8,7 +8,7 @@ export class ExamQuestionService {
   constructor(private prisma:PrismaService){}
   create(createExamQuestionDto: CreateExamQuestionDto) {
     try{
-      return 'This action adds a new examQuestion';
+      return this.prisma.examQuestion.create({data:createExamQuestionDto})
 
     }catch(err){
       throw new HttpException(err,500)

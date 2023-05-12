@@ -88,8 +88,6 @@ Table Question {
   question_CategoryId String
   qsn_set_id String [not null]
   questionSet QuestionSet [not null]
-  examSet ExamSet
-  examSetId String
 }
 
 Table User_Progress {
@@ -178,6 +176,7 @@ Table SubService {
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime [not null]
   subserviceHasSyllabus SubserviceHasSyllabus [not null]
+  examSets ExamSet [not null]
 }
 
 Table SubserviceHasSyllabus {
@@ -223,7 +222,7 @@ Table QuestionSet {
   subStrTopic SubStrTopic [not null]
   title String [not null]
   description String
-  questions Question [not null]
+  Question Question [not null]
 }
 
 Table Forum {
@@ -257,31 +256,38 @@ Table Comments {
   updatedAt DateTime [not null]
 }
 
-Table Exam {
+Table ExamSet {
   id String [pk]
   title String [not null]
+  level LEVEL [not null]
   negative_mark_value Float [default: 0]
+  examCategories ExamCategory [not null]
+  subService_id String [not null]
+  subService SubService [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  examCategories ExamCategory [not null]
-  examSet ExamSet [not null]
 }
 
 Table ExamCategory {
   id String [pk]
   title String [not null]
-  exam_id String [not null]
-  exam Exam [not null]
+  examSet_id String [not null]
+  exam ExamSet [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  ExamQuestion ExamQuestion [not null]
 }
 
-Table ExamSet {
+Table ExamQuestion {
   id String [pk]
-  title String [not null]
-  exam Exam
-  examId String
-  questions Question [not null]
+  examCategory_id String [not null]
+  examCategory ExamCategory [not null]
+  syllabusStr String [not null]
+  syllabusSubStr String [not null]
+  question String [not null]
+  options String[] [not null]
+  correct_ans String [not null]
+  explaination String [not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
 }
@@ -315,6 +321,12 @@ Enum QSN_TYPE {
   TRIAL
 }
 
+Enum LEVEL {
+  EASY
+  MEDIUM
+  HARD
+}
+
 Ref: refreshTokenHash.user_id - User.id
 
 Ref: Quiz.category_id > Quiz_Category.id
@@ -324,8 +336,6 @@ Ref: Question.quiz_id > Quiz.id
 Ref: Question.question_CategoryId > Question_Category.id
 
 Ref: Question.qsn_set_id > QuestionSet.id
-
-Ref: Question.examSetId > ExamSet.id
 
 Ref: User_Progress.quiz_id > Quiz.id
 
@@ -365,6 +375,8 @@ Ref: Comments.userId > User.id
 
 Ref: Comments.postId > Post.id
 
-Ref: ExamCategory.exam_id > Exam.id
+Ref: ExamSet.subService_id > SubService.id
 
-Ref: ExamSet.examId > Exam.id
+Ref: ExamCategory.examSet_id > ExamSet.id
+
+Ref: ExamQuestion.examCategory_id > ExamCategory.id

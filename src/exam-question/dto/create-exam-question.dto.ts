@@ -1,5 +1,5 @@
 export class CreateExamQuestionDto {
-    examCategory_id :string
+  examCategory_id: string;
   syllabusStr: string;
   syllabusSubStr: string;
   question: string;

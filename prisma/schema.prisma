@@ -390,9 +390,9 @@ model ExamCategory {
   examSet_id String
   exam       ExamSet @relation(fields: [examSet_id], references: [id])
 
-  createdAt    DateTime       @default(now()) @map("created_at")
-  updatedAt    DateTime       @updatedAt @map("updated_at")
-  ExamQuestion ExamQuestion[]
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  questions ExamQuestion[]
 }
 
 model ExamQuestion {

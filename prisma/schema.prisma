@@ -172,6 +172,8 @@ model Package {
   description      String
   amount           Int
   subscriptionDays String
+  subscriptionDate DateTime?
+  remainingDays    String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -358,24 +360,4 @@ enum QSN_TYPE {
   PAID
   FREE
   TRIAL
-}
-
-model Exam {
-  id                  String          @id @default(cuid())
-  title               String
-  negative_mark_value Float?          @default(0)
-  createdAt           DateTime        @default(now()) @map("created_at")
-  updatedAt           DateTime        @updatedAt @map("updated_at")
-
-  examCategories ExamCategory[]
-}
-
-model ExamCategory {
-  id                  String          @id @default(cuid())
-  title                String
-
-  exam_id String
-  exam Exam @relation(fields: [exam_id],references: [id])
-  createdAt           DateTime        @default(now()) @map("created_at")
-  updatedAt           DateTime        @updatedAt @map("updated_at")
 }

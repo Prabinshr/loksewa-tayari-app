@@ -26,8 +26,6 @@ import { CouponModule } from 'src/coupon/coupon.module';
 import { ForumModule } from 'src/forum/forum.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { PostModule } from 'src/post/post.module';
-import { ExamModule } from 'src/exam/exam.module';
-import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
 
 @Module({
   imports: [
@@ -53,9 +51,7 @@ import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
     CouponModule,
     ForumModule,
     PostModule,
-    CommentModule,
-    ExamModule,
-    ExamCategoryModule
+    CommentModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

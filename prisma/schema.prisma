@@ -234,7 +234,7 @@ model OTP {
 
 model SewaService {
   id          String       @id @default(cuid())
-  description String
+  title       String
   status      STATUS
   image       String?
   created_at  DateTime     @default(now())
@@ -319,7 +319,7 @@ model QuestionSet {
   subStrTopic SubStrTopic @relation(fields: [topic_id], references: [id])
   title       String
   description String?
-  Question    Question[]
+  questions   Question[]
 }
 
 model Forum {

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ExamsetService } from './examset.service';
 import { CreateExamsetDto } from './dto/create-examset.dto';
 import { UpdateExamsetDto } from './dto/update-examset.dto';
@@ -19,16 +27,16 @@ export class ExamsetController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.examsetService.findOne(+id);
+    return this.examsetService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateExamsetDto: UpdateExamsetDto) {
-    return this.examsetService.update(+id, updateExamsetDto);
+    return this.examsetService.update(id, updateExamsetDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.examsetService.remove(+id);
+    return this.examsetService.remove(id);
   }
 }

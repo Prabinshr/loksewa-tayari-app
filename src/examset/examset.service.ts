@@ -17,7 +17,7 @@ export class ExamsetService {
   findAll() {
     try {
       return this.prisma.examSet.findMany({
-        include: { examCategories: true },
+        include: { examCategories: { include: { questions: true } } },
       });
     } catch (error) {
       throw new HttpException(error, 404);
@@ -26,7 +26,10 @@ export class ExamsetService {
 
   findOne(id: string) {
     try {
-      return this.prisma.examSet.findUnique({ where: { id } });
+      return this.prisma.examSet.findUnique({
+        where: { id },
+        include: { examCategories: { include: { questions: true } } },
+      });
     } catch (error) {
       throw new HttpException(error, 404);
     }
@@ -37,6 +40,7 @@ export class ExamsetService {
       return this.prisma.examSet.update({
         data: updateExamsetDto,
         where: { id },
+        include: { examCategories: true },
       });
     } catch (error) {
       throw new HttpException(error, 404);

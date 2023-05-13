@@ -51,7 +51,7 @@ import { PostModule } from 'src/post/post.module';
     CouponModule,
     ForumModule,
     PostModule,
-    CommentModule,
+    CommentModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

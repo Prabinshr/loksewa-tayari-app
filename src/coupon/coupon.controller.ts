@@ -1,12 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { CouponService } from './coupon.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from '@prisma/client';
 import { Roles } from 'src/auth/guards/roles.decorator';
-
 
 @ApiTags('Coupon')
 @Controller('coupon')
@@ -24,6 +32,7 @@ export class CouponController {
   @Post()
   // @Roles(Role.ADMIN)
   @Roles(Role.USER)
+  @ApiOperation({ summary: 'Create Coupon.' })
   async createCoupon(
     @Body('discountValue') discountValue: number,
     @Body('maxUses') maxUses: number,
@@ -38,6 +47,7 @@ export class CouponController {
   }
 
   @Post('/apply')
+  @ApiOperation({ summary: 'Apply coupon.' })
   @Roles(Role.USER)
   async applyCoupon(
     @Body('transactionId') transactionId: string,
@@ -46,6 +56,7 @@ export class CouponController {
     await this.couponService.applyCoupon(transactionId, couponCode);
   }
   @Get()
+  @ApiOperation({ summary: 'Get all coupon codes.' })
   @Roles(Role.USER)
   findAll() {
     return this.couponService.findAll();

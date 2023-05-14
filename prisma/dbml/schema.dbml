@@ -260,6 +260,7 @@ Table ExamSet {
   id String [pk]
   title String [not null]
   level LEVEL [not null]
+  mock Int [not null, default: 1]
   negative_mark_value Float [default: 0]
   examCategories ExamCategory [not null]
   subService_id String

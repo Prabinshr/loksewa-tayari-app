@@ -31,6 +31,13 @@ export class ExamsetService {
       throw new HttpException(error, 404);
     }
   }
+  async filter(mock: number) {
+    const filter = await this.prisma.examSet.findMany({
+      where: { mock },
+      include:{examCategories:true}
+    });
+    return filter;
+  }
 
   update(id: string, updateExamsetDto: UpdateExamsetDto) {
     try {

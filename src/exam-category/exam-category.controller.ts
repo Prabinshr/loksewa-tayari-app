@@ -19,30 +19,33 @@ import { Role } from '@prisma/client';
 @ApiTags('ExamCategory')
 @ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
-@Roles(Role.USER)
 @Controller('exam-category')
 export class ExamCategoryController {
   constructor(private readonly examCategoryService: ExamCategoryService) {}
 
   @Post()
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Create exam-category.' })
   create(@Body() createExamCategoryDto: CreateExamCategoryDto) {
     return this.examCategoryService.create(createExamCategoryDto);
   }
 
   @Get()
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get all exam-categories.' })
   findAll() {
     return this.examCategoryService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.USER)
   @ApiOperation({ summary: 'Get exam-category by id.' })
   findOne(@Param('id') id: string) {
     return this.examCategoryService.findOne(id);
   }
 
   @Patch(':id')
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Update exam-category by id.' })
   update(
     @Param('id') id: string,
@@ -52,6 +55,7 @@ export class ExamCategoryController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
   @ApiOperation({ summary: 'Delete exam-category by id.' })
   remove(@Param('id') id: string) {
     return this.examCategoryService.remove(id);

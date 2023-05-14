@@ -26,6 +26,7 @@ import { CouponModule } from 'src/coupon/coupon.module';
 import { ForumModule } from 'src/forum/forum.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { PostModule } from 'src/post/post.module';
+import { VacancyModule } from 'src/vacancy/vacancy.module';
 
 @Module({
   imports: [
@@ -51,7 +52,8 @@ import { PostModule } from 'src/post/post.module';
     CouponModule,
     ForumModule,
     PostModule,
-    CommentModule
+    CommentModule,
+    VacancyModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

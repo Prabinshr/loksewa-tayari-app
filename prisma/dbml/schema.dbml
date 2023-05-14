@@ -255,24 +255,6 @@ Table Comments {
   updatedAt DateTime [not null]
 }
 
-Table Exam {
-  id String [pk]
-  title String [not null]
-  negative_mark_value Float [default: 0]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-  examCategories ExamCategory [not null]
-}
-
-Table ExamCategory {
-  id String [pk]
-  title String [not null]
-  exam_id String [not null]
-  exam Exam [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
-
 Enum Role {
   ADMIN
   MODERATOR
@@ -349,5 +331,3 @@ Ref: Post.userId > User.id
 Ref: Comments.userId > User.id
 
 Ref: Comments.postId > Post.id
-
-Ref: ExamCategory.exam_id > Exam.id

@@ -153,7 +153,7 @@ Table OTP {
 
 Table SewaService {
   id String [pk]
-  description String [not null]
+  title String [not null]
   status STATUS [not null]
   image String
   created_at DateTime [default: `now()`, not null]

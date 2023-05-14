@@ -6,7 +6,7 @@ export class CreateSewaserviceDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  description: string;
+  title: string;
   @ApiProperty()
   @IsNotEmpty()
   @IsString()

@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class ExamQuestionService {
   constructor(private prisma: PrismaService) {}
+
   create(createExamQuestionDto: CreateExamQuestionDto) {
     try {
       return this.prisma.examQuestion.create({ data: createExamQuestionDto });
@@ -24,20 +25,21 @@ export class ExamQuestionService {
   }
 
   findOne(id: string) {
-    try{
-      return this.prisma.examQuestion.findUnique({where:{id}})
-
-    }catch(err){
-      throw new HttpException(err,500)
+    try {
+      return this.prisma.examQuestion.findUnique({ where: { id } });
+    } catch (err) {
+      throw new HttpException(err, 500);
     }
   }
 
   update(id: string, updateExamQuestionDto: UpdateExamQuestionDto) {
-    try{
-      return this.prisma.examQuestion.update({data:updateExamQuestionDto,where:{id}})
-
-    }catch(err){
-      throw new HttpException(err,500)
+    try {
+      return this.prisma.examQuestion.update({
+        data: updateExamQuestionDto,
+        where: { id },
+      });
+    } catch (err) {
+      throw new HttpException(err, 500);
     }
   }
 

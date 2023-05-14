@@ -1,15 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ParseIntPipe,
-  Query,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ExamsetService } from './examset.service';
 import { CreateExamsetDto } from './dto/create-examset.dto';
 import { UpdateExamsetDto } from './dto/update-examset.dto';
@@ -43,11 +32,6 @@ export class ExamsetController {
   @Roles(Role.USER)
   findOne(@Param('id') id: string) {
     return this.examsetService.findOne(id);
-  }
-  @Get('filter')
-  @Roles(Role.USER)
-  async findfilter(@Query('mock', ParseIntPipe) mock: number) {
-    return this.examsetService.filter(mock);
   }
 
   @Patch(':id')

@@ -7,28 +7,15 @@ import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 export class VacancyController {
   constructor(private readonly vacancyService: VacancyService) {}
 
-  @Post()
-  create(@Body() createVacancyDto: CreateVacancyDto) {
-    return this.vacancyService.create(createVacancyDto);
+  
+  @Get('np')
+  findNp() {
+    return this.vacancyService.getNpData();
+  }
+  @Get('p2')
+  findP2() {
+    return this.vacancyService.getp2Data();
   }
 
-  @Get()
-  findAll() {
-    return this.vacancyService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.vacancyService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVacancyDto: UpdateVacancyDto) {
-    return this.vacancyService.update(+id, updateVacancyDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.vacancyService.remove(+id);
-  }
+  
 }

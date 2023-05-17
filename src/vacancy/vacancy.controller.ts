@@ -23,6 +23,15 @@ import { Role } from '@prisma/client';
 export class VacancyController {
   constructor(private readonly vacancyService: VacancyService) {}
 
+  //endpooint to hit all the other endpoints to scrape data at once
+  //for future automation-cronjob
+  @Get('all')
+  @Roles(Role.USER)
+  async scrapeAllData() {
+    const allData = await this.vacancyService.scrapeAllData();
+    return allData;
+  }
+
   @Get('bagmati')
   @Roles(Role.USER)
   async scrapeBagmati() {
@@ -63,6 +72,17 @@ export class VacancyController {
   @Roles(Role.USER)
   async scrapeGandakiNotices() {
     return this.vacancyService.scrapeGandakiNotices();
+  }
+
+  @Get('p1')
+  @Roles(Role.USER)
+  async scrapePradeshOne() {
+    return this.vacancyService.scrapePradeshOne();
+  }
+  @Get('p1/notices')
+  @Roles(Role.USER)
+  async scrapePradeshOneNotices() {
+    return this.vacancyService.scrapePradeshOneNotices();
   }
 
   // @Get('pradesh5')

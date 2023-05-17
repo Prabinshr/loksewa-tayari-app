@@ -3,38 +3,41 @@ import puppeteer from 'puppeteer';
 
 @Injectable()
 export class VacancyService {
-  //TO BE DONE- psc.sudurpashchim.gov.np took too long to respond.
-  //ERROR-net::ERR_CONNECTION_TIMED_OUT
+  async scrapeAllData() {
+    const [
+      bagmatiVacancyData,
+      bagmatiNoticesData,
+      bagmatiPromotionData,
+      karnaliVacancyData,
+      karnaliNoticesData,
+      gandakiVacancyData,
+      gandakiNoticesData,
+      pradeshOneVacancyData,
+      pradeshOneNoticesData,
+    ] = await Promise.all([
+      this.scrapeBagmati(),
+      this.scrapeBagmatiNotices(),
+      this.scrapeBagmatiPromotion(),
+      this.scrapeKarnali(),
+      this.scrapeKarnaliNotices(),
+      this.scrapeGandaki(),
+      this.scrapeGandakiNotices(),
+      this.scrapePradeshOne(),
+      this.scrapePradeshOneNotices(),
+    ]);
 
-  // sudurpaschim vacancies
-  // async scrapeSudurpaschim() {
-  //   const url = 'https://psc.sudurpashchim.gov.np/welcome/advertisements';
-  //   const browser = await puppeteer.launch({
-  //     headless: false,
-  //     defaultViewport: null,
-  //   });
-  //   const page = await browser.newPage();
-  //   await page.setDefaultNavigationTimeout(0);
-  //   await page.goto(url, {
-  //     timeout: 60000,
-  //   });
-
-  //   // Use Puppeteer to scrape the website
-  //   const scrapVacancies = await page.evaluate((url) => {
-  //     const vacancies = Array.from(document.querySelectorAll('tr'));
-  //     const data = vacancies.map((vacancy: any) => ({
-  //       ad_no: vacancy.querySelector(':nth:child(1) a').innerText,
-  //       pdfUrl: vacancy.querySelector(':nth:child(1) a').getAttribute('href'),
-  //       title: vacancy.querySelector(':nth:child(2)').innerText,
-  //       published_date: vacancy.querySelector(':nth:child(3)').innerText,
-  //       deadline: vacancy.querySelector(':nth:child(4)').getAttribute('href'),
-  //       price_double_date: vacancy.querySelector(':nth:child(5)').innerText,
-  //     }));
-  //     return data;
-  //   }, url);
-  //   // await browser.close();
-  //   return scrapVacancies;
-  // }
+    return {
+      bagmatiVacancyData,
+      bagmatiNoticesData,
+      bagmatiPromotionData,
+      karnaliVacancyData,
+      karnaliNoticesData,
+      gandakiVacancyData,
+      gandakiNoticesData,
+      pradeshOneVacancyData,
+      pradeshOneNoticesData,
+    };
+  }
 
   //scrape bagmati-all vacancies
   async scrapeBagmati() {
@@ -56,7 +59,7 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    // await browser.close();
+    await browser.close();
     return scrapVacancies;
   }
 
@@ -80,7 +83,7 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    // await browser.close();
+    await browser.close();
     return scrapPromotions;
   }
 
@@ -106,7 +109,7 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    // await browser.close();
+    await browser.close();
     return scrapNotices;
   }
 
@@ -130,7 +133,7 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    // await browser.close();
+    await browser.close();
     return scrapVacancies;
   }
 
@@ -154,7 +157,7 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    // await browser.close();
+    await browser.close();
     return scrapNotices;
   }
 
@@ -210,8 +213,62 @@ export class VacancyService {
     return scrapNotices;
   }
 
-  //scrape province 5-all vacancies
-  //ERROR-net::ERR_CONNECTION_TIMED_OUT
+  // scrape province 1-all vacancies
+  //this is for local level(because currently there's no data in state level)
+  //DOM is same
+  //same code will work for state level(P.S. you have to change the url link only.)
+  async scrapePradeshOne() {
+    const url = 'https://psc.p1.gov.np/vacancy/advertise_local';
+    const browser = await puppeteer.launch({
+      headless: false,
+      defaultViewport: null,
+    });
+    const page = await browser.newPage();
+    await page.goto(url);
+    // Use Puppeteer to scrape the website
+    const scrapVacancies = await page.evaluate((url) => {
+      const vacancies = Array.from(
+        document.querySelectorAll('div .no-gutters .aos-init .coupon'),
+      );
+      const data = vacancies.map((vacancy: any) => ({
+        title: vacancy.querySelector('h3').innerText,
+        news_url: vacancy.querySelector('a').getAttribute('href'),
+        pdf_url: vacancy.querySelector('a[href$=".pdf"]').getAttribute('href'),
+        date: vacancy.querySelector('small').innerText,
+      }));
+      return data;
+    }, url);
+    await browser.close();
+    return scrapVacancies;
+  }
+
+  // scrape province 1-all general notices
+  async scrapePradeshOneNotices() {
+    const url = 'https://psc.p1.gov.np/notice/general-notice';
+    const browser = await puppeteer.launch({
+      headless: false,
+      defaultViewport: null,
+    });
+    const page = await browser.newPage();
+    await page.goto(url);
+    // Use Puppeteer to scrape the website
+    const scrapNotices = await page.evaluate((url) => {
+      const notices = Array.from(
+        document.querySelectorAll('div .no-gutters .aos-init .coupon'),
+      );
+      const data = notices.map((notice: any) => ({
+        title: notice.querySelector('h3').innerText,
+        news_url: notice.querySelector('a').getAttribute('href'),
+        pdf_url: notice.querySelector('a[href$=".pdf"]').getAttribute('href'),
+        date: notice.querySelector('small').innerText,
+      }));
+      return data;
+    }, url);
+    await browser.close();
+    return scrapNotices;
+  }
+  // scrape province 5-all vacancies
+  // // ERROR-net::ERR_CONNECTION_TIMED_OUT
   // async scrapePradeshPach() {
   //   const url =
   //     //url is in nepali text as well
@@ -221,9 +278,9 @@ export class VacancyService {
   //     defaultViewport: null,
   //   });
   //   const page = await browser.newPage();
-  //   await page.setDefaultNavigationTimeout(60000);
+  //   await page.setDefaultNavigationTimeout(120000);
   //   await page.goto(url, {
-  //     timeout: 60000,
+  //     timeout: 120000,
   //   });
   //   // Use Puppeteer to scrape the website
   //   const scrapVacancies = await page.evaluate((url) => {
@@ -238,6 +295,38 @@ export class VacancyService {
   //     return data;
   //   }, url);
   //   await browser.close();
+  //   return scrapVacancies;
+  // }
+  //TO BE DONE- psc.sudurpashchim.gov.np took too long to respond.
+  //ERROR-net::ERR_CONNECTION_TIMED_OUT
+
+  // sudurpaschim vacancies
+  // async scrapeSudurpaschim() {
+  //   const url = 'https://psc.sudurpashchim.gov.np/welcome/advertisements';
+  //   const browser = await puppeteer.launch({
+  //     headless: false,
+  //     defaultViewport: null,
+  //   });
+  //   const page = await browser.newPage();
+  //   await page.setDefaultNavigationTimeout(0);
+  //   await page.goto(url, {
+  //     timeout: 60000,
+  //   });
+
+  //   // Use Puppeteer to scrape the website
+  //   const scrapVacancies = await page.evaluate((url) => {
+  //     const vacancies = Array.from(document.querySelectorAll('tr'));
+  //     const data = vacancies.map((vacancy: any) => ({
+  //       ad_no: vacancy.querySelector(':nth:child(1) a').innerText,
+  //       pdfUrl: vacancy.querySelector(':nth:child(1) a').getAttribute('href'),
+  //       title: vacancy.querySelector(':nth:child(2)').innerText,
+  //       published_date: vacancy.querySelector(':nth:child(3)').innerText,
+  //       deadline: vacancy.querySelector(':nth:child(4)').getAttribute('href'),
+  //       price_double_date: vacancy.querySelector(':nth:child(5)').innerText,
+  //     }));
+  //     return data;
+  //   }, url);
+  //   // await browser.close();
   //   return scrapVacancies;
   // }
 }

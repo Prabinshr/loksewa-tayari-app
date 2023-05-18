@@ -7,8 +7,19 @@ import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 export class VacancyController {
   constructor(private readonly vacancyService: VacancyService) {}
 
-  @Get("")
-  find(){
-    return this.vacancyService.getGandaki()
+  
+  @Get('np')
+  findNp() {
+    return this.vacancyService.getNpData();
   }
+  @Get('p2')
+  findP2() {
+    return this.vacancyService.getp2Data();
+  }
+  @Get('p2/notice')
+  findP2notice() {
+    return this.vacancyService.getp2noticeData();
+  }
+
+  
 }

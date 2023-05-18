@@ -16,6 +16,10 @@ export class VacancyController {
   findP2() {
     return this.vacancyService.getp2Data();
   }
+  @Get('p2/notice')
+  findP2notice() {
+    return this.vacancyService.getp2noticeData();
+  }
 
   
 }

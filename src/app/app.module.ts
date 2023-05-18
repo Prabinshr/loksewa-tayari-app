@@ -26,6 +26,9 @@ import { CouponModule } from 'src/coupon/coupon.module';
 import { ForumModule } from 'src/forum/forum.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { PostModule } from 'src/post/post.module';
+import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
+import { ExamsetModule } from 'src/examset/examset.module';
+import { ExamQuestionModule } from 'src/exam-question/exam-question.module';
 import { VacancyModule } from 'src/vacancy/vacancy.module';
 
 @Module({
@@ -53,7 +56,10 @@ import { VacancyModule } from 'src/vacancy/vacancy.module';
     ForumModule,
     PostModule,
     CommentModule,
-    VacancyModule
+    ExamCategoryModule,
+    ExamsetModule,
+    ExamQuestionModule,
+    VacancyModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

@@ -29,7 +29,9 @@ export class SubServiceService {
 
   findAll() {
     try {
-      return this.prismaService.subService.findMany({});
+      return this.prismaService.subService.findMany({
+        include: { examSets: true },
+      });
     } catch (err) {
       throw new HttpException('Cannot find', 404);
     }
@@ -37,7 +39,10 @@ export class SubServiceService {
 
   findOne(id: string) {
     try {
-      return this.prismaService.subService.findUnique({ where: { id: id } });
+      return this.prismaService.subService.findUnique({
+        where: { id: id },
+        include: { examSets: true },
+      });
     } catch (err) {
       throw new HttpException('Cannot find', 404);
     }
@@ -47,6 +52,7 @@ export class SubServiceService {
     try {
       return this.prismaService.subService.update({
         where: { id },
+        include: { examSets: true },
         data: updateSubServiceDto,
       });
     } catch (err) {

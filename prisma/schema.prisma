@@ -42,19 +42,19 @@ enum OnlineStatus {
 }
 
 model User {
-  id           String            @id @default(cuid())
-  username     String            @unique
+  id           String        @id @default(cuid())
+  username     String        @unique
   first_name   String
   middle_name  String?
   last_name    String
   image        String?
-  onlineStatus OnlineStatus?     @default(OFFLINE)
+  onlineStatus OnlineStatus? @default(OFFLINE)
   /// @DtoEntityHidden
   password     String
-  email        String            @unique
-  verified     Boolean?          @default(false)
+  email        String        @unique
+  verified     Boolean?      @default(false)
   /// @DtoCreateOptional
-  role         Role?             @default(USER)
+  role         Role?         @default(USER)
 
   /// @DtoCreateOptional
   /// @DtoReadOnly
@@ -68,8 +68,8 @@ model User {
   otps         OTP[]
   hash         refreshTokenHash?
 
-  posts   Post[]
-  comment Comments[]
+  posts       Post[]
+  comment     Comments[]
   subServices SubService[]
 }
 
@@ -85,6 +85,9 @@ model refreshTokenHash {
   user_id    String @unique
   user       User   @relation(fields: [user_id], references: [id])
   token_hash String
+
+  @@index([user_id])
+  @@index([token_hash])
 }
 
 model Quiz_Category {
@@ -179,7 +182,7 @@ model Package {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   transactions Transaction[]
-  subService SubService[]
+  subService   SubService[]
 }
 
 model Transaction {
@@ -233,7 +236,7 @@ model OTP {
 
 model SewaService {
   id          String       @id @default(cuid())
-  description String
+  title       String
   status      STATUS
   image       String?
   created_at  DateTime     @default(now())
@@ -251,22 +254,23 @@ model SubService {
   sewaService_id String
   service        SewaService @relation(fields: [sewaService_id], references: [id])
 
-  title          String
+  title String
 
   user_id String
-  user User @relation(fields: [user_id], references: [id])
+  user    User   @relation(fields: [user_id], references: [id])
 
-  description    String?
-  image          String?
-  status         STATUS
+  description String?
+  image       String?
+  status      STATUS
 
-  package_title  String?
-  package Package? @relation(fields: [package_title], references: [title])
+  package_title String?
+  package       Package? @relation(fields: [package_title], references: [title])
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt()
 
   subserviceHasSyllabus SubserviceHasSyllabus[]
+  examSets              ExamSet[]
 }
 
 model SubserviceHasSyllabus {
@@ -360,4 +364,52 @@ enum QSN_TYPE {
   PAID
   FREE
   TRIAL
+}
+
+enum LEVEL {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model ExamSet {
+  id                  String         @id @default(cuid())
+  title               String
+  level               LEVEL
+  mock                Int @default(1)
+  negative_mark_value Float?         @default(0)
+  examCategories      ExamCategory[]
+
+  subService_id String?
+  subService    SubService? @relation(fields: [subService_id], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model ExamCategory {
+  id         String   @id @default(cuid())
+  title      String
+  examSet_id String?
+  exam       ExamSet? @relation(fields: [examSet_id], references: [id])
+
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+  questions ExamQuestion[]
+}
+
+model ExamQuestion {
+  id              String        @id @default(cuid())
+  examCategory_id String?
+  examCategory    ExamCategory? @relation(fields: [examCategory_id], references: [id])
+
+  syllabusStr    String
+  syllabusSubStr String
+  question       String
+  options        String[]
+  correct_ans    String
+  explaination   String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }

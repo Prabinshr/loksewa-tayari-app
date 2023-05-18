@@ -215,7 +215,6 @@ export class UserService {
           username: username,
         },
       });
-      console.log(user);
 
       // const { password, ...withoutPassword } = user;
       return user;

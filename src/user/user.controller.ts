@@ -79,9 +79,6 @@ export class UserController {
     )
     profile: Express.Multer.File,
   ) {
-    console.log(user);
-    console.log('Hello');
-
     return await this.userService.uploadUserImage(user, profile);
   }
 

@@ -26,10 +26,10 @@ import { CouponModule } from 'src/coupon/coupon.module';
 import { ForumModule } from 'src/forum/forum.module';
 import { CommentModule } from 'src/comment/comment.module';
 import { PostModule } from 'src/post/post.module';
+import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
 import { ExamsetModule } from 'src/examset/examset.module';
 import { ExamQuestionModule } from 'src/exam-question/exam-question.module';
 import { VacancyModule } from 'src/vacancy/vacancy.module';
-import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
 
 @Module({
   imports: [
@@ -59,7 +59,7 @@ import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
     ExamCategoryModule,
     ExamsetModule,
     ExamQuestionModule,
-    VacancyModule
+    VacancyModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

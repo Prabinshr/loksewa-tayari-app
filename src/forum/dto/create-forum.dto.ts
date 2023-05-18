@@ -1,8 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateForumDto {
   @ApiProperty()
   @IsNotEmpty()
   title: string;
+  
+  @ApiProperty()
+  @IsOptional()
+  image?: string;
 }

@@ -323,7 +323,7 @@ model QuestionSet {
 }
 
 model Forum {
-  id    String @id @default(cuid())
+  id    String  @id @default(cuid())
   title String
   posts Post[]
   image String?
@@ -375,7 +375,7 @@ model ExamSet {
   id                  String         @id @default(cuid())
   title               String
   level               LEVEL
-  mock                Int @default(1)
+  mock                Int            @default(1)
   negative_mark_value Float?         @default(0)
   examCategories      ExamCategory[]
 
@@ -408,6 +408,17 @@ model ExamQuestion {
   options        String[]
   correct_ans    String
   explaination   String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model Vacancy {
+  id String @id @default(cuid())
+
+  title String
+  pdf   String
+  type  String
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

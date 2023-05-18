@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import puppeteer from 'puppeteer';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class VacancyService {
+  constructor(private prisma: PrismaService) {}
   async scrapeAllData() {
     const [
       bagmatiVacancyData,
@@ -331,6 +333,7 @@ export class VacancyService {
   //   // await browser.close();
   //   return scrapVacancies;
   // }
+
   //psc.gov.np
   async getNpData() {
     const url = `https://psc.gov.np/category/sangathit-vacancies.html`;
@@ -358,14 +361,14 @@ export class VacancyService {
   //ppsc.p2.gov.np
 
   //advertising
-  async getp2Data() {
+  async postp2DataAdvertising() {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%aa%e0%a4%a6%e0%a4%aa%e0%a5%82%e0%a4%b0%e0%a5%8d%e0%a4%a4%e0%a4%bf/%e0%a4%b5%e0%a4%bf%e0%a4%9c%e0%a5%8d%e0%a4%9e%e0%a4%be%e0%a4%aa%e0%a4%a8/`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     await page.goto(url);
 
-    while (await page.$('a.next.page-numbers')) {
+    // while (await page.$('a.next.page-numbers')) {
       const allData = await page.evaluate(() => {
         const vacancies = Array.from(
           document.querySelectorAll('.mg-posts-sec-inner article'),
@@ -375,18 +378,34 @@ export class VacancyService {
           pdf: vacancy.querySelector('h4 a').getAttribute('href'),
           title: vacancy.querySelector('h4 a').innerText,
         }));
-        return data.length;
+        return data;
         // return data;
       });
-      console.log(allData);
-      await page.click(' a.next.page-numbers');
-    }
+      for(const vacancy of allData){
+        await this.prisma.vacancy.createMany({
+          data:{
+            title:vacancy.title,
+            pdf:vacancy.pdf,
+            type:"p2advertising"
+          }
+        })
+      }
+      // console.log(allData);
+      // await page.click(' a.next.page-numbers');
+    // }
   }
+  async getp2DataAdvertising(type: string) {
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData
+  }
+  
+
 
   //notice
-  async getp2noticeData() {
+  async postp2noticeData() {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be-%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/page/1/`;
-    // const url = `https://ppsc.p2.gov.np/category/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be-%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/page/2/`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
@@ -394,38 +413,47 @@ export class VacancyService {
 
     const noticeHandles = await page.$$('.mg-posts-sec-inner article');
     let items = [];
-    
-    let isBtnDisable = false;
-    for (let i=0;i<3;i++) {
-      for (const noticeHandle of noticeHandles) {
-        let title = 'Null';
-        let pdf = 'Null';
 
-        try {
-          title = await page.evaluate(
-            (el) => el.querySelector('h4 a').textContent,
-            noticeHandle,
-          );
-        } catch (err) {}
-        try {
-          pdf = await page.evaluate(
-            (el) => el.querySelector('h4 a').getAttribute('href'),
-            noticeHandle,
-          );
-        } catch (err) {}
-        items.push({ title, pdf });
-        
-      }
-      // const nextButton = await page.$("a.next.page-numbers")
-      // const isDisable = (await page.$('a.next.page-numbers')) == null;
-      // console.log(isDisable)
-      // isBtnDisable = isDisable;
-      // if (!isDisable) {
-      // }
-      await page.click("a.next.page-numbers")
-      // await page.waitForSelector('a.next.page-numbers', { visible: true });
-      // await page.waitForNavigation()
+    // for (let i = 0; i < 3; i++) {
+    for (const noticeHandle of noticeHandles) {
+      let title = 'Null';
+      let pdf = 'Null';
+
+      try {
+        title = await page.evaluate(
+          (el) => el.querySelector('h4 a').textContent,
+          noticeHandle,
+        );
+      } catch (err) {}
+      try {
+        pdf = await page.evaluate(
+          (el) => el.querySelector('h4 a').getAttribute('href'),
+          noticeHandle,
+        );
+      } catch (err) {}
+      items.push({ title, pdf });
+
+      await this.prisma.vacancy.createMany({
+        data: {
+          title: title,
+          pdf: pdf,
+          type: 'p2notice',
+        },
+      });
     }
-    console.log(items.length);
+    const isDisable = (await page.$('a.next.page-numbers')) == null;
+    console.log(isDisable);
+
+    if (!isDisable) {
+      await page.click('a.next.page-numbers');
+    }
+  }
+  // }
+
+  async getp2noticeData(type: string) {
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData
   }
 }

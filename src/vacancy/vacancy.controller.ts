@@ -2,6 +2,8 @@
 import {
   Controller,
   Get,
+  Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { VacancyService } from './vacancy.service';
@@ -30,16 +32,32 @@ export class VacancyController {
 
 
   @Get('np')
+  @Roles(Role.USER)
   findNp() {
     return this.vacancyService.getNpData();
   }
+
+  @Post('p2')
+  @Roles(Role.USER)
+  postP2() {
+    return this.vacancyService.postp2DataAdvertising();
+  }
+
   @Get('p2')
-  findP2() {
-    return this.vacancyService.getp2Data();
+  @Roles(Role.USER)
+  findP2(@Query("type") type:string) {
+    return this.vacancyService.getp2DataAdvertising(type);
+  }
+  
+  @Post('p2/notice')
+  // @Roles(Role.USER)
+  postP2notice() {
+    return this.vacancyService.postp2noticeData();
   }
   @Get('p2/notice')
-  findP2notice() {
-    return this.vacancyService.getp2noticeData();
+  @Roles(Role.USER)
+  findP2notice(@Query("type") type:string) {
+    return this.vacancyService.getp2noticeData(type)
   }
 
   @Get('bagmati')

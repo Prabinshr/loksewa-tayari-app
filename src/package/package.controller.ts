@@ -42,6 +42,11 @@ export class PackageController {
     await this.packageService.applyPackage(transactionId, package_title);
   }
 
+  // @Post(':id/subscribe')
+  // async subscribeToPackage(@Param('id') id: string): Promise<void> {
+  //   await this.packageService.subscribeToPackage(id);
+  // }
+
   @Get()
   @ApiOperation({ summary: 'Get all Packages.' })
   @Roles(Role.USER)

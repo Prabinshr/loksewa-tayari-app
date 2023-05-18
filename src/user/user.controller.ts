@@ -61,6 +61,12 @@ export class UserController {
 
   //upload image
   @Post('upload')
+  @ApiOperation({ summary: 'Upload Profile Picture of The User' })
+  @ApiResponse({
+    status: 201,
+    description: 'Upload Profile Picture of The User',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseInterceptors(
     FileInterceptor('profile', {
       storage: memoryStorage(),

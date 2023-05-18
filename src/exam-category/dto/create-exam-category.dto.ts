@@ -6,6 +6,8 @@ export class CreateExamCategoryDto {
   @IsString()
   @IsNotEmpty()
   title: string;
+
+  
   
 
 }

@@ -56,7 +56,8 @@
     "pug": "^3.0.1",
     "puppeteer": "^20.2.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "sharp": "^0.32.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

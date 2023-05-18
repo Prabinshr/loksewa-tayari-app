@@ -10,14 +10,18 @@ import {
   Query,
   BadRequestException,
   UseGuards,
-  UploadedFiles,
+  UploadedFile,
   UseInterceptors,
+  ParseFilePipeBuilder,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateUserDto, UpdateUserDto } from './dto';
@@ -25,9 +29,13 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
 import { User } from './entities';
-import { extname } from 'path';
-import { diskStorage } from 'multer';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { SharpPipe } from './pipes';
+import { Response } from 'express';
+import { join } from 'path';
+import { Public } from 'src/decorators/public.decorator';
 
 @ApiTags('User')
 @ApiBearerAuth('jwt')
@@ -53,40 +61,42 @@ export class UserController {
 
   //upload image
   @Post('upload')
-  @Roles(Role.USER)
-  @UseGuards(RolesGuard)
+  @ApiOperation({ summary: 'Upload Profile Picture of The User' })
+  @ApiResponse({
+    status: 201,
+    description: 'Upload Profile Picture of The User',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        {
-          name: 'user',
-          maxCount: 1,
-        },
-      ],
-      {
-        storage: diskStorage({
-          destination: './images',
-          filename: (req, file, callback) => {
-            console.log(file);
-
-            const filename = file.originalname;
-            const ext = extname(file.originalname);
-            callback(null, `${filename}${ext}`);
-          },
-        }),
-      },
-    ),
+    FileInterceptor('profile', {
+      storage: memoryStorage(),
+    }),
   )
-  uploadFiles(
-    @UploadedFiles()
-    file: {
-      user?: Express.Multer.File[];
-    },
-  ): object {
-    console.log(file);
-    return {
-      message: 'File Upload successful.',
-    };
+  async uploadProfileImage(
+    @CurrentUser() user,
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: /(jpg|jpeg|png|gif)$/ })
+        .addMaxSizeValidator({
+          maxSize: 5242880,
+        })
+        .build({ errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY }),
+      SharpPipe,
+    )
+    profile: Express.Multer.File,
+  ) {
+    return await this.userService.uploadUserImage(user, profile);
+  }
+
+  // Getting Profile Image
+  @Get('profile-image/:imageName')
+  @ApiOperation({ summary: 'Get Profile Image of The User' })
+  @ApiResponse({ status: 201, description: 'Get Profile Image Of The User' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  getProfileImage(@Param('imageName') imageName: string, @Res() res: Response) {
+    return res.sendFile(
+      join(process.cwd(), `uploads/profile-pictures/${imageName}`),
+    );
   }
 
   @Get()

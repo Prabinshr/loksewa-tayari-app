@@ -37,12 +37,11 @@ export class PackageService {
       },
       data: {
         package_title,
-        amount : packageAmount,
+        amount: packageAmount,
       },
     });
   }
 
-  
   findAll() {
     try {
       return this.prismaService.package.findMany();

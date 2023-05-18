@@ -66,9 +66,27 @@ export class UserService {
     }
   }
 
-  async uploadUserImage(id: string, userImage: Express.Multer.File) {
+  async uploadUserImage(
+    user: User,
+    profile: Express.Multer.File,
+  ): Promise<{ message: string; user: User }> {
     try {
-      console.log(userImage);
+      const { email, ...User } = user;
+      console.log(profile);
+      // Inserting The Image File Path In User
+      await this.prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          image: `/user/profile-image/${String(profile)}`,
+        },
+      });
+
+      return {
+        message: 'Profile Picture Uploaded !!!',
+        user,
+      };
     } catch (err) {
       throw new HttpException(err, 500);
     }

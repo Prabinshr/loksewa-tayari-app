@@ -1,5 +1,6 @@
 
 import {
+  Body,
   Controller,
   Get,
   Post,
@@ -13,6 +14,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
+import { type } from 'os';
 
 @ApiTags('vacancy')
 @ApiBearerAuth('jwt')
@@ -23,94 +25,102 @@ export class VacancyController {
 
   //endpooint to hit all the other endpoints to scrape data at once
   //for future automation-cronjob
-  @Get('all')
-  @Roles(Role.USER)
-  async scrapeAllData() {
-    const allData = await this.vacancyService.scrapeAllData();
-    return allData;
-  }
+  // @Get('all')
+  // @Roles(Role.USER)
+  // async scrapeAllData() {
+  //   const allData = await this.vacancyService.scrapeAllData();
+  //   return allData;
+  // }
 
 
+ 
   @Get('np')
   @Roles(Role.USER)
-  findNp() {
-    return this.vacancyService.getNpData();
+  findNp(@Query("type") type:string) {
+    return this.vacancyService.getNpData(type);
   }
 
-  @Post('p2')
-  @Roles(Role.USER)
-  postP2() {
-    return this.vacancyService.postp2DataAdvertising();
-  }
+  
 
   @Get('p2')
   @Roles(Role.USER)
   findP2(@Query("type") type:string) {
     return this.vacancyService.getp2DataAdvertising(type);
   }
+
   
-  @Post('p2/notice')
-  // @Roles(Role.USER)
-  postP2notice() {
-    return this.vacancyService.postp2noticeData();
-  }
   @Get('p2/notice')
   @Roles(Role.USER)
   findP2notice(@Query("type") type:string) {
     return this.vacancyService.getp2noticeData(type)
   }
 
+  
   @Get('bagmati')
   @Roles(Role.USER)
-  async scrapeBagmati() {
-    return this.vacancyService.scrapeBagmati();
+  async getBagmati(@Query() type:string) {
+    return this.vacancyService.getBagmati(type);
   }
 
+  
   @Get('bagmati/notices')
   @Roles(Role.USER)
-  async scrapeBagmatiNotices() {
-    return this.vacancyService.scrapeBagmatiNotices();
+  async getBagmatiNotices(@Query() type:string) {
+    return this.vacancyService.getBagmatiNotices(type);
   }
 
-  @Get('bagmati/promotion')
-  @Roles(Role.USER)
-  async scrapeBagmatiPromotion() {
-    return this.vacancyService.scrapeBagmatiPromotion();
-  }
+  // @Post('bagmati/promotion')
+  // @Roles(Role.USER)
+  // async postBagmatiPromotion() {
+  //   return this.vacancyService.postBagmatiPromotion();
+  // }
+  // @Get('bagmati/promotion')
+  // @Roles(Role.USER)
+  // async getBagmatiPromotion(@Query() type:string) {
+  //   return this.vacancyService.getBagmatiPromotion(type);
+  // }
+
 
   @Get('karnali')
   @Roles(Role.USER)
-  async scrapeKarnali() {
-    return this.vacancyService.scrapeKarnali();
+  async getKarnali(@Query() type:string) {
+    return this.vacancyService.getKarnali(type);
   }
 
+ 
   @Get('karnali/notices')
   @Roles(Role.USER)
-  async scrapeKarnaliNotices() {
-    return this.vacancyService.scrapeKarnaliNotices();
+  async getKarnaliNotices(@Query() type:string) {
+    return this.vacancyService.getKarnaliNotices(type);
   }
 
+  
   @Get('gandaki')
   @Roles(Role.USER)
-  async scrapeGandaki() {
-    return this.vacancyService.scrapeGandaki();
+  async getGandaki(@Query() type:string) {
+    return this.vacancyService.getGandaki(type);
   }
 
+ 
   @Get('gandaki/notices')
   @Roles(Role.USER)
-  async scrapeGandakiNotices() {
-    return this.vacancyService.scrapeGandakiNotices();
+  async getGandakiNotices(@Query() type:string) {
+    return this.vacancyService.getGandakiNotices(type);
   }
+
+  
 
   @Get('p1')
   @Roles(Role.USER)
-  async scrapePradeshOne() {
-    return this.vacancyService.scrapePradeshOne();
+  async getPradeshOne(@Query() type:string) {
+    return this.vacancyService.getPradeshOne(type);
   }
+
+  
   @Get('p1/notices')
   @Roles(Role.USER)
-  async scrapePradeshOneNotices() {
-    return this.vacancyService.scrapePradeshOneNotices();
+  async getPradeshOneNotices(@Query() type:string) {
+    return this.vacancyService.getPradeshOneNotices(type);
   }
 
   // @Get('pradesh5')

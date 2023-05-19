@@ -22,6 +22,7 @@ export class VacancyController {
   //endpooint to hit all the other endpoints to scrape data at once
   //for future automation-cronjob
   @Get('all')
+  
   @Roles(Role.USER)
   async scrapeAllData() {
     const allData = await this.vacancyService.scrapeAllData();

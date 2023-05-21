@@ -13,7 +13,18 @@ export class CreateExamsetDto {
   @IsNotEmpty()
   level: LEVEL;
 
-  
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  mock: number;
 
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  negative_mark_value?: number;
 
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  subService_id: string;
 }

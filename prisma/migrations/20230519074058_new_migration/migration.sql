@@ -13,6 +13,9 @@ CREATE TYPE "STATUS" AS ENUM ('PUBLISHED', 'UNPUBLISHED');
 -- CreateEnum
 CREATE TYPE "QSN_TYPE" AS ENUM ('PAID', 'FREE', 'TRIAL');
 
+-- CreateEnum
+CREATE TYPE "LEVEL" AS ENUM ('EASY', 'MEDIUM', 'HARD');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
@@ -117,6 +120,7 @@ CREATE TABLE "Package" (
     "description" TEXT NOT NULL,
     "amount" INTEGER NOT NULL,
     "subscriptionDays" TEXT NOT NULL,
+    "subscriptionDate" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -166,7 +170,7 @@ CREATE TABLE "OTP" (
 -- CreateTable
 CREATE TABLE "SewaService" (
     "id" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "status" "STATUS" NOT NULL,
     "image" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -246,6 +250,7 @@ CREATE TABLE "QuestionSet" (
 CREATE TABLE "Forum" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
+    "image" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -276,6 +281,47 @@ CREATE TABLE "Comments" (
     CONSTRAINT "Comments_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "ExamSet" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "level" "LEVEL" NOT NULL,
+    "mock" INTEGER NOT NULL DEFAULT 1,
+    "negative_mark_value" DOUBLE PRECISION DEFAULT 0,
+    "subService_id" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ExamSet_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ExamCategory" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "examSet_id" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ExamCategory_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ExamQuestion" (
+    "id" TEXT NOT NULL,
+    "examCategory_id" TEXT,
+    "syllabusStr" TEXT NOT NULL,
+    "syllabusSubStr" TEXT NOT NULL,
+    "question" TEXT NOT NULL,
+    "options" TEXT[],
+    "correct_ans" TEXT NOT NULL,
+    "explaination" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ExamQuestion_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
@@ -287,6 +333,12 @@ CREATE UNIQUE INDEX "ResetPassword_email_key" ON "ResetPassword"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "refreshTokenHash_user_id_key" ON "refreshTokenHash"("user_id");
+
+-- CreateIndex
+CREATE INDEX "refreshTokenHash_user_id_idx" ON "refreshTokenHash"("user_id");
+
+-- CreateIndex
+CREATE INDEX "refreshTokenHash_token_hash_idx" ON "refreshTokenHash"("token_hash");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Package_title_key" ON "Package"("title");
@@ -365,3 +417,12 @@ ALTER TABLE "Comments" ADD CONSTRAINT "Comments_userId_fkey" FOREIGN KEY ("userI
 
 -- AddForeignKey
 ALTER TABLE "Comments" ADD CONSTRAINT "Comments_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExamSet" ADD CONSTRAINT "ExamSet_subService_id_fkey" FOREIGN KEY ("subService_id") REFERENCES "SubService"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExamCategory" ADD CONSTRAINT "ExamCategory_examSet_id_fkey" FOREIGN KEY ("examSet_id") REFERENCES "ExamSet"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ExamQuestion" ADD CONSTRAINT "ExamQuestion_examCategory_id_fkey" FOREIGN KEY ("examCategory_id") REFERENCES "ExamCategory"("id") ON DELETE SET NULL ON UPDATE CASCADE;

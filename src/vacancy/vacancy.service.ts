@@ -605,10 +605,13 @@ export class VacancyService {
 
     await page.goto(url);
 
-    const noticeHandles = await page.$$('.mg-posts-sec-inner article');
     let items = [];
-
-    // for (let i = 0; i < 3; i++) {
+    
+    let isButton = false;
+    
+    while (!isButton) {
+      const noticeHandles = await page.$$('.d-md-flex.mg-posts-sec-post');
+    
     for (const noticeHandle of noticeHandles) {
       let titlee = 'Null';
       let pdff = 'Null';
@@ -625,13 +628,14 @@ export class VacancyService {
           noticeHandle,
         );
       } catch (err) {}
+
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: titlee },
       });
       if (!findtitle) {
         items.push({ titlee, pdff });
 
-        await this.prisma.vacancy.createMany({
+      await this.prisma.vacancy.createMany({
           data: {
             title: titlee,
             pdf: pdff,
@@ -639,7 +643,13 @@ export class VacancyService {
           },
         });
       }
+      
     }
+    let isDisable = (await page.$('.next')) == null;
+      isButton = isDisable;
+      if (!isDisable) {
+        await page.click('.next');
+      }
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
     });
@@ -647,5 +657,6 @@ export class VacancyService {
     
     
   }
+}
 
 }

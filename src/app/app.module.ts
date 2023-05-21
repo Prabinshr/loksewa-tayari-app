@@ -30,6 +30,7 @@ import { ExamCategoryModule } from 'src/exam-category/exam-category.module';
 import { ExamsetModule } from 'src/examset/examset.module';
 import { ExamQuestionModule } from 'src/exam-question/exam-question.module';
 import { VacancyModule } from 'src/vacancy/vacancy.module';
+import { GorkhaPatraModule } from 'src/gorkha-patra/gorkha-patra.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { VacancyModule } from 'src/vacancy/vacancy.module';
     ExamsetModule,
     ExamQuestionModule,
     VacancyModule,
+    GorkhaPatraModule
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

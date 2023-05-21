@@ -5,7 +5,6 @@ import puppeteer from 'puppeteer';
 
 @Injectable()
 export class GorkhaPatraService {
-
   //scrape gorkhaPatra loksewa news from smartTayari website
   async scrapeNews() {
     const url = 'https://smarttayari.com/gorkhapatra';
@@ -16,17 +15,54 @@ export class GorkhaPatraService {
     const page = await browser.newPage();
     await page.goto(url);
 
+    // //LOAD MORE - button logic
+    // let isLoadMoreVisible = await page.evaluate(() => {
+    //   // const loadMoreButton = document.querySelector('.loadmore') as HTMLElement;
+    //   const loadMoreButton = document.querySelector(
+    //     '.loadmore a.mui-button',
+    //   ) as HTMLElement;
+    //   if (loadMoreButton) {
+    //     loadMoreButton.click();
+    //     return true;
+    //   }
+    //   return false;
+    // });
+
+    // while (isLoadMoreVisible) {
+    //   //  await page.waitFor({ timeout: 2000 });
+    //   await page.waitForTimeout(9000); // Add a delay to ensure content loads after clicking "Load More"
+    //   isLoadMoreVisible = await page.evaluate(() => {
+    //     // const loadMoreButton = document.querySelector('.loadmore') as HTMLElement;
+    //     const loadMoreButton = document.querySelector(
+    //       '.loadmore a.mui-button',
+    //     ) as HTMLElement;
+    //     if (loadMoreButton) {
+    //       loadMoreButton.click();
+    //       return true;
+    //     }
+    //     return false;
+    //   });
+    // }
+
     // Use Puppeteer to scrape the website
     const scrapNews = await page.evaluate((url) => {
-      const loksewaNews = Array.from(document.querySelectorAll('div .list-items .mui-panel .mui-row'));
+      const loksewaNews = Array.from(
+        document.querySelectorAll('div .list-items .mui-panel .mui-row'),
+      );
       const data = loksewaNews.map((news: any) => ({
         title: news.querySelector('a').getAttribute('title'),
-        news_link: 'https://smarttayari.com' + news.querySelector('a').getAttribute('href'),
-        image_url: 'https://smarttayari.com' + news.querySelector('a img').getAttribute('src'),
+        news_link:
+          'https://smarttayari.com' +
+          news.querySelector('a').getAttribute('href'),
+        image_url:
+          'https://smarttayari.com' +
+          // news.querySelector('a img').getAttribute('src'),
+          news.querySelector('a img').getAttribute('src').split('&w=')[0] + '&w=400',
       }));
+
       return data;
     }, url);
-    await browser.close();
+    // await browser.close();
     return scrapNews;
   }
 }

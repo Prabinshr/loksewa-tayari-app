@@ -15,35 +15,6 @@ export class GorkhaPatraService {
     const page = await browser.newPage();
     await page.goto(url);
 
-    // //LOAD MORE - button logic
-    // let isLoadMoreVisible = await page.evaluate(() => {
-    //   // const loadMoreButton = document.querySelector('.loadmore') as HTMLElement;
-    //   const loadMoreButton = document.querySelector(
-    //     '.loadmore a.mui-button',
-    //   ) as HTMLElement;
-    //   if (loadMoreButton) {
-    //     loadMoreButton.click();
-    //     return true;
-    //   }
-    //   return false;
-    // });
-
-    // while (isLoadMoreVisible) {
-    //   //  await page.waitFor({ timeout: 2000 });
-    //   await page.waitForTimeout(9000); // Add a delay to ensure content loads after clicking "Load More"
-    //   isLoadMoreVisible = await page.evaluate(() => {
-    //     // const loadMoreButton = document.querySelector('.loadmore') as HTMLElement;
-    //     const loadMoreButton = document.querySelector(
-    //       '.loadmore a.mui-button',
-    //     ) as HTMLElement;
-    //     if (loadMoreButton) {
-    //       loadMoreButton.click();
-    //       return true;
-    //     }
-    //     return false;
-    //   });
-    // }
-
     // Use Puppeteer to scrape the website
     const scrapNews = await page.evaluate((url) => {
       const loksewaNews = Array.from(
@@ -56,13 +27,55 @@ export class GorkhaPatraService {
           news.querySelector('a').getAttribute('href'),
         image_url:
           'https://smarttayari.com' +
-          // news.querySelector('a img').getAttribute('src'),
-          news.querySelector('a img').getAttribute('src').split('&w=')[0] + '&w=400',
+          news.querySelector('a img').getAttribute('src').split('&w=')[0] +
+          '&w=400',
       }));
 
       return data;
     }, url);
-    // await browser.close();
+
+    await browser.close();
     return scrapNews;
+
+    
+    //logic for scraping 50 news
+
+    // let newsCount = 0;
+    // let scrapedNews = [];
+
+    // while (newsCount < 50) {
+    //   const newsItems = await page.evaluate(() => {
+    //     const items = Array.from(
+    //       document.querySelectorAll('div.list-items .mui-panel .mui-row'),
+    //     );
+    //     return items.slice(0, Math.min(items.length, 50 - newsCount));
+    //   });
+
+    //   const newsData = await page.evaluate((items) => {
+    //     return items.map((news) => ({
+    //       title: news.querySelector('a').getAttribute('title'),
+    //       news_link:
+    //         'https://smarttayari.com' +
+    //         news.querySelector('a').getAttribute('href'),
+    //       image_url:
+    //         'https://smarttayari.com' +
+    //         news.querySelector('a img').getAttribute('src').split('&w=')[0],
+    //     }));
+    //   }, newsItems);
+
+    //   scrapedNews = scrapedNews.concat(newsData);
+    //   newsCount = scrapedNews.length;
+
+    //   const loadMoreButton = await page.$('.loadmore');
+    //   if (loadMoreButton) {
+    //     await loadMoreButton.click();
+    //     await page.waitForTimeout(2000); // Add a delay to ensure content loads after clicking "Load More"
+    //   } else {
+    //     break; // Break the loop if there is no "Load More" button
+    //   }
+    // }
+    
+    // await browser.close();
+    // return scrapedNews;
   }
 }

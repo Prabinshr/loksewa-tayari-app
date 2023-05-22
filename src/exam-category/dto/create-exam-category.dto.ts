@@ -7,7 +7,8 @@ export class CreateExamCategoryDto {
   @IsNotEmpty()
   title: string;
 
-  
-  
-
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  examSet_id: string;
 }

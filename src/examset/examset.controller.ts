@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ExamsetService } from './examset.service';
 import { CreateExamsetDto } from './dto/create-examset.dto';
 import { UpdateExamsetDto } from './dto/update-examset.dto';
@@ -12,7 +21,6 @@ import { Role } from '@prisma/client';
 @ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
 // @Roles(Role.ADMIN)
-
 export class ExamsetController {
   constructor(private readonly examsetService: ExamsetService) {}
 
@@ -26,6 +34,23 @@ export class ExamsetController {
   @Roles(Role.USER)
   findAll() {
     return this.examsetService.findAll();
+  }
+
+  // Getting Specific SubService's All Exam Sets
+  @Get(':subService/')
+  @Roles(Role.USER)
+  findAllSets(@Param('subService') subService: string) {
+    return this.examsetService.findAllSets(subService);
+  }
+
+  // Getting Specific SubService Exam Set
+  @Get(':subService/:mock')
+  @Roles(Role.USER)
+  findSet(
+    @Param('subService') subService: string,
+    @Param('mock') mock: number,
+  ) {
+    return this.examsetService.findSet(subService, mock);
   }
 
   @Get(':id')

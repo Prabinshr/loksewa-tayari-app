@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateExamsetDto } from './dto/create-examset.dto';
 import { UpdateExamsetDto } from './dto/update-examset.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class ExamsetService {
   constructor(private prisma: PrismaService) {}
+
   create(createExamsetDto: CreateExamsetDto) {
     try {
       return this.prisma.examSet.create({ data: createExamsetDto });
@@ -24,6 +25,62 @@ export class ExamsetService {
     }
   }
 
+  // Getting Specific SubService Exam Sets
+  async findAllSets(subService: string) {
+    try {
+      // Getting SubService's ID
+      const { id, ...subServ } = await this.prisma.subService.findFirst({
+        where: {
+          title: subService.toUpperCase(),
+        },
+      });
+
+      if (!id)
+        throw new HttpException('Invalid Sub Service', HttpStatus.BAD_REQUEST);
+
+      // Getting ExamSets Using SubService's ID
+      return await this.prisma.examSet.findMany({
+        where: {
+          subService_id: id,
+        },
+      });
+    } catch (e) {
+      throw new HttpException(
+        'Something Went Wrong Finding SubService Exam Sets',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  // Getting Specific SubService Exam Set
+  async findSet(subService: string, mock: number) {
+    try {
+      // Getting SubService's ID
+      const { id, ...subServ } = await this.prisma.subService.findFirst({
+        where: {
+          title: subService.toUpperCase(),
+        },
+      });
+
+      if (!id)
+        throw new HttpException('Invalid Sub Service', HttpStatus.BAD_REQUEST);
+
+      // Getting ExamSets Using SubService's ID
+      return await this.prisma.examSet.findMany({
+        where: {
+          subService_id: id,
+          mock,
+        },
+        include: { examCategories: { include: { questions: true } } },
+      });
+    } catch (e) {
+      throw new HttpException(
+        'Something Went Wrong Finding SubService Exam Sets',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   findOne(id: string) {
     try {
       return this.prisma.examSet.findUnique({
@@ -37,7 +94,7 @@ export class ExamsetService {
   async filter(mock: number) {
     const filter = await this.prisma.examSet.findMany({
       where: { mock },
-      include:{examCategories:true}
+      include: { examCategories: true },
     });
     return filter;
   }

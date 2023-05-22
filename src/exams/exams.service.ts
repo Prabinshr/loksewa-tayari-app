@@ -11,7 +11,6 @@ export class ExamsService {
       // Checking If SewaService & SubService Are Related Or Not
       const { id, ...sewas } = await this.prisma.sewaService.findFirst({
         where: { title: sewaService.toUpperCase() },
-        include: { subServices: true },
       });
 
       const { sewaService_id, ...subServ } =
@@ -25,11 +24,21 @@ export class ExamsService {
         throw new HttpException('Invalid Sub Service', HttpStatus.BAD_REQUEST);
 
       // Getting ExamSets Using SubService's ID
+      const filteredCondition = {
+        subService_id: subServ.id,
+      };
+
+      if (mock) {
+        filteredCondition['mock'] = mock;
+
+        return await this.prisma.examSet.findMany({
+          where: filteredCondition,
+          include: { examCategories: { include: { questions: true } } },
+        });
+      }
+
       return await this.prisma.examSet.findMany({
-        where: {
-          subService_id: subServ.id,
-          mock,
-        },
+        where: filteredCondition,
       });
     } catch (e) {
       throw new HttpException(

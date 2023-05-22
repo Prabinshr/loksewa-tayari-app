@@ -32,6 +32,7 @@ import { Public } from 'src/decorators/public.decorator';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ITokens } from './interfaces/tokens.interface';
 import { OTPType } from '@prisma/client';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -43,6 +44,7 @@ export class AuthController {
     private readonly prismaService: PrismaService,
   ) {}
 
+  @Throttle(8, 60)
   @Post('login')
   @Public()
   @UseGuards(AuthGuard('local')) // <---- This is important. It handles the authentication.

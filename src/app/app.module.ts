@@ -32,6 +32,7 @@ import { ExamQuestionModule } from 'src/exam-question/exam-question.module';
 import { VacancyModule } from 'src/vacancy/vacancy.module';
 import { GorkhaPatraModule } from 'src/gorkha-patra/gorkha-patra.module';
 import { NotificationModule } from 'src/notification/notification.module';
+import { ExamsModule } from 'src/exams/exams.module';
 
 @Module({
   imports: [
@@ -63,7 +64,8 @@ import { NotificationModule } from 'src/notification/notification.module';
     ExamQuestionModule,
     VacancyModule,
     GorkhaPatraModule,
-    NotificationModule
+    NotificationModule,
+    ExamsModule,
   ],
   controllers: [AppController],
   providers: [AppService, UserService],

@@ -31,6 +31,7 @@ import { ExamsetModule } from 'src/examset/examset.module';
 import { ExamQuestionModule } from 'src/exam-question/exam-question.module';
 import { VacancyModule } from 'src/vacancy/vacancy.module';
 import { GorkhaPatraModule } from 'src/gorkha-patra/gorkha-patra.module';
+import { NotificationModule } from 'src/notification/notification.module';
 import { ExamsModule } from 'src/exams/exams.module';
 
 @Module({
@@ -63,6 +64,7 @@ import { ExamsModule } from 'src/exams/exams.module';
     ExamQuestionModule,
     VacancyModule,
     GorkhaPatraModule,
+    NotificationModule,
     ExamsModule,
   ],
   controllers: [AppController],

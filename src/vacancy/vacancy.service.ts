@@ -2,47 +2,53 @@ import { Injectable } from '@nestjs/common';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import puppeteer from 'puppeteer';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class VacancyService {
-  async scrapeAllData() {
-    const [
-      bagmatiVacancyData,
-      bagmatiNoticesData,
-      bagmatiPromotionData,
-      karnaliVacancyData,
-      karnaliNoticesData,
-      gandakiVacancyData,
-      gandakiNoticesData,
-      pradeshOneVacancyData,
-      pradeshOneNoticesData,
-    ] = await Promise.all([
-      this.scrapeBagmati(),
-      this.scrapeBagmatiNotices(),
-      this.scrapeBagmatiPromotion(),
-      this.scrapeKarnali(),
-      this.scrapeKarnaliNotices(),
-      this.scrapeGandaki(),
-      this.scrapeGandakiNotices(),
-      this.scrapePradeshOne(),
-      this.scrapePradeshOneNotices(),
-    ]);
+  constructor(
+    private prisma: PrismaService,
+    private notification: NotificationService,
+  ) {}
+  // async scrapeAllData() {
+  //   const [
+  //     bagmatiVacancyData,
+  //     bagmatiNoticesData,
+  //     bagmatiPromotionData,
+  //     karnaliVacancyData,
+  //     karnaliNoticesData,
+  //     gandakiVacancyData,
+  //     gandakiNoticesData,
+  //     pradeshOneVacancyData,
+  //     pradeshOneNoticesData,
+  //   ] = await Promise.all([
+  //     this.scrapeBagmati(),
+  //     this.scrapeBagmatiNotices(),
+  //     this.scrapeBagmatiPromotion(),
+  //     this.scrapeKarnali(),
+  //     this.scrapeKarnaliNotices(),
+  //     this.scrapeGandaki(),
+  //     this.scrapeGandakiNotices(),
+  //     this.scrapePradeshOne(),
+  //     this.getPradeshOneNotices(),
+  //   ]);
 
-    return {
-      bagmatiVacancyData,
-      bagmatiNoticesData,
-      bagmatiPromotionData,
-      karnaliVacancyData,
-      karnaliNoticesData,
-      gandakiVacancyData,
-      gandakiNoticesData,
-      pradeshOneVacancyData,
-      pradeshOneNoticesData,
-    };
-  }
+  //   return {
+  //     bagmatiVacancyData,
+  //     bagmatiNoticesData,
+  //     bagmatiPromotionData,
+  //     karnaliVacancyData,
+  //     karnaliNoticesData,
+  //     gandakiVacancyData,
+  //     gandakiNoticesData,
+  //     pradeshOneVacancyData,
+  //     pradeshOneNoticesData,
+  //   };
+  // }
 
   //scrape bagmati-all vacancies
-  async scrapeBagmati() {
+  async getBagmati(type: string) {
     const url = 'https://spsc.bagamati.gov.np/acts-rules/10/80861221';
     const browser = await puppeteer.launch({
       headless: false,
@@ -61,36 +67,82 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
+    for (const vacancy of scrapVacancies) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.pdfUrl,
+            type: 'bagmati',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapVacancies;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   //scrape bagmati-all promotion news
-  async scrapeBagmatiPromotion() {
-    const url = 'https://spsc.bagamati.gov.np/acts-rules/15/49186083';
-    const browser = await puppeteer.launch({
-      headless: false,
-      defaultViewport: null,
-    });
-    const page = await browser.newPage();
-    await page.goto(url);
+  // async postBagmatiPromotion() {
+  //   const url = 'https://spsc.bagamati.gov.np/acts-rules/15/49186083';
+  //   const browser = await puppeteer.launch({
+  //     headless: false,
+  //     defaultViewport: null,
+  //   });
+  //   const page = await browser.newPage();
+  //   await page.goto(url);
 
-    // Use Puppeteer to scrape the website
-    const scrapPromotions = await page.evaluate((url) => {
-      const promotions = Array.from(document.querySelectorAll('tbody tr'));
-      const data = promotions.map((promotion: any) => ({
-        symbol_no: promotion.querySelector('td').innerText,
-        title: promotion.querySelector('td strong').innerText,
-        pdfUrl: promotion.querySelector('td a').getAttribute('href'),
-      }));
-      return data;
-    }, url);
-    await browser.close();
-    return scrapPromotions;
-  }
+  //   // Use Puppeteer to scrape the website
+  //   const scrapPromotions = await page.evaluate((url) => {
+  //     const promotions = Array.from(document.querySelectorAll('tbody tr'));
+  //     const data = promotions.map((promotion: any) => ({
+  //       symbol_no: promotion.querySelector('td').innerText,
+  //       title: promotion.querySelector('td strong').innerText,
+  //       pdfUrl: promotion.querySelector('td a').getAttribute('href'),
+  //     }));
+  //     return data;
+  //   }, url);
+  //   for (const vacancy of scrapPromotions) {
+  //     const findtitle = await this.prisma.vacancy.findFirst({
+  //       where: { title: vacancy.title },
+  //     });
+  //     if(!findtitle){
+
+  //       await this.prisma.vacancy.createMany({
+  //         data: {
+  //           title: vacancy.title,
+  //           pdf: vacancy.pdfUrl,
+  //           type: 'bagmatiAct-rule',
+  //         },
+  //       });
+  //     }
+  //   }
+  //   await browser.close();
+  //   return scrapPromotions;
+  // }
+
+  // //get
+  // async getBagmatiPromotion(type: string) {
+  //   const getData = await this.prisma.vacancy.findMany({
+  //     where: { type },
+  //   });
+  //   return getData;
+  // }
 
   //scrape bagmati-all notices
-  async scrapeBagmatiNotices() {
+  async getBagmatiNotices(type: string) {
     const url = 'https://spsc.bagamati.gov.np/notice-board/1/2018';
     const browser = await puppeteer.launch({
       headless: false,
@@ -111,12 +163,34 @@ export class VacancyService {
       }));
       return data;
     }, url);
+    let item = 0
+    for (const vacancy of scrapNotices) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.news_link,
+            type: 'bagmatiNotice',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapNotices;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   //scrape karnali-all vacancies
-  async scrapeKarnali() {
+  async getKarnali(type: string) {
     const url = 'https://ppsc.karnali.gov.np/vacancy?type=2';
     const browser = await puppeteer.launch({
       headless: false,
@@ -135,12 +209,34 @@ export class VacancyService {
       }));
       return data;
     }, url);
+    let item = 0
+    for (const vacancy of scrapVacancies) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.pdfUrl,
+            type: 'karnaliVacancy',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapVacancies;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   //scrape karnali-all notices from notice-board
-  async scrapeKarnaliNotices() {
+  async getKarnaliNotices(type: string) {
     const url = 'https://ppsc.karnali.gov.np/notice?type=1';
     const browser = await puppeteer.launch({
       headless: false,
@@ -159,12 +255,35 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
+    for (const vacancy of scrapNotices) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.pdfUrl,
+            type: 'karnaliNotice',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapNotices;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   //scrape gandaki-all vacancies
-  async scrapeGandaki() {
+  async getGandaki(type: string) {
     const url = 'https://ppsc.gandaki.gov.np/list/advertisment_notive';
     const browser = await puppeteer.launch({
       headless: false,
@@ -185,12 +304,35 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
+    for (const vacancy of scrapVacancies) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.news_url,
+            type: 'gandakiAdvertisment',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapVacancies;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   //scrape gandaki-all notices from notice-board
-  async scrapeGandakiNotices() {
+  async getGandakiNotices(type: string) {
     const url = 'https://ppsc.gandaki.gov.np/list/notice_bord';
     const browser = await puppeteer.launch({
       headless: false,
@@ -211,15 +353,38 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
+    for (const vacancy of scrapNotices) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.news_url,
+            type: 'gandakiNotice',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapNotices;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   // scrape province 1-all vacancies
   //this is for local level(because currently there's no data in state level)
   //DOM is same
   //same code will work for state level(P.S. you have to change the url link only.)
-  async scrapePradeshOne() {
+  async getPradeshOne(type: string) {
     const url = 'https://psc.p1.gov.np/vacancy/advertise_local';
     const browser = await puppeteer.launch({
       headless: false,
@@ -240,12 +405,35 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item =0
+    for (const vacancy of scrapVacancies) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.pdf_url,
+            type: 'p1AdvertiseNotice',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapVacancies;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   // scrape province 1-all general notices
-  async scrapePradeshOneNotices() {
+  async getPradeshOneNotices(type: string) {
     const url = 'https://psc.p1.gov.np/notice/general-notice';
     const browser = await puppeteer.launch({
       headless: false,
@@ -266,10 +454,34 @@ export class VacancyService {
       }));
       return data;
     }, url);
+    let item = 0
+    for (const vacancy of scrapNotices) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.pdf_url,
+            type: 'p1GeneralNotice',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
-    return scrapNotices;
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
+
   // scrape province 5-all vacancies
+
   // // ERROR-net::ERR_CONNECTION_TIMED_OUT
   // async scrapePradeshPach() {
   //   const url =
@@ -331,13 +543,20 @@ export class VacancyService {
   //   // await browser.close();
   //   return scrapVacancies;
   // }
+
   //psc.gov.np
-  async getNpData() {
+
+  //scrap psc.gov.np
+  async getNpData(type: string) {
     const url = `https://psc.gov.np/category/sangathit-vacancies.html`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     await page.goto(url);
+
+    // const checkTitle = await this.prisma.vacancy.findFirst({
+    //   where: { title: createVacancyDto.title },
+    // });
 
     const allData = await page.evaluate(() => {
       const vacancies = Array.from(
@@ -351,81 +570,143 @@ export class VacancyService {
       }));
       return data;
     });
-    // return data
-    console.log(allData);
+    let item = 0
+    for (const vacancy of allData) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
+      });
+      if (!findtitle) {
+        item = item +1 
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.pdf,
+            type: 'psc',
+          },
+        });
+      }
+    }
+    if (item > 0) {
+      await this.notification.create();
+    }
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   //ppsc.p2.gov.np
 
   //advertising
-  async getp2Data() {
+  async getp2DataAdvertising(type: string) {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%aa%e0%a4%a6%e0%a4%aa%e0%a5%82%e0%a4%b0%e0%a5%8d%e0%a4%a4%e0%a4%bf/%e0%a4%b5%e0%a4%bf%e0%a4%9c%e0%a5%8d%e0%a4%9e%e0%a4%be%e0%a4%aa%e0%a4%a8/`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     await page.goto(url);
 
-    while (await page.$('a.next.page-numbers')) {
-      const allData = await page.evaluate(() => {
-        const vacancies = Array.from(
-          document.querySelectorAll('.mg-posts-sec-inner article'),
-        );
+    // while (await page.$('a.next.page-numbers')) {
+    const allData = await page.evaluate(() => {
+      const vacancies = Array.from(
+        document.querySelectorAll('.mg-posts-sec-inner article'),
+      );
 
-        const data = vacancies.map((vacancy: any) => ({
-          pdf: vacancy.querySelector('h4 a').getAttribute('href'),
-          title: vacancy.querySelector('h4 a').innerText,
-        }));
-        return data.length;
-        // return data;
+      const data = vacancies.map((vacancy: any) => ({
+        pdf: vacancy.querySelector('h4 a').getAttribute('href'),
+        title: vacancy.querySelector('h4 a').innerText,
+      }));
+      return data;
+      // return data;
+    });
+
+    let item = 0;
+    for (const vacancy of allData) {
+      const findtitle = await this.prisma.vacancy.findFirst({
+        where: { title: vacancy.title },
       });
-      console.log(allData);
-      await page.click(' a.next.page-numbers');
+      if (!findtitle) {
+        item = item + 1;
+        await this.prisma.vacancy.createMany({
+          data: {
+            title: vacancy.title,
+            pdf: vacancy.pdf,
+            type: 'p2advertising',
+          },
+        });
+      }
     }
+    console.log(item);
+    if (item > 0) {
+      await this.notification.create();
+    }
+    const getData = await this.prisma.vacancy.findMany({
+      where: { type },
+    });
+    return getData;
   }
 
   //notice
-  async getp2noticeData() {
+  async getp2noticeData(type: string) {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be-%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/page/1/`;
-    // const url = `https://ppsc.p2.gov.np/category/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be-%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/page/2/`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
 
     await page.goto(url);
 
-    const noticeHandles = await page.$$('.mg-posts-sec-inner article');
     let items = [];
-    
-    let isBtnDisable = false;
-    for (let i=0;i<3;i++) {
+    let getData = [];
+
+    let isButton = false;
+
+    while (!isButton) {
+      const noticeHandles = await page.$$('.d-md-flex.mg-posts-sec-post');
+
       for (const noticeHandle of noticeHandles) {
-        let title = 'Null';
-        let pdf = 'Null';
+        let titlee = 'Null';
+        let pdff = 'Null';
 
         try {
-          title = await page.evaluate(
+          titlee = await page.evaluate(
             (el) => el.querySelector('h4 a').textContent,
             noticeHandle,
           );
         } catch (err) {}
         try {
-          pdf = await page.evaluate(
+          pdff = await page.evaluate(
             (el) => el.querySelector('h4 a').getAttribute('href'),
             noticeHandle,
           );
         } catch (err) {}
-        items.push({ title, pdf });
-        
+
+        const findtitle = await this.prisma.vacancy.findFirst({
+          where: { title: titlee },
+        });
+        if (!findtitle) {
+          items.push({ titlee, pdff });
+
+          await this.prisma.vacancy.createMany({
+            data: {
+              title: titlee,
+              pdf: pdff,
+              type: 'p2notice',
+            },
+          });
+        }
       }
-      // const nextButton = await page.$("a.next.page-numbers")
-      // const isDisable = (await page.$('a.next.page-numbers')) == null;
-      // console.log(isDisable)
-      // isBtnDisable = isDisable;
-      // if (!isDisable) {
-      // }
-      await page.click("a.next.page-numbers")
-      // await page.waitForSelector('a.next.page-numbers', { visible: true });
-      // await page.waitForNavigation()
+      let isDisable = (await page.$('.next')) == null;
+      isButton = isDisable;
+      if (!isDisable) {
+        await page.click('.next');
+      }
+      const data = await this.prisma.vacancy.findMany({
+        where: { type },
+      });
+      getData.push(data);
     }
     console.log(items.length);
+    if (items.length > 0) {
+      await this.notification.create();
+    }
+    return getData;
   }
 }

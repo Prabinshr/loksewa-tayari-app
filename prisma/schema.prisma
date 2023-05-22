@@ -413,3 +413,23 @@ model ExamQuestion {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
+
+model Vacancy {
+  id String @id @default(cuid())
+
+  title String
+  pdf   String
+  type  String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}
+
+model notification {
+  id String @id @default(cuid())
+
+  message String
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+}

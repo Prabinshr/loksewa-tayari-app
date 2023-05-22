@@ -3,10 +3,14 @@ import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import puppeteer from 'puppeteer';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { NotificationService } from 'src/notification/notification.service';
 
 @Injectable()
 export class VacancyService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private notification: NotificationService,
+  ) {}
   // async scrapeAllData() {
   //   const [
   //     bagmatiVacancyData,
@@ -44,7 +48,7 @@ export class VacancyService {
   // }
 
   //scrape bagmati-all vacancies
-  async getBagmati(type:string) {
+  async getBagmati(type: string) {
     const url = 'https://spsc.bagamati.gov.np/acts-rules/10/80861221';
     const browser = await puppeteer.launch({
       headless: false,
@@ -63,12 +67,14 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -77,6 +83,9 @@ export class VacancyService {
           },
         });
       }
+    }
+    if (item > 0) {
+      await this.notification.create();
     }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
@@ -133,7 +142,7 @@ export class VacancyService {
   // }
 
   //scrape bagmati-all notices
-  async getBagmatiNotices(type:string) {
+  async getBagmatiNotices(type: string) {
     const url = 'https://spsc.bagamati.gov.np/notice-board/1/2018';
     const browser = await puppeteer.launch({
       headless: false,
@@ -154,12 +163,13 @@ export class VacancyService {
       }));
       return data;
     }, url);
+    let item = 0
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -169,6 +179,9 @@ export class VacancyService {
         });
       }
     }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
@@ -177,7 +190,7 @@ export class VacancyService {
   }
 
   //scrape karnali-all vacancies
-  async getKarnali(type:string) {
+  async getKarnali(type: string) {
     const url = 'https://ppsc.karnali.gov.np/vacancy?type=2';
     const browser = await puppeteer.launch({
       headless: false,
@@ -196,12 +209,13 @@ export class VacancyService {
       }));
       return data;
     }, url);
+    let item = 0
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -211,6 +225,9 @@ export class VacancyService {
         });
       }
     }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
@@ -219,7 +236,7 @@ export class VacancyService {
   }
 
   //scrape karnali-all notices from notice-board
-  async getKarnaliNotices(type:string) {
+  async getKarnaliNotices(type: string) {
     const url = 'https://ppsc.karnali.gov.np/notice?type=1';
     const browser = await puppeteer.launch({
       headless: false,
@@ -238,12 +255,14 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -253,6 +272,9 @@ export class VacancyService {
         });
       }
     }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
@@ -260,9 +282,8 @@ export class VacancyService {
     return getData;
   }
 
-
   //scrape gandaki-all vacancies
-  async getGandaki(type:string) {
+  async getGandaki(type: string) {
     const url = 'https://ppsc.gandaki.gov.np/list/advertisment_notive';
     const browser = await puppeteer.launch({
       headless: false,
@@ -283,12 +304,14 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -298,6 +321,9 @@ export class VacancyService {
         });
       }
     }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
@@ -305,9 +331,8 @@ export class VacancyService {
     return getData;
   }
 
-
   //scrape gandaki-all notices from notice-board
-  async getGandakiNotices(type:string) {
+  async getGandakiNotices(type: string) {
     const url = 'https://ppsc.gandaki.gov.np/list/notice_bord';
     const browser = await puppeteer.launch({
       headless: false,
@@ -328,12 +353,14 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item = 0
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -342,6 +369,9 @@ export class VacancyService {
           },
         });
       }
+    }
+    if (item > 0) {
+      await this.notification.create();
     }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
@@ -354,7 +384,7 @@ export class VacancyService {
   //this is for local level(because currently there's no data in state level)
   //DOM is same
   //same code will work for state level(P.S. you have to change the url link only.)
-  async getPradeshOne(type:string) {
+  async getPradeshOne(type: string) {
     const url = 'https://psc.p1.gov.np/vacancy/advertise_local';
     const browser = await puppeteer.launch({
       headless: false,
@@ -375,12 +405,14 @@ export class VacancyService {
       }));
       return data;
     }, url);
+
+    let item =0
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -390,6 +422,9 @@ export class VacancyService {
         });
       }
     }
+    if (item > 0) {
+      await this.notification.create();
+    }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
@@ -398,7 +433,7 @@ export class VacancyService {
   }
 
   // scrape province 1-all general notices
-  async getPradeshOneNotices(type:string) {
+  async getPradeshOneNotices(type: string) {
     const url = 'https://psc.p1.gov.np/notice/general-notice';
     const browser = await puppeteer.launch({
       headless: false,
@@ -419,12 +454,13 @@ export class VacancyService {
       }));
       return data;
     }, url);
+    let item = 0
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -433,6 +469,9 @@ export class VacancyService {
           },
         });
       }
+    }
+    if (item > 0) {
+      await this.notification.create();
     }
     await browser.close();
     const getData = await this.prisma.vacancy.findMany({
@@ -506,9 +545,9 @@ export class VacancyService {
   // }
 
   //psc.gov.np
-  
+
   //scrap psc.gov.np
-  async getNpData(type:string) {
+  async getNpData(type: string) {
     const url = `https://psc.gov.np/category/sangathit-vacancies.html`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
@@ -531,12 +570,13 @@ export class VacancyService {
       }));
       return data;
     });
+    let item = 0
     for (const vacancy of allData) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item +1 
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -545,6 +585,9 @@ export class VacancyService {
           },
         });
       }
+    }
+    if (item > 0) {
+      await this.notification.create();
     }
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
@@ -555,7 +598,7 @@ export class VacancyService {
   //ppsc.p2.gov.np
 
   //advertising
-  async getp2DataAdvertising(type:string) {
+  async getp2DataAdvertising(type: string) {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%aa%e0%a4%a6%e0%a4%aa%e0%a5%82%e0%a4%b0%e0%a5%8d%e0%a4%a4%e0%a4%bf/%e0%a4%b5%e0%a4%bf%e0%a4%9c%e0%a5%8d%e0%a4%9e%e0%a4%be%e0%a4%aa%e0%a4%a8/`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
@@ -575,13 +618,14 @@ export class VacancyService {
       return data;
       // return data;
     });
-    
+
+    let item = 0;
     for (const vacancy of allData) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
-      if(!findtitle){
-
+      if (!findtitle) {
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -591,6 +635,10 @@ export class VacancyService {
         });
       }
     }
+    console.log(item);
+    if (item > 0) {
+      await this.notification.create();
+    }
     const getData = await this.prisma.vacancy.findMany({
       where: { type },
     });
@@ -598,7 +646,7 @@ export class VacancyService {
   }
 
   //notice
-  async getp2noticeData(type:string) {
+  async getp2noticeData(type: string) {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be-%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/page/1/`;
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
@@ -606,57 +654,59 @@ export class VacancyService {
     await page.goto(url);
 
     let items = [];
-    
+    let getData = [];
+
     let isButton = false;
-    
+
     while (!isButton) {
       const noticeHandles = await page.$$('.d-md-flex.mg-posts-sec-post');
-    
-    for (const noticeHandle of noticeHandles) {
-      let titlee = 'Null';
-      let pdff = 'Null';
 
-      try {
-        titlee = await page.evaluate(
-          (el) => el.querySelector('h4 a').textContent,
-          noticeHandle,
-        );
-      } catch (err) {}
-      try {
-        pdff = await page.evaluate(
-          (el) => el.querySelector('h4 a').getAttribute('href'),
-          noticeHandle,
-        );
-      } catch (err) {}
+      for (const noticeHandle of noticeHandles) {
+        let titlee = 'Null';
+        let pdff = 'Null';
 
-      const findtitle = await this.prisma.vacancy.findFirst({
-        where: { title: titlee },
-      });
-      if (!findtitle) {
-        items.push({ titlee, pdff });
+        try {
+          titlee = await page.evaluate(
+            (el) => el.querySelector('h4 a').textContent,
+            noticeHandle,
+          );
+        } catch (err) {}
+        try {
+          pdff = await page.evaluate(
+            (el) => el.querySelector('h4 a').getAttribute('href'),
+            noticeHandle,
+          );
+        } catch (err) {}
 
-      await this.prisma.vacancy.createMany({
-          data: {
-            title: titlee,
-            pdf: pdff,
-            type: 'p2notice',
-          },
+        const findtitle = await this.prisma.vacancy.findFirst({
+          where: { title: titlee },
         });
+        if (!findtitle) {
+          items.push({ titlee, pdff });
+
+          await this.prisma.vacancy.createMany({
+            data: {
+              title: titlee,
+              pdf: pdff,
+              type: 'p2notice',
+            },
+          });
+        }
       }
-      
-    }
-    let isDisable = (await page.$('.next')) == null;
+      let isDisable = (await page.$('.next')) == null;
       isButton = isDisable;
       if (!isDisable) {
         await page.click('.next');
       }
-    const getData = await this.prisma.vacancy.findMany({
-      where: { type },
-    });
+      const data = await this.prisma.vacancy.findMany({
+        where: { type },
+      });
+      getData.push(data);
+    }
+    console.log(items.length);
+    if (items.length > 0) {
+      await this.notification.create();
+    }
     return getData;
-    
-    
   }
-}
-
 }

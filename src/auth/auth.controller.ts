@@ -33,6 +33,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { ITokens } from './interfaces/tokens.interface';
 import { OTPType } from '@prisma/client';
 import { Throttle } from '@nestjs/throttler';
+import { UpdatePasswordDto } from './dto/update-password.dto';
+import { JwtAuthGuard } from './guards/jwt.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -88,6 +90,16 @@ export class AuthController {
   @ApiBody({ type: CreateUserDto })
   async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     return await this.userService.create(createUserDto);
+  }
+
+  @Post('update-password')
+  @ApiBearerAuth('jwt')
+  @ApiOperation({ summary: 'Auth Update Password' })
+  async updatePassword(
+    @CurrentUser() user,
+    @Body() updatePassword: UpdatePasswordDto,
+  ): Promise<ITokens> {
+    return await this.authService.updatePassword(user.username, updatePassword);
   }
 
   @Public()

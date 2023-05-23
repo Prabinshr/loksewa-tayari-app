@@ -1,4 +1,10 @@
-import { HttpException, Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TOKENS } from 'config';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,6 +14,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { UserService } from 'src/user/user.service';
 import * as argon from 'argon2';
 import { User } from 'src/user/entities';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,6 +60,46 @@ export class AuthService {
         verified: true,
       },
     });
+  }
+
+  async updatePassword(
+    username: string,
+    updatePasswordDto: UpdatePasswordDto,
+  ): Promise<ITokens> {
+    // Getting User By Username
+    const user = await this.userService.findByUsername(username);
+
+    // Checking If Provided Current Password Is Correct Or Not
+    if (!(await argon.verify(user.password, updatePasswordDto.password)))
+      throw new HttpException('Incorrect Password', HttpStatus.UNAUTHORIZED);
+
+    // Changing Password
+    const hashedPassword = await argon.hash(updatePasswordDto.newPassword);
+
+    const { password, ...updatedUser } = await this.prismaService.user.update({
+      where: {
+        username,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    // Generating JWT Tokens Again
+    const tokens = await this.generateJWT(updatedUser);
+
+    let hashedRefreshToken = await argon.hash(tokens.refresh_token);
+
+    await this.prismaService.refreshTokenHash.update({
+      where: {
+        user_id: updatedUser.id,
+      },
+      data: {
+        token_hash: hashedRefreshToken,
+      },
+    });
+
+    return tokens;
   }
 
   async forgetPassword(

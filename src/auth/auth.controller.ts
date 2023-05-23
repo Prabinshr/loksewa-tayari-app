@@ -97,9 +97,12 @@ export class AuthController {
   @ApiOperation({ summary: 'Auth Update Password' })
   async updatePassword(
     @CurrentUser() user,
-    @Body() updatePassword: UpdatePasswordDto,
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<ITokens> {
-    return await this.authService.updatePassword(user.username, updatePassword);
+    return await this.authService.updatePassword(
+      user.username,
+      updatePasswordDto,
+    );
   }
 
   @Public()

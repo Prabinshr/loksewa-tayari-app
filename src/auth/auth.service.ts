@@ -62,6 +62,32 @@ export class AuthService {
     });
   }
 
+  // Password Validation
+  validatePassword(password: string) {
+    const requirements = [
+      { regex: /.{8,}/, index: 0, message: 'Min 8 Characters' },
+      { regex: /[0-9]/, index: 1, message: 'Atleast One Number' },
+      { regex: /[a-z]/, index: 2, message: 'Atleast One Lowercase Letter' },
+      { regex: /[A-Z]/, index: 3, message: 'Atleast One Uppercase Letter' },
+      {
+        regex: /[^A-Za-z0-9]/,
+        index: 4,
+        message: 'Atleast One Special Character',
+      },
+    ];
+
+    // Checking If The Password Matches The Requirement Regex
+    requirements.forEach((item) => {
+      const isValid = item.regex.test(password);
+
+      if (!isValid)
+        throw new HttpException(
+          `Password Validation Failed: ${item.message}`,
+          HttpStatus.FORBIDDEN,
+        );
+    });
+  }
+
   async updatePassword(
     username: string,
     updatePasswordDto: UpdatePasswordDto,
@@ -72,6 +98,9 @@ export class AuthService {
     // Checking If Provided Current Password Is Correct Or Not
     if (!(await argon.verify(user.password, updatePasswordDto.password)))
       throw new HttpException('Incorrect Password', HttpStatus.UNAUTHORIZED);
+
+    // Validating Password
+    this.validatePassword(updatePasswordDto.newPassword);
 
     // Changing Password
     const hashedPassword = await argon.hash(updatePasswordDto.newPassword);
@@ -163,6 +192,9 @@ export class AuthService {
     });
 
     if (!user) throw new HttpException('Reset Token Has Expired', 498);
+
+    // Validating Password
+    this.validatePassword(newPassword);
 
     // If User Exists Then Reset Password
     const hashedPassword = await argon.hash(newPassword);

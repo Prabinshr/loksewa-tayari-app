@@ -111,6 +111,9 @@ export class UserService {
 
     if (user) throw new HttpException('User already exists', 400);
 
+    // Validating Password
+    this.authService.validatePassword(createUserDto.password);
+
     const hashedPassword = await argon.hash(createUserDto.password);
     createUserDto.password = hashedPassword;
 

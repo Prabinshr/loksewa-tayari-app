@@ -12,7 +12,7 @@ export class GorkhaPatraService {
   async scrapeNews() {
     const url = 'https://smarttayari.com/gorkhapatra';
     const browser = await puppeteer.launch({
-      headless: false,
+      // headless: false,
       defaultViewport: null,
     });
     const page = await browser.newPage();

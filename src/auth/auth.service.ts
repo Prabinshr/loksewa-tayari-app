@@ -1,4 +1,10 @@
-import { HttpException, Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TOKENS } from 'config';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -8,6 +14,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { UserService } from 'src/user/user.service';
 import * as argon from 'argon2';
 import { User } from 'src/user/entities';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -53,6 +60,75 @@ export class AuthService {
         verified: true,
       },
     });
+  }
+
+  // Password Validation
+  validatePassword(password: string) {
+    const requirements = [
+      { regex: /.{8,}/, index: 0, message: 'Min 8 Characters' },
+      { regex: /[0-9]/, index: 1, message: 'Atleast One Number' },
+      { regex: /[a-z]/, index: 2, message: 'Atleast One Lowercase Letter' },
+      { regex: /[A-Z]/, index: 3, message: 'Atleast One Uppercase Letter' },
+      {
+        regex: /[^A-Za-z0-9]/,
+        index: 4,
+        message: 'Atleast One Special Character',
+      },
+    ];
+
+    // Checking If The Password Matches The Requirement Regex
+    requirements.forEach((item) => {
+      const isValid = item.regex.test(password);
+
+      if (!isValid)
+        throw new HttpException(
+          `Password Validation Failed: ${item.message}`,
+          HttpStatus.FORBIDDEN,
+        );
+    });
+  }
+
+  async updatePassword(
+    username: string,
+    updatePasswordDto: UpdatePasswordDto,
+  ): Promise<ITokens> {
+    // Getting User By Username
+    const user = await this.userService.findByUsername(username);
+
+    // Checking If Provided Current Password Is Correct Or Not
+    if (!(await argon.verify(user.password, updatePasswordDto.password)))
+      throw new HttpException('Incorrect Password', HttpStatus.UNAUTHORIZED);
+
+    // Validating Password
+    this.validatePassword(updatePasswordDto.newPassword);
+
+    // Changing Password
+    const hashedPassword = await argon.hash(updatePasswordDto.newPassword);
+
+    const { password, ...updatedUser } = await this.prismaService.user.update({
+      where: {
+        username,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    // Generating JWT Tokens Again
+    const tokens = await this.generateJWT(updatedUser);
+
+    let hashedRefreshToken = await argon.hash(tokens.refresh_token);
+
+    await this.prismaService.refreshTokenHash.update({
+      where: {
+        user_id: updatedUser.id,
+      },
+      data: {
+        token_hash: hashedRefreshToken,
+      },
+    });
+
+    return tokens;
   }
 
   async forgetPassword(
@@ -116,6 +192,9 @@ export class AuthService {
     });
 
     if (!user) throw new HttpException('Reset Token Has Expired', 498);
+
+    // Validating Password
+    this.validatePassword(newPassword);
 
     // If User Exists Then Reset Password
     const hashedPassword = await argon.hash(newPassword);

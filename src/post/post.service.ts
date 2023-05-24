@@ -34,15 +34,18 @@ export class PostService {
     }
   }
 
-  findOne(id: string) {
+  async findOne(id: string) {
     try {
-      const post = this.prismaService.post.findUnique({
+      const post = await this.prismaService.post.findUnique({
         where: {
           id,
         },
+        include: { comments: true },
       });
       if (!post)
         throw new HttpException('Post Not Found', HttpStatus.NOT_FOUND);
+
+      return post;
     } catch (e) {
       throw new HttpException(
         'Something Went Wrong Finding The Post',

@@ -16,17 +16,17 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role, User } from '@prisma/client';
 import { Roles } from 'src/auth/guards/roles.decorator';
+import { Public } from 'src/decorators/public.decorator';
 
 @ApiTags('Comment')
-@ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
-// @Roles(Role.ADMIN, Role.USER, Role.SUBSCRIBED_USER)
-@Roles(Role.USER)
 @Controller('comment')
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Post(':postId')
+  @ApiBearerAuth('jwt')
+  @Roles(Role.ADMIN, Role.USER, Role.MODERATOR, Role.SUBSCRIBED_USER)
   @ApiOperation({ summary: 'Comment On Post' })
   create(
     @Body() createCommentDto: CreateCommentDto,
@@ -41,18 +41,22 @@ export class CommentController {
   }
 
   @Get()
+  @Public()
   @ApiOperation({ summary: 'Get All Comments' })
   findAll() {
     return this.commentService.findAll();
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get Comment By Comment Id' })
   findOne(@Param('id') id: string) {
     return this.commentService.findOne(id);
   }
 
   @Patch(':id')
+  @ApiBearerAuth('jwt')
+  @Roles(Role.ADMIN, Role.USER, Role.MODERATOR, Role.SUBSCRIBED_USER)
   @ApiOperation({ summary: 'Update Comment' })
   update(
     @CurrentUser() me: Express.User,
@@ -64,6 +68,8 @@ export class CommentController {
   }
 
   @Delete(':id')
+  @ApiBearerAuth('jwt')
+  @Roles(Role.ADMIN, Role.USER, Role.MODERATOR, Role.SUBSCRIBED_USER)
   @ApiOperation({ summary: 'Delete Comment' })
   remove(@CurrentUser() me: Express.User, @Param('id') id: string) {
     const userId = me['id'];

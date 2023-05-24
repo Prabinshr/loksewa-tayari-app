@@ -19,7 +19,7 @@ export class ForumService {
   findAll() {
     try {
       return this.prisma.forum.findMany({
-        include: { posts: { include: { comments: true } } },
+        include: { posts: true },
       });
     } catch (err) {
       throw new HttpException(err, 500);
@@ -28,7 +28,10 @@ export class ForumService {
 
   findOne(id: string) {
     try {
-      return this.prisma.forum.findUnique({ where: { id } });
+      return this.prisma.forum.findUnique({
+        where: { id },
+        include: { posts: true },
+      });
     } catch (err) {
       throw new HttpException(err, 500);
     }

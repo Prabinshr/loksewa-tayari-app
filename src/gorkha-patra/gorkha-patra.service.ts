@@ -9,7 +9,6 @@ export class GorkhaPatraService {
   async scrapeNews() {
     const url = 'https://smarttayari.com/gorkhapatra';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
     });
     const page = await browser.newPage();
@@ -37,7 +36,6 @@ export class GorkhaPatraService {
     await browser.close();
     return scrapNews;
 
-    
     //logic for scraping 50 news
 
     // let newsCount = 0;
@@ -74,7 +72,7 @@ export class GorkhaPatraService {
     //     break; // Break the loop if there is no "Load More" button
     //   }
     // }
-    
+
     // await browser.close();
     // return scrapedNews;
   }

@@ -322,6 +322,40 @@ CREATE TABLE "ExamQuestion" (
     CONSTRAINT "ExamQuestion_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "GorkhaPatra" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "news_link" TEXT NOT NULL,
+    "image_url" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "GorkhaPatra_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Vacancy" (
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "pdf" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Vacancy_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "notification" (
+    "id" TEXT NOT NULL,
+    "message" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "notification_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 

@@ -33,9 +33,15 @@ import { VacancyModule } from 'src/vacancy/vacancy.module';
 import { GorkhaPatraModule } from 'src/gorkha-patra/gorkha-patra.module';
 import { NotificationModule } from 'src/notification/notification.module';
 import { ExamsModule } from 'src/exams/exams.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 20,
+    }),
     AuthModule,
     PrismaModule,
     UserModule,
@@ -68,6 +74,10 @@ import { ExamsModule } from 'src/exams/exams.module';
     ExamsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, UserService],
+  providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    AppService,
+    UserService,
+  ],
 })
 export class AppModule {}

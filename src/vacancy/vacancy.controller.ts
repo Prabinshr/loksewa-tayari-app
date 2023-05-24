@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { VacancyService } from './vacancy.service';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
@@ -35,35 +35,40 @@ export class VacancyController {
   //   return allData;
   // }
 
+  @Get('all')
+  @ApiOperation({summary:"get all "})
+  findall(@Query() type: string) {
+    return this.vacancyService.getNpData(type);
+  }
   @Get('np')
-  @Roles(Role.USER)
+  @ApiOperation({summary:"type = psc "})
   findNp(@Query('type') type: string) {
     return this.vacancyService.getNpData(type);
   }
 
   @Get('p2')
-  @Roles(Role.USER)
+  @ApiOperation({summary:"type = p2advertising "})  
   async findP2(@Query('type') type: string) {
     return this.vacancyService.getp2DataAdvertising(type);
     
   }
 
   @Get('p2/notice')
-  @Roles(Role.USER)
+  @ApiOperation({summary:"type = p2advertising "}) 
   async findP2notice(@Query('type') type: string) {
     return  this.vacancyService.getp2noticeData(type);
     
   }
 
   @Get('bagmati')
-  @Roles(Role.USER)
-  async getBagmati(@Query() type: string) {
+  @ApiOperation({summary:"type = bagmati "}) 
+  async getBagmati(@Query('type') type: string) {
     return this.vacancyService.getBagmati(type);
   }
 
   @Get('bagmati/notices')
-  @Roles(Role.USER)
-  async getBagmatiNotices(@Query() type: string) {
+  @ApiOperation({summary:"type = bagmatiNotice "}) 
+  async getBagmatiNotices(@Query('type') type: string) {
     return this.vacancyService.getBagmatiNotices(type);
   }
 
@@ -79,38 +84,38 @@ export class VacancyController {
   // }
 
   @Get('karnali')
-  @Roles(Role.USER)
-  async getKarnali(@Query() type: string) {
+  @ApiOperation({summary:"type = karnaliVacancy "}) 
+  async getKarnali(@Query('type') type: string) {
     return this.vacancyService.getKarnali(type);
   }
 
   @Get('karnali/notices')
-  @Roles(Role.USER)
-  async getKarnaliNotices(@Query() type: string) {
+  @ApiOperation({summary:"type = karnaliNotice "}) 
+  async getKarnaliNotices(@Query('type') type: string) {
     return this.vacancyService.getKarnaliNotices(type);
   }
 
   @Get('gandaki')
-  @Roles(Role.USER)
-  async getGandaki(@Query() type: string) {
+  @ApiOperation({summary:"type = gandakiAdvertisment "}) 
+  async getGandaki(@Query('type') type: string) {
     return this.vacancyService.getGandaki(type);
   }
 
   @Get('gandaki/notices')
-  @Roles(Role.USER)
-  async getGandakiNotices(@Query() type: string) {
+  @ApiOperation({summary:"type = gandakiNotice "}) 
+  async getGandakiNotices(@Query('type') type: string) {
     return this.vacancyService.getGandakiNotices(type);
   }
 
   @Get('p1')
-  @Roles(Role.USER)
-  async getPradeshOne(@Query() type: string) {
+  @ApiOperation({summary:"type = p1AdvertiseNotice "}) 
+  async getPradeshOne(@Query('type') type: string) {
     return this.vacancyService.getPradeshOne(type);
   }
 
   @Get('p1/notices')
-  @Roles(Role.USER)
-  async getPradeshOneNotices(@Query() type: string) {
+  @ApiOperation({summary:"type = p1GeneralNotice "}) 
+  async getPradeshOneNotices(@Query('type') type: string) {
     return this.vacancyService.getPradeshOneNotices(type);
   }
 

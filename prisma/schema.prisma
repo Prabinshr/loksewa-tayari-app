@@ -241,6 +241,7 @@ model SewaService {
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt()
   subServices SubService[]
+  forum       Forum?
 }
 
 enum STATUS {
@@ -324,13 +325,16 @@ model QuestionSet {
 }
 
 model Forum {
-  id    String  @id @default(cuid())
-  title String
-  posts Post[]
-  image String?
+  id            String  @id @default(cuid())
+  title         String
+  posts         Post[]
+  image         String?
+  sewaServiceId String  @unique
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  sewaService SewaService @relation(fields: [sewaServiceId], references: [id])
 }
 
 model Post {
@@ -413,16 +417,18 @@ model ExamQuestion {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
+
 model GorkhaPatra {
-   id              String        @id @default(cuid())
+  id String @id @default(cuid())
 
-   title     String
-   news_link String
-   image_url String
+  title     String
+  news_link String
+  image_url String
 
-   createdAt DateTime @default(now()) @map("created_at")
-   updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }
+
 model Vacancy {
   id String @id @default(cuid())
 

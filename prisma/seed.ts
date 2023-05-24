@@ -35,7 +35,21 @@ async function main() {
   await prisma.sewaService.create({
     data: {
       id: 'clhubp5rk0008bug8wplt62s2',
-      title: 'NIJAMATI',
+      title: 'nijamati',
+      status: STATUS.PUBLISHED,
+    },
+  });
+  await prisma.sewaService.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt100s2',
+      title: 'nepalpolice',
+      status: STATUS.PUBLISHED,
+    },
+  });
+  await prisma.sewaService.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt101s2',
+      title: 'nepalarmy',
       status: STATUS.PUBLISHED,
     },
   });
@@ -45,7 +59,7 @@ async function main() {
     data: {
       id: 'clhubp5rk0008bug8wplt64s1',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
-      title: 'KHARIDAR',
+      title: 'kharidar',
       user_id: 'clhubp5rk0008bug8wplt62s1',
       status: STATUS.PUBLISHED,
     },
@@ -54,7 +68,7 @@ async function main() {
     data: {
       id: 'clhubp5rk0008bug8wplt64s2',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
-      title: 'NAYABSUBBA',
+      title: 'nayabsubba',
       user_id: 'clhubp5rk0008bug8wplt62s1',
       status: STATUS.PUBLISHED,
     },
@@ -63,7 +77,7 @@ async function main() {
     data: {
       id: 'clhubp5rk0008bug8wplt64s3',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
-      title: 'ADHIKRIT',
+      title: 'adhikrit',
       user_id: 'clhubp5rk0008bug8wplt62s1',
       status: STATUS.PUBLISHED,
     },
@@ -274,19 +288,22 @@ async function main() {
   await prisma.forum.create({
     data: {
       id: 'clhubp5rk0008bug8wplt78s1',
-      title: 'KHARIDAR',
+      sewaServiceId: 'clhubp5rk0008bug8wplt62s2',
+      title: 'nijamati',
     },
   });
   await prisma.forum.create({
     data: {
       id: 'clhubp5rk0008bug8wplt79s1',
-      title: 'NAYABSUBBA',
+      sewaServiceId: 'clhubp5rk0008bug8wplt100s2',
+      title: 'nepalpolice',
     },
   });
   await prisma.forum.create({
     data: {
       id: 'clhubp5rk0008bug8wplt80s1',
-      title: 'ADHIKRIT',
+      sewaServiceId: 'clhubp5rk0008bug8wplt101s2',
+      title: 'nepalarmy',
     },
   });
 

@@ -53,7 +53,7 @@ export class GorkhaPatraService {
         });
       } else {
         console.log('No latest news to store.');
-        return scrapNews;
+        return {};
       }
     }
     await browser.close();

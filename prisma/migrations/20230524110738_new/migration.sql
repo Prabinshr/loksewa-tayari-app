@@ -251,6 +251,7 @@ CREATE TABLE "Forum" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "image" TEXT,
+    "sewaServiceId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -380,6 +381,9 @@ CREATE UNIQUE INDEX "Package_title_key" ON "Package"("title");
 -- CreateIndex
 CREATE UNIQUE INDEX "Coupon_code_key" ON "Coupon"("code");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Forum_sewaServiceId_key" ON "Forum"("sewaServiceId");
+
 -- AddForeignKey
 ALTER TABLE "refreshTokenHash" ADD CONSTRAINT "refreshTokenHash_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -439,6 +443,9 @@ ALTER TABLE "SubStrTopic" ADD CONSTRAINT "SubStrTopic_sub_struct_topic_id_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "QuestionSet" ADD CONSTRAINT "QuestionSet_topic_id_fkey" FOREIGN KEY ("topic_id") REFERENCES "SubStrTopic"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Forum" ADD CONSTRAINT "Forum_sewaServiceId_fkey" FOREIGN KEY ("sewaServiceId") REFERENCES "SewaService"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_forumId_fkey" FOREIGN KEY ("forumId") REFERENCES "Forum"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

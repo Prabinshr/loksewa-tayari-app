@@ -160,6 +160,7 @@ Table SewaService {
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime [not null]
   subServices SubService [not null]
+  forum Forum
 }
 
 Table SubService {
@@ -231,8 +232,10 @@ Table Forum {
   title String [not null]
   posts Post [not null]
   image String
+  sewaServiceId String [unique, not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  sewaService SewaService [not null]
 }
 
 Table Post {
@@ -394,6 +397,8 @@ Ref: SyllabusSubStructure.syllabus_structure_id > SyllabusStructure.id
 Ref: SubStrTopic.sub_struct_topic_id > SyllabusSubStructure.id
 
 Ref: QuestionSet.topic_id > SubStrTopic.id
+
+Ref: Forum.sewaServiceId - SewaService.id
 
 Ref: Post.forumId > Forum.id
 

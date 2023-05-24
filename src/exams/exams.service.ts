@@ -47,4 +47,31 @@ export class ExamsService {
       );
     }
   }
+
+  async findForumPost(sewaService: string, postId: string) {
+    // Getting SewaService's ID
+    const { id, ...sewaServ } = await this.prisma.sewaService.findFirst({
+      where: {
+        title: sewaService,
+      },
+    });
+
+    // If PostID, Sending Specific POST with it's comments
+    if (postId) {
+      return await this.prisma.post.findUnique({
+        where: { id: postId },
+        include: { comments: true },
+      });
+    }
+
+    // Sending SewaService's Forum's POSTS
+    return await this.prisma.forum.findUnique({
+      where: {
+        sewaServiceId: id,
+      },
+      include: {
+        posts: true,
+      },
+    });
+  }
 }

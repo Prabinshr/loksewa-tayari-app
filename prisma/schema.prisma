@@ -41,6 +41,11 @@ enum OnlineStatus {
   OFFLINE
 }
 
+enum Result {
+  PASS
+  FAIL
+}
+
 model User {
   id           String        @id @default(cuid())
   username     String        @unique
@@ -58,15 +63,16 @@ model User {
 
   /// @DtoCreateOptional
   /// @DtoReadOnly
-  createdAt    DateTime          @default(now()) @map("created_at")
+  createdAt     DateTime          @default(now()) @map("created_at")
   /// @DtoReadOnly
-  updatedAt    DateTime          @updatedAt @map("updated_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
   /// @DtoCreateOptional
-  transactions Transaction[]
+  transactions  Transaction[]
   /// @DtoCreateOptional
-  progress     User_Progress[]
-  otps         OTP[]
-  hash         refreshTokenHash?
+  progress      User_Progress[]
+  exam_progress Exam_Progress[]
+  otps          OTP[]
+  hash          refreshTokenHash?
 
   posts       Post[]
   comment     Comments[]
@@ -167,6 +173,32 @@ model User_Progress {
   updatedAt      DateTime @updatedAt @map("updated_at")
   quiz           Quiz     @relation(fields: [quiz_id], references: [id])
   user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Exam_Progress {
+  id         String  @id @default(cuid())
+  userId     String?
+  examSet_Id String? @unique
+
+  total_score        String
+  total_qsns         Int
+  total_attempt_qsns Int
+  // Right Answer Points
+  total_right_qsns   Int
+  earn_points        Int
+  // Wrong Answer Points
+  total_wrong_qsns   Int
+  negative_points    Int
+  // Final
+  final_score        Int
+  result             Result
+
+  /// @DtoReadOnly
+  createdAt DateTime @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User?    @relation(fields: [userId], references: [id])
+  examSet   ExamSet? @relation(fields: [examSet_Id], references: [id])
 }
 
 model Package {
@@ -383,6 +415,7 @@ model ExamSet {
   mock                Int            @default(1)
   negative_mark_value Float?         @default(0)
   examCategories      ExamCategory[]
+  examProgress        Exam_Progress?
 
   subService_id String?
   subService    SubService? @relation(fields: [subService_id], references: [id])

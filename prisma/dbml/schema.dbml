@@ -24,6 +24,7 @@ Table User {
   updatedAt DateTime [not null, note: '@DtoReadOnly']
   transactions Transaction [not null, note: '@DtoCreateOptional']
   progress User_Progress [not null, note: '@DtoCreateOptional']
+  exam_progress Exam_Progress [not null]
   otps OTP [not null]
   hash refreshTokenHash
   posts Post [not null]
@@ -100,6 +101,25 @@ Table User_Progress {
   updatedAt DateTime [not null, note: '@DtoReadOnly']
   quiz Quiz [not null]
   user User [not null]
+}
+
+Table Exam_Progress {
+  id String [pk]
+  userId String
+  examSet_Id String [unique]
+  total_score String [not null]
+  total_qsns Int [not null]
+  total_attempt_qsns Int [not null]
+  total_right_qsns Int [not null]
+  earn_points Int [not null]
+  total_wrong_qsns Int [not null]
+  negative_points Int [not null]
+  final_score Int [not null]
+  result Result [not null]
+  createdAt DateTime [default: `now()`, not null, note: '@DtoReadOnly']
+  updatedAt DateTime [not null, note: '@DtoReadOnly']
+  User User
+  examSet ExamSet
 }
 
 Table Package {
@@ -268,6 +288,7 @@ Table ExamSet {
   mock Int [not null, default: 1]
   negative_mark_value Float [default: 0]
   examCategories ExamCategory [not null]
+  examProgress Exam_Progress
   subService_id String
   subService SubService
   createdAt DateTime [default: `now()`, not null]
@@ -335,6 +356,11 @@ Enum OnlineStatus {
   OFFLINE
 }
 
+Enum Result {
+  PASS
+  FAIL
+}
+
 Enum OTPType {
   EMAIL_VERIFICATION
   PASSWORD_RESET
@@ -371,6 +397,10 @@ Ref: Question.qsn_set_id > QuestionSet.id
 Ref: User_Progress.quiz_id > Quiz.id
 
 Ref: User_Progress.user_id > User.id [delete: Cascade]
+
+Ref: Exam_Progress.userId > User.id
+
+Ref: Exam_Progress.examSet_Id - ExamSet.id
 
 Ref: Transaction.couponCode > Coupon.code
 

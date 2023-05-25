@@ -11,6 +11,7 @@ import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { Public } from 'src/decorators/public.decorator';
 
 @ApiTags('User Progress')
 @ApiBearerAuth('jwt')
@@ -63,4 +64,16 @@ export class UserProgressController {
   // remove(@Param('id') id: string) {
   //   return this.userProgressService.remove(id);
   // }
+
+  // EXAM PROGRESS
+  @Get('exam/hello')
+  @Roles(Role.USER)
+  findExamProgress(@CurrentUser() user) {
+    return this.userProgressService.findExamProgress(user['id']);
+  }
+
+  @Get('exam/progress')
+  find() {
+    return this.userProgressService.exam();
+  }
 }

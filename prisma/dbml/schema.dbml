@@ -105,21 +105,21 @@ Table User_Progress {
 
 Table Exam_Progress {
   id String [pk]
-  userId String
-  examSet_Id String [unique]
-  total_score String [not null]
+  userId String [not null]
+  examSet_Id String [unique, not null]
+  total_score Int [not null]
   total_qsns Int [not null]
   total_attempt_qsns Int [not null]
   total_right_qsns Int [not null]
-  earn_points Int [not null]
+  earn_points Float [not null]
   total_wrong_qsns Int [not null]
-  negative_points Int [not null]
-  final_score Int [not null]
+  negative_points Float [not null]
+  final_score Float [not null]
   result Result [not null]
   createdAt DateTime [default: `now()`, not null, note: '@DtoReadOnly']
   updatedAt DateTime [not null, note: '@DtoReadOnly']
-  User User
-  examSet ExamSet
+  User User [not null]
+  examSet ExamSet [not null]
 }
 
 Table Package {

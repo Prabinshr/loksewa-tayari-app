@@ -176,29 +176,29 @@ model User_Progress {
 }
 
 model Exam_Progress {
-  id         String  @id @default(cuid())
-  userId     String?
-  examSet_Id String? @unique
+  id         String @id @default(cuid())
+  userId     String
+  examSet_Id String @unique
 
-  total_score        String
+  total_score        Int
   total_qsns         Int
   total_attempt_qsns Int
   // Right Answer Points
   total_right_qsns   Int
-  earn_points        Int
+  earn_points        Float
   // Wrong Answer Points
   total_wrong_qsns   Int
-  negative_points    Int
+  negative_points    Float
   // Final
-  final_score        Int
+  final_score        Float
   result             Result
 
   /// @DtoReadOnly
   createdAt DateTime @default(now()) @map("created_at")
   /// @DtoReadOnly
   updatedAt DateTime @updatedAt @map("updated_at")
-  User      User?    @relation(fields: [userId], references: [id])
-  examSet   ExamSet? @relation(fields: [examSet_Id], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+  examSet   ExamSet  @relation(fields: [examSet_Id], references: [id])
 }
 
 model Package {

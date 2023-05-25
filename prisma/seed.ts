@@ -1,4 +1,4 @@
-import { LEVEL, PrismaClient, Role, STATUS } from '@prisma/client';
+import { LEVEL, PrismaClient, Result, Role, STATUS } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 import { hash } from 'argon2';
 
@@ -28,6 +28,18 @@ async function main() {
       last_name: 'test',
       password: await hash('test'),
       role: Role.USER,
+    },
+  });
+  await prisma.user.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt1000s1',
+      username: 'subscribe',
+      email: 'subscribe@subscribe.com',
+      first_name: 'subscribe',
+      middle_name: 'subscribe',
+      last_name: 'subscribe',
+      password: await hash('subscribe'),
+      role: Role.SUBSCRIBED_USER,
     },
   });
 
@@ -60,7 +72,7 @@ async function main() {
       id: 'clhubp5rk0008bug8wplt64s1',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
       title: 'kharidar',
-      user_id: 'clhubp5rk0008bug8wplt62s1',
+      user_id: 'clhubp5rk0008bug8wplt1000s1',
       status: STATUS.PUBLISHED,
     },
   });
@@ -69,13 +81,22 @@ async function main() {
       id: 'clhubp5rk0008bug8wplt64s2',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
       title: 'nayabsubba',
-      user_id: 'clhubp5rk0008bug8wplt62s1',
+      user_id: 'clhubp5rk0008bug8wplt1000s1',
       status: STATUS.PUBLISHED,
     },
   });
   await prisma.subService.create({
     data: {
       id: 'clhubp5rk0008bug8wplt64s3',
+      sewaService_id: 'clhubp5rk0008bug8wplt62s2',
+      title: 'adhikrit',
+      user_id: 'clhubp5rk0008bug8wplt1000s1',
+      status: STATUS.PUBLISHED,
+    },
+  });
+  await prisma.subService.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt66546165s3',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
       title: 'adhikrit',
       user_id: 'clhubp5rk0008bug8wplt62s1',
@@ -89,6 +110,15 @@ async function main() {
       id: 'clhubp5rk0008bug8wplt65s1',
       subService_id: 'clhubp5rk0008bug8wplt64s1',
       title: 'MOCK EXAM SET 1',
+      level: LEVEL.EASY,
+      negative_mark_value: 0.25,
+    },
+  });
+  await prisma.examSet.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt65456s1',
+      subService_id: 'clhubp5rk0008bug8wplt64s1',
+      title: 'MOCK EXAM SET 2',
       level: LEVEL.EASY,
       negative_mark_value: 0.25,
     },
@@ -356,6 +386,38 @@ async function main() {
       postId: 'clhubp5rk0008bug8wplt83s1',
       userId: 'clhubp5rk0008bug8wplt62s1',
       content: "It's Homo Sapiens.",
+    },
+  });
+
+  // Exam Progress
+  await prisma.exam_Progress.create({
+    data: {
+      userId: 'clhubp5rk0008bug8wplt1000s1',
+      examSet_Id: 'clhubp5rk0008bug8wplt65s1',
+      total_score: 100,
+      total_qsns: 100,
+      total_attempt_qsns: 80,
+      total_right_qsns: 70,
+      earn_points: 70,
+      total_wrong_qsns: 10,
+      negative_points: 2.5,
+      final_score: 67.5,
+      result: Result.PASS,
+    },
+  });
+  await prisma.exam_Progress.create({
+    data: {
+      userId: 'clhubp5rk0008bug8wplt1000s1',
+      examSet_Id: 'clhubp5rk0008bug8wplt65456s1',
+      total_score: 100,
+      total_qsns: 100,
+      total_attempt_qsns: 80,
+      total_right_qsns: 70,
+      earn_points: 70,
+      total_wrong_qsns: 10,
+      negative_points: 2.5,
+      final_score: 67.5,
+      result: Result.PASS,
     },
   });
 }

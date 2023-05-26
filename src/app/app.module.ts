@@ -6,7 +6,7 @@ import { UserModule } from 'src/user/user.module';
 import { UserService } from 'src/user/user.service';
 import { QuizModule } from 'src/quiz/quiz.module';
 import { QuestionModule } from 'src/question/question.module';
-import { UserProgressModule } from 'src/userProgress/progress.module';
+import { UserProgressModule } from 'src/userProgress/modules/progress.module';
 import { TransactionModule } from 'src/transaction/transaction.module';
 import { QuestionCategoryModule } from 'src/questionCategory/question_category.module';
 import { AuthModule } from 'src/auth/auth.module';

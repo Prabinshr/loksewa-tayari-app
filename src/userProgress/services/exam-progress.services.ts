@@ -191,8 +191,4 @@ export class UserExamProgressService {
   update() {}
 
   remove() {}
-
-  // exam() {
-  //   return this.prisma.exam_Progress.findMany();
-  // }
 }

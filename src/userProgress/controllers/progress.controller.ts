@@ -5,7 +5,7 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
-import { UserProgressService } from './progress.service';
+import { UserProgressService } from '../services/progress.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
@@ -64,16 +64,4 @@ export class UserProgressController {
   // remove(@Param('id') id: string) {
   //   return this.userProgressService.remove(id);
   // }
-
-  // EXAM PROGRESS
-  @Get('exam/hello')
-  @Roles(Role.USER)
-  findExamProgress(@CurrentUser() user) {
-    return this.userProgressService.findExamProgress(user['id']);
-  }
-
-  @Get('exam/progress')
-  find() {
-    return this.userProgressService.exam();
-  }
 }

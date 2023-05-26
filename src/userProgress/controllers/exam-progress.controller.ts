@@ -21,7 +21,7 @@ import { Role } from '@prisma/client';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { CreateExamProgressDto } from '../dto';
 
-@ApiTags('User Progress')
+@ApiTags('User Exam Progress')
 @ApiBearerAuth('jwt')
 @UseGuards(RolesGuard)
 @Controller('exam-progress')
@@ -64,9 +64,4 @@ export class UserExamProgressController {
   remove() {
     return this.userExamProgressService.remove();
   }
-
-  // @Get('exam/exam')
-  // find() {
-  //   return this.userExamProgressService.exam();
-  // }
 }

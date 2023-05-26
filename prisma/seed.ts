@@ -344,6 +344,8 @@ async function main() {
       forumId: 'clhubp5rk0008bug8wplt78s1',
       userId: 'clhubp5rk0008bug8wplt62s1',
       content: 'What is the scientific name of human beings?',
+      creator_name: 'test test',
+      creator_profile: null,
     },
   });
   await prisma.post.create({
@@ -352,6 +354,8 @@ async function main() {
       forumId: 'clhubp5rk0008bug8wplt79s1',
       userId: 'clhubp5rk0008bug8wplt62s1',
       content: 'What is the scientific name of human beings?',
+      creator_name: 'test test',
+      creator_profile: null,
     },
   });
   await prisma.post.create({
@@ -360,6 +364,38 @@ async function main() {
       forumId: 'clhubp5rk0008bug8wplt80s1',
       userId: 'clhubp5rk0008bug8wplt62s1',
       content: 'What is the scientific name of human beings?',
+      creator_name: 'test test',
+      creator_profile: null,
+    },
+  });
+  await prisma.post.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt8000s1',
+      forumId: 'clhubp5rk0008bug8wplt80s1',
+      userId: 'clhubp5rk0008bug8wplt1000s1',
+      content: 'What is the scientific name of camel?',
+      creator_name: 'subscribe subscribe',
+      creator_profile: null,
+    },
+  });
+  await prisma.post.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt8001s1',
+      forumId: 'clhubp5rk0008bug8wplt80s1',
+      userId: 'clhubp5rk0008bug8wplt1000s1',
+      content: 'What is the scientific name of camel?',
+      creator_name: 'subscribe subscribe',
+      creator_profile: null,
+    },
+  });
+  await prisma.post.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt8002s1',
+      forumId: 'clhubp5rk0008bug8wplt80s1',
+      userId: 'clhubp5rk0008bug8wplt1000s1',
+      content: 'What is the scientific name of camel?',
+      creator_name: 'subscribe subscribe',
+      creator_profile: null,
     },
   });
 
@@ -370,6 +406,8 @@ async function main() {
       postId: 'clhubp5rk0008bug8wplt81s1',
       userId: 'clhubp5rk0008bug8wplt62s1',
       content: "It's Homo Sapiens.",
+      creator_name: 'test test',
+      creator_profile: null,
     },
   });
   await prisma.comments.create({
@@ -378,14 +416,38 @@ async function main() {
       postId: 'clhubp5rk0008bug8wplt82s1',
       userId: 'clhubp5rk0008bug8wplt62s1',
       content: "It's Homo Sapiens.",
+      creator_name: 'test test',
+      creator_profile: null,
     },
   });
   await prisma.comments.create({
     data: {
       id: 'clhubp5rk0008bug8wplt86s1',
       postId: 'clhubp5rk0008bug8wplt83s1',
-      userId: 'clhubp5rk0008bug8wplt62s1',
+      userId: 'clhubp5rk0008bug8wplt1000s1',
       content: "It's Homo Sapiens.",
+      creator_name: 'subscribe subscribe',
+      creator_profile: null,
+    },
+  });
+  await prisma.comments.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt65415174s1',
+      postId: 'clhubp5rk0008bug8wplt8002s1',
+      userId: 'clhubp5rk0008bug8wplt1000s1',
+      content: "It's Homo Sapiens.",
+      creator_name: 'subscribe subscribe',
+      creator_profile: null,
+    },
+  });
+  await prisma.comments.create({
+    data: {
+      id: 'clhubp5rk0008bug8wplt654158574s1',
+      postId: 'clhubp5rk0008bug8wplt8002s1',
+      userId: 'clhubp5rk0008bug8wplt1000s1',
+      content: "It's Homo Sapiens.",
+      creator_name: 'subscribe subscribe',
+      creator_profile: null,
     },
   });
 

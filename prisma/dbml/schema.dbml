@@ -262,6 +262,9 @@ Table Post {
   id String [pk]
   content String [not null]
   comments Comments [not null]
+  imae String
+  creator_name String
+  creator_profile String
   Forum Forum [not null]
   forumId String [not null]
   User User [not null]
@@ -273,6 +276,9 @@ Table Post {
 Table Comments {
   id String [pk]
   content String [not null]
+  image String
+  creator_name String
+  creator_profile String
   User User [not null]
   userId String [not null]
   Post Post [not null]

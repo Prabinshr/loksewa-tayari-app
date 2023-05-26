@@ -285,6 +285,9 @@ CREATE TABLE "Forum" (
 CREATE TABLE "Post" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "imae" TEXT,
+    "creator_name" TEXT,
+    "creator_profile" TEXT,
     "forumId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -297,6 +300,9 @@ CREATE TABLE "Post" (
 CREATE TABLE "Comments" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "image" TEXT,
+    "creator_name" TEXT,
+    "creator_profile" TEXT,
     "userId" TEXT NOT NULL,
     "postId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

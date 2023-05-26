@@ -16,4 +16,12 @@ export class CreatePostDto {
   @ApiProperty()
   @IsOptional()
   image?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  creator_name?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  creator_profile?: string;
 }

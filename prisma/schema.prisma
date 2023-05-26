@@ -374,7 +374,7 @@ model Post {
   content  String
   comments Comments[]
 
-  imae            String?
+  image           String?
   creator_name    String?
   creator_profile String?
 

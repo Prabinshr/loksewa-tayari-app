@@ -28,4 +28,13 @@ export class ExamsController {
   ) {
     return this.examsService.findAllSets(sewaService, subService, mock);
   }
+
+  @ApiOperation({ summary: "Gets Specific SewaService's Forum's Post" })
+  @Get(':sewaService/forum/posts/:postId?')
+  findForumPost(
+    @Param('sewaService') sewaService: string,
+    @Param('postId') postId: string,
+  ) {
+    return this.examsService.findForumPost(sewaService, postId);
+  }
 }

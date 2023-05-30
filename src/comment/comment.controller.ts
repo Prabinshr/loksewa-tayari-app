@@ -33,9 +33,11 @@ export class CommentController {
     @Param('postId') postId: string,
     @CurrentUser() me: User,
   ) {
-    // Assigning User Id & Post Id
+    // Assigning User Id & Post Id & Creator Name & Creator Profile
     createCommentDto.userId = me.id;
     createCommentDto.postId = postId;
+    createCommentDto.creator_name = `${me['first_name']} ${me['last_name']}`;
+    createCommentDto.creator_profile = `${me['image']}`;
 
     return this.commentService.create(createCommentDto);
   }

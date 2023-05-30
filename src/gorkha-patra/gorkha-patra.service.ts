@@ -12,7 +12,6 @@ export class GorkhaPatraService {
   async scrapeNews() {
     const url = 'https://smarttayari.com/gorkhapatra';
     const browser = await puppeteer.launch({
-      // headless: false,
       defaultViewport: null,
     });
     const page = await browser.newPage();
@@ -53,10 +52,9 @@ export class GorkhaPatraService {
         });
       } else {
         console.log('No latest news to store.');
-        return scrapNews;
+
+        return await this.prisma.gorkhaPatra.findMany({});
       }
     }
-    await browser.close();
-    return scrapNews;
   }
 }

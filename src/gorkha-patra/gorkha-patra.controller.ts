@@ -11,7 +11,6 @@ export class GorkhaPatraController {
 
   @Get('news')
   async scrapeAllData() {
-    const allData = await this.gorkhaPatraService.scrapeNews();
-    return allData;
+    return await this.gorkhaPatraService.scrapeNews();
   }
 }

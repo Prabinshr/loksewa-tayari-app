@@ -34,8 +34,11 @@ export class PostController {
     @Body() createPostDto: CreatePostDto,
   ) {
     // Assigning User Id & Forum Id
+    console.log(me);
     createPostDto.userId = me['id'];
     createPostDto.forumId = forumId;
+    createPostDto.creator_name = `${me['first_name']} ${me['last_name']}`;
+    createPostDto.creator_profile = `${me['image']}`;
 
     return this.postService.create(createPostDto);
   }

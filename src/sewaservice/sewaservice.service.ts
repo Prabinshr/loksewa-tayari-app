@@ -16,7 +16,10 @@ export class SewaserviceService {
     }
   }
 
-  async uploadSewaServiceImage(id: string, sewaServiceImage: Express.Multer.File) {
+  async uploadSewaServiceImage(
+    id: string,
+    sewaServiceImage: Express.Multer.File,
+  ) {
     try {
       console.log(sewaServiceImage);
       // const uploadImage = await this.prisma.sewaService.update({where:{id},data:{image:`/land/image/${String{landImage}}`}})
@@ -24,7 +27,7 @@ export class SewaserviceService {
       throw new HttpException(err, 500);
     }
   }
-  
+
   findAll() {
     // return this.prismaService.sewaService.findMany()
     try {
@@ -35,6 +38,7 @@ export class SewaserviceService {
               subserviceHasSyllabus: true,
             },
           },
+          forum: true,
         },
       });
     } catch (error) {

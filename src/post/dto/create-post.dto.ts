@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -12,4 +12,16 @@ export class CreatePostDto {
 
   @ApiProperty()
   forumId: string;
+
+  @ApiProperty()
+  @IsOptional()
+  image?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  creator_name?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  creator_profile?: string;
 }

@@ -41,6 +41,11 @@ enum OnlineStatus {
   OFFLINE
 }
 
+enum Result {
+  PASS
+  FAIL
+}
+
 model User {
   id           String        @id @default(cuid())
   username     String        @unique
@@ -58,15 +63,16 @@ model User {
 
   /// @DtoCreateOptional
   /// @DtoReadOnly
-  createdAt    DateTime          @default(now()) @map("created_at")
+  createdAt     DateTime          @default(now()) @map("created_at")
   /// @DtoReadOnly
-  updatedAt    DateTime          @updatedAt @map("updated_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
   /// @DtoCreateOptional
-  transactions Transaction[]
+  transactions  Transaction[]
   /// @DtoCreateOptional
-  progress     User_Progress[]
-  otps         OTP[]
-  hash         refreshTokenHash?
+  progress      User_Progress[]
+  exam_progress Exam_Progress[]
+  otps          OTP[]
+  hash          refreshTokenHash?
 
   posts       Post[]
   comment     Comments[]
@@ -169,6 +175,32 @@ model User_Progress {
   user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
+model Exam_Progress {
+  id         String @id @default(cuid())
+  userId     String
+  examSet_Id String @unique
+
+  total_score        Int
+  total_qsns         Int
+  total_attempt_qsns Int
+  // Right Answer Points
+  total_right_qsns   Int
+  earn_points        Float
+  // Wrong Answer Points
+  total_wrong_qsns   Int
+  negative_points    Float
+  // Final
+  final_score        Float
+  result             Result
+
+  /// @DtoReadOnly
+  createdAt DateTime @default(now()) @map("created_at")
+  /// @DtoReadOnly
+  updatedAt DateTime @updatedAt @map("updated_at")
+  User      User     @relation(fields: [userId], references: [id])
+  examSet   ExamSet  @relation(fields: [examSet_Id], references: [id])
+}
+
 model Package {
   id               String    @id @default(cuid())
   title            String    @unique
@@ -241,6 +273,7 @@ model SewaService {
   created_at  DateTime     @default(now())
   updated_at  DateTime     @updatedAt()
   subServices SubService[]
+  forum       Forum?
 }
 
 enum STATUS {
@@ -324,19 +357,26 @@ model QuestionSet {
 }
 
 model Forum {
-  id    String  @id @default(cuid())
-  title String
-  posts Post[]
-  image String?
+  id            String  @id @default(cuid())
+  title         String
+  posts         Post[]
+  image         String?
+  sewaServiceId String  @unique
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  sewaService SewaService @relation(fields: [sewaServiceId], references: [id])
 }
 
 model Post {
   id       String     @id @default(cuid())
   content  String
   comments Comments[]
+
+  image           String?
+  creator_name    String?
+  creator_profile String?
 
   Forum   Forum  @relation(fields: [forumId], references: [id])
   forumId String
@@ -350,6 +390,10 @@ model Post {
 model Comments {
   id      String @id @default(cuid())
   content String
+
+  image           String?
+  creator_name    String?
+  creator_profile String?
 
   User   User   @relation(fields: [userId], references: [id])
   userId String
@@ -379,6 +423,7 @@ model ExamSet {
   mock                Int            @default(1)
   negative_mark_value Float?         @default(0)
   examCategories      ExamCategory[]
+  examProgress        Exam_Progress?
 
   subService_id String?
   subService    SubService? @relation(fields: [subService_id], references: [id])
@@ -413,16 +458,18 @@ model ExamQuestion {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 }
+
 model GorkhaPatra {
-   id              String        @id @default(cuid())
+  id String @id @default(cuid())
 
-   title     String
-   news_link String
-   image_url String
+  title     String
+  news_link String
+  image_url String
 
-   createdAt DateTime @default(now()) @map("created_at")
-   updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 }
+
 model Vacancy {
   id String @id @default(cuid())
 

@@ -12,8 +12,9 @@ export class GorkhaPatraService {
   async scrapeNews() {
     const url = 'https://smarttayari.com/gorkhapatra';
     const browser = await puppeteer.launch({
-      // headless: false,
+      headless: 'new',
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);

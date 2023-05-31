@@ -93,6 +93,7 @@ async function main() {
   });
 
   // SUB SERVICE
+  // NIJAMATI
   await prisma.subService.upsert({
     where: { id: 'clhubp5rk0008bug8wplt64s1' },
     update: {},
@@ -362,6 +363,105 @@ async function main() {
       ],
       correct_ans: 'Identifying Potential Conflicts of Interest',
       explaination: faker.random.word(),
+    },
+  });
+
+  // FORUM
+  await prisma.forum.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt78s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt78s1',
+      sewaServiceId: 'clhubp5rk0008bug8wplt62s2',
+      title: 'nijmati',
+    },
+  });
+  await prisma.forum.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt79s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt79s1',
+      sewaServiceId: 'clhubp5rk0008bug8wplt100s2',
+      title: 'nepalpolice',
+    },
+  });
+  await prisma.forum.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt80s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt80s1',
+      sewaServiceId: 'clhubp5rk0008bug8wplt101s2',
+      title: 'nepalarmy',
+    },
+  });
+
+  // POST
+  await prisma.post.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt81s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt81s1',
+      forumId: 'clhubp5rk0008bug8wplt78s1',
+      userId: 'clhubp5rk0008bug8wplt62s1',
+      creator_name: 'test test',
+      content: 'What is the scientific name of human beings?',
+    },
+  });
+  await prisma.post.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt82s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt82s1',
+      forumId: 'clhubp5rk0008bug8wplt79s1',
+      userId: 'clhubp5rk0008bug8wplt62s1',
+      creator_name: 'test test',
+      content: 'What is the scientific name of human beings?',
+    },
+  });
+  await prisma.post.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt83s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt83s1',
+      forumId: 'clhubp5rk0008bug8wplt80s1',
+      userId: 'clhubp5rk0008bug8wplt62s1',
+      creator_name: 'test test',
+      content: 'What is the scientific name of human beings?',
+    },
+  });
+
+  // COMMENT
+  await prisma.comments.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt84s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt84s1',
+      postId: 'clhubp5rk0008bug8wplt81s1',
+      userId: 'clhubp5rk0008bug8wplt62s1',
+      creator_name: 'test test',
+      content: "It's Homo Sapiens.",
+    },
+  });
+  await prisma.comments.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt85s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt85s1',
+      postId: 'clhubp5rk0008bug8wplt82s1',
+      userId: 'clhubp5rk0008bug8wplt62s1',
+      creator_name: 'test test',
+      content: "It's Homo Sapiens.",
+    },
+  });
+  await prisma.comments.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt86s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt86s1',
+      postId: 'clhubp5rk0008bug8wplt83s1',
+      userId: 'clhubp5rk0008bug8wplt62s1',
+      creator_name: 'test test',
+      content: "It's Homo Sapiens.",
     },
   });
 }

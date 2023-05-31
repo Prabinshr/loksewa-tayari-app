@@ -13,6 +13,7 @@ export class GorkhaPatraService {
     const url = 'https://smarttayari.com/gorkhapatra';
     const browser = await puppeteer.launch({
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);

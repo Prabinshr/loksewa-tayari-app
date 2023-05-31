@@ -51,8 +51,8 @@ export class VacancyService {
   async getBagmati(type: string) {
     const url = 'https://spsc.bagamati.gov.np/acts-rules/10/80861221';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -68,13 +68,13 @@ export class VacancyService {
       return data;
     }, url);
 
-    let item = 0
+    let item = 0;
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -145,8 +145,8 @@ export class VacancyService {
   async getBagmatiNotices(type: string) {
     const url = 'https://spsc.bagamati.gov.np/notice-board/1/2018';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -163,13 +163,13 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    let item = 0
+    let item = 0;
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -193,8 +193,8 @@ export class VacancyService {
   async getKarnali(type: string) {
     const url = 'https://ppsc.karnali.gov.np/vacancy?type=2';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -209,13 +209,13 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    let item = 0
+    let item = 0;
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -239,8 +239,8 @@ export class VacancyService {
   async getKarnaliNotices(type: string) {
     const url = 'https://ppsc.karnali.gov.np/notice?type=1';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -256,13 +256,13 @@ export class VacancyService {
       return data;
     }, url);
 
-    let item = 0
+    let item = 0;
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -286,8 +286,8 @@ export class VacancyService {
   async getGandaki(type: string) {
     const url = 'https://ppsc.gandaki.gov.np/list/advertisment_notive';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -305,13 +305,13 @@ export class VacancyService {
       return data;
     }, url);
 
-    let item = 0
+    let item = 0;
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -335,8 +335,8 @@ export class VacancyService {
   async getGandakiNotices(type: string) {
     const url = 'https://ppsc.gandaki.gov.np/list/notice_bord';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -354,13 +354,13 @@ export class VacancyService {
       return data;
     }, url);
 
-    let item = 0
+    let item = 0;
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -387,8 +387,8 @@ export class VacancyService {
   async getPradeshOne(type: string) {
     const url = 'https://psc.p1.gov.np/vacancy/advertise_local';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -406,13 +406,13 @@ export class VacancyService {
       return data;
     }, url);
 
-    let item =0
+    let item = 0;
     for (const vacancy of scrapVacancies) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -436,8 +436,8 @@ export class VacancyService {
   async getPradeshOneNotices(type: string) {
     const url = 'https://psc.p1.gov.np/notice/general-notice';
     const browser = await puppeteer.launch({
-      headless: false,
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -454,13 +454,13 @@ export class VacancyService {
       }));
       return data;
     }, url);
-    let item = 0
+    let item = 0;
     for (const vacancy of scrapNotices) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -549,7 +549,10 @@ export class VacancyService {
   //scrap psc.gov.np
   async getNpData(type: string) {
     const url = `https://psc.gov.np/category/sangathit-vacancies.html`;
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({
+      defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
 
     await page.goto(url);
@@ -570,13 +573,13 @@ export class VacancyService {
       }));
       return data;
     });
-    let item = 0
+    let item = 0;
     for (const vacancy of allData) {
       const findtitle = await this.prisma.vacancy.findFirst({
         where: { title: vacancy.title },
       });
       if (!findtitle) {
-        item = item +1 
+        item = item + 1;
         await this.prisma.vacancy.createMany({
           data: {
             title: vacancy.title,
@@ -600,7 +603,10 @@ export class VacancyService {
   //advertising
   async getp2DataAdvertising(type: string) {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%aa%e0%a4%a6%e0%a4%aa%e0%a5%82%e0%a4%b0%e0%a5%8d%e0%a4%a4%e0%a4%bf/%e0%a4%b5%e0%a4%bf%e0%a4%9c%e0%a5%8d%e0%a4%9e%e0%a4%be%e0%a4%aa%e0%a4%a8/`;
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({
+      defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
 
     await page.goto(url);
@@ -648,7 +654,10 @@ export class VacancyService {
   //notice
   async getp2noticeData(type: string) {
     const url = `https://ppsc.p2.gov.np/category/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be-%e0%a4%b8%e0%a5%82%e0%a4%9a%e0%a4%a8%e0%a4%be/page/1/`;
-    const browser = await puppeteer.launch({ headless: false });
+    const browser = await puppeteer.launch({
+      defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
     const page = await browser.newPage();
 
     await page.goto(url);

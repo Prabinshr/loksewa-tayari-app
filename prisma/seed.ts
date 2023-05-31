@@ -6,8 +6,10 @@ const prisma = new PrismaClient();
 
 async function main() {
   // USER
-  await prisma.user.create({
-    data: {
+  await prisma.user.upsert({
+    where: { id: 'clhua4n4t0000but8wsapabsd' },
+    update: {},
+    create: {
       id: 'clhua4n4t0000but8wsapabsd',
       username: 'admin',
       email: 'admin@admin.com',
@@ -18,8 +20,10 @@ async function main() {
       role: Role.ADMIN,
     },
   });
-  await prisma.user.create({
-    data: {
+  await prisma.user.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt62s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt62s1',
       username: 'test',
       email: 'test@test.com',
@@ -30,8 +34,10 @@ async function main() {
       role: Role.USER,
     },
   });
-  await prisma.user.create({
-    data: {
+  await prisma.user.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt1000s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt1000s1',
       username: 'subscribe',
       email: 'subscribe@subscribe.com',
@@ -42,24 +48,44 @@ async function main() {
       role: Role.SUBSCRIBED_USER,
     },
   });
+  await prisma.user.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt1018970s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt1018970s1',
+      username: 'moderator',
+      email: 'moderator@moderator.com',
+      first_name: 'moderator',
+      middle_name: 'moderator',
+      last_name: 'moderator',
+      password: await hash('moderator'),
+      role: Role.MODERATOR,
+    },
+  });
 
   // SEWA SERVICE
-  await prisma.sewaService.create({
-    data: {
+  await prisma.sewaService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt62s2' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt62s2',
       title: 'nijamati',
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.sewaService.create({
-    data: {
+  await prisma.sewaService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt100s2' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt100s2',
       title: 'nepalpolice',
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.sewaService.create({
-    data: {
+  await prisma.sewaService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt101s2' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt101s2',
       title: 'nepalarmy',
       status: STATUS.PUBLISHED,
@@ -67,8 +93,10 @@ async function main() {
   });
 
   // SUB SERVICE
-  await prisma.subService.create({
-    data: {
+  await prisma.subService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt64s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt64s1',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
       title: 'kharidar',
@@ -76,8 +104,10 @@ async function main() {
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.subService.create({
-    data: {
+  await prisma.subService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt64s2' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt64s2',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
       title: 'nayabsubba',
@@ -85,8 +115,10 @@ async function main() {
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.subService.create({
-    data: {
+  await prisma.subService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt64s3' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt64s3',
       sewaService_id: 'clhubp5rk0008bug8wplt62s2',
       title: 'adhikrit',
@@ -94,19 +126,12 @@ async function main() {
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.subService.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt66546165s3',
-      sewaService_id: 'clhubp5rk0008bug8wplt62s2',
-      title: 'adhikrit',
-      user_id: 'clhubp5rk0008bug8wplt62s1',
-      status: STATUS.PUBLISHED,
-    },
-  });
 
   // EXAM SET
-  await prisma.examSet.create({
-    data: {
+  await prisma.examSet.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt65s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt65s1',
       subService_id: 'clhubp5rk0008bug8wplt64s1',
       title: 'MOCK EXAM SET 1',
@@ -114,8 +139,10 @@ async function main() {
       negative_mark_value: 0.25,
     },
   });
-  await prisma.examSet.create({
-    data: {
+  await prisma.examSet.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt65456s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt65456s1',
       subService_id: 'clhubp5rk0008bug8wplt64s1',
       title: 'MOCK EXAM SET 2',
@@ -125,15 +152,19 @@ async function main() {
   });
 
   // EXAM CATEGORY
-  await prisma.examCategory.create({
-    data: {
+  await prisma.examCategory.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt66s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt66s1',
       examSet_id: 'clhubp5rk0008bug8wplt65s1',
       title: 'General Knowledge',
     },
   });
-  await prisma.examCategory.create({
-    data: {
+  await prisma.examCategory.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt67s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt67s1',
       examSet_id: 'clhubp5rk0008bug8wplt65s1',
       title: 'Public Management',
@@ -141,9 +172,11 @@ async function main() {
   });
 
   // EXAM QUESTIONS
-  // GK E.Q.
-  await prisma.examQuestion.create({
-    data: {
+  // GK
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt68s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt68s1',
       examCategory_id: 'clhubp5rk0008bug8wplt66s1',
       syllabusStr: 'General Knowledge',
@@ -160,8 +193,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt69s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt69s1',
       examCategory_id: 'clhubp5rk0008bug8wplt66s1',
       syllabusStr: 'General Knowledge',
@@ -173,8 +208,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt70s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt70s1',
       examCategory_id: 'clhubp5rk0008bug8wplt66s1',
       syllabusStr: 'General Knowledge',
@@ -191,8 +228,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt71s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt71s1',
       examCategory_id: 'clhubp5rk0008bug8wplt66s1',
       syllabusStr: 'General Knowledge',
@@ -209,8 +248,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt72s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt72s1',
       examCategory_id: 'clhubp5rk0008bug8wplt66s1',
       syllabusStr: 'General Knowledge',
@@ -224,8 +265,10 @@ async function main() {
   });
 
   // Public Management
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt73s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt73s1',
       examCategory_id: 'clhubp5rk0008bug8wplt67s1',
       syllabusStr: 'Public Management',
@@ -242,8 +285,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt74s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt74s1',
       examCategory_id: 'clhubp5rk0008bug8wplt67s1',
       syllabusStr: 'Public Management',
@@ -260,8 +305,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt75s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt75s1',
       examCategory_id: 'clhubp5rk0008bug8wplt67s1',
       syllabusStr: 'Public Management',
@@ -277,8 +324,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt76s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt76s1',
       examCategory_id: 'clhubp5rk0008bug8wplt67s1',
       syllabusStr: 'Public Management',
@@ -295,8 +344,10 @@ async function main() {
       explaination: faker.random.word(),
     },
   });
-  await prisma.examQuestion.create({
-    data: {
+  await prisma.examQuestion.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt77s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt77s1',
       examCategory_id: 'clhubp5rk0008bug8wplt67s1',
       syllabusStr: 'Public Management',
@@ -311,175 +362,6 @@ async function main() {
       ],
       correct_ans: 'Identifying Potential Conflicts of Interest',
       explaination: faker.random.word(),
-    },
-  });
-
-  // FORUM
-  await prisma.forum.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt78s1',
-      sewaServiceId: 'clhubp5rk0008bug8wplt62s2',
-      title: 'nijamati',
-    },
-  });
-  await prisma.forum.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt79s1',
-      sewaServiceId: 'clhubp5rk0008bug8wplt100s2',
-      title: 'nepalpolice',
-    },
-  });
-  await prisma.forum.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt80s1',
-      sewaServiceId: 'clhubp5rk0008bug8wplt101s2',
-      title: 'nepalarmy',
-    },
-  });
-
-  // POST
-  await prisma.post.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt81s1',
-      forumId: 'clhubp5rk0008bug8wplt78s1',
-      userId: 'clhubp5rk0008bug8wplt62s1',
-      content: 'What is the scientific name of human beings?',
-      creator_name: 'test test',
-      creator_profile: null,
-    },
-  });
-  await prisma.post.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt82s1',
-      forumId: 'clhubp5rk0008bug8wplt79s1',
-      userId: 'clhubp5rk0008bug8wplt62s1',
-      content: 'What is the scientific name of human beings?',
-      creator_name: 'test test',
-      creator_profile: null,
-    },
-  });
-  await prisma.post.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt83s1',
-      forumId: 'clhubp5rk0008bug8wplt80s1',
-      userId: 'clhubp5rk0008bug8wplt62s1',
-      content: 'What is the scientific name of human beings?',
-      creator_name: 'test test',
-      creator_profile: null,
-    },
-  });
-  await prisma.post.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt8000s1',
-      forumId: 'clhubp5rk0008bug8wplt80s1',
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      content: 'What is the scientific name of camel?',
-      creator_name: 'subscribe subscribe',
-      creator_profile: null,
-    },
-  });
-  await prisma.post.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt8001s1',
-      forumId: 'clhubp5rk0008bug8wplt80s1',
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      content: 'What is the scientific name of camel?',
-      creator_name: 'subscribe subscribe',
-      creator_profile: null,
-    },
-  });
-  await prisma.post.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt8002s1',
-      forumId: 'clhubp5rk0008bug8wplt80s1',
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      content: 'What is the scientific name of camel?',
-      creator_name: 'subscribe subscribe',
-      creator_profile: null,
-    },
-  });
-
-  // COMMENT
-  await prisma.comments.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt84s1',
-      postId: 'clhubp5rk0008bug8wplt81s1',
-      userId: 'clhubp5rk0008bug8wplt62s1',
-      content: "It's Homo Sapiens.",
-      creator_name: 'test test',
-      creator_profile: null,
-    },
-  });
-  await prisma.comments.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt85s1',
-      postId: 'clhubp5rk0008bug8wplt82s1',
-      userId: 'clhubp5rk0008bug8wplt62s1',
-      content: "It's Homo Sapiens.",
-      creator_name: 'test test',
-      creator_profile: null,
-    },
-  });
-  await prisma.comments.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt86s1',
-      postId: 'clhubp5rk0008bug8wplt83s1',
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      content: "It's Homo Sapiens.",
-      creator_name: 'subscribe subscribe',
-      creator_profile: null,
-    },
-  });
-  await prisma.comments.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt65415174s1',
-      postId: 'clhubp5rk0008bug8wplt8002s1',
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      content: "It's Homo Sapiens.",
-      creator_name: 'subscribe subscribe',
-      creator_profile: null,
-    },
-  });
-  await prisma.comments.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt654158574s1',
-      postId: 'clhubp5rk0008bug8wplt8002s1',
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      content: "It's Homo Sapiens.",
-      creator_name: 'subscribe subscribe',
-      creator_profile: null,
-    },
-  });
-
-  // Exam Progress
-  await prisma.exam_Progress.create({
-    data: {
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      examSet_Id: 'clhubp5rk0008bug8wplt65s1',
-      total_score: 100,
-      total_qsns: 100,
-      total_attempt_qsns: 80,
-      total_right_qsns: 70,
-      earn_points: 70,
-      total_wrong_qsns: 10,
-      negative_points: 2.5,
-      final_score: 67.5,
-      result: Result.PASS,
-    },
-  });
-  await prisma.exam_Progress.create({
-    data: {
-      userId: 'clhubp5rk0008bug8wplt1000s1',
-      examSet_Id: 'clhubp5rk0008bug8wplt65456s1',
-      total_score: 100,
-      total_qsns: 100,
-      total_attempt_qsns: 80,
-      total_right_qsns: 70,
-      earn_points: 70,
-      total_wrong_qsns: 10,
-      negative_points: 2.5,
-      final_score: 67.5,
-      result: Result.PASS,
     },
   });
 }

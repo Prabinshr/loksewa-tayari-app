@@ -1,8 +1,8 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Result } from '@prisma/client';
 
-export class CreateExamProgressDto {
+export class UpdateExamProgressDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
@@ -16,47 +16,56 @@ export class CreateExamProgressDto {
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  total_score: number;
+  @IsOptional()
+  total_score?: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  total_qsns: number;
+  @IsOptional()
+  total_qsns?: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  total_attempt_qsns: number;
+  @IsOptional()
+  total_attempt_qsns?: number;
 
   // Right Answer Points
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  total_right_qsns: number;
+  @IsOptional()
+  total_right_qsns?: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  earn_points: number;
+  @IsOptional()
+  earn_points?: number;
 
   // Wrong Answer Points
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  total_wrong_qsns: number;
+  @IsOptional()
+  total_wrong_qsns?: number;
 
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  negative_points: number;
+  @IsOptional()
+  negative_points?: number;
 
   // Final
   @ApiProperty()
   @IsNotEmpty()
   @IsNumber()
-  final_score: number;
+  @IsOptional()
+  final_score?: number;
 
   @ApiProperty()
   @IsNotEmpty()
-  result: Result;
+  @IsOptional()
+  result?: Result;
 }

@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   // USER
+  // Admin
   await prisma.user.upsert({
     where: { id: 'clhua4n4t0000but8wsapabsd' },
     update: {},

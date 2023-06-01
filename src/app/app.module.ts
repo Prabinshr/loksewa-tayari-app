@@ -35,6 +35,8 @@ import { NotificationModule } from 'src/notification/notification.module';
 import { ExamsModule } from 'src/exams/exams.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskScrapeModule } from 'src/task-scrape/task-scrape.module';
 
 @Module({
   imports: [
@@ -42,6 +44,7 @@ import { APP_GUARD } from '@nestjs/core';
       ttl: 60,
       limit: 20,
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     PrismaModule,
     UserModule,
@@ -72,6 +75,7 @@ import { APP_GUARD } from '@nestjs/core';
     GorkhaPatraModule,
     NotificationModule,
     ExamsModule,
+    TaskScrapeModule,
   ],
   controllers: [AppController],
   providers: [

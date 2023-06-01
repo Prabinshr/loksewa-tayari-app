@@ -20,6 +20,7 @@ import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role } from '@prisma/client';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { CreateExamProgressDto } from '../dto';
+import { UpdateExamProgressDto } from '../dto/update-examProgress.dto';
 
 @ApiTags('User Exam Progress')
 @ApiBearerAuth('jwt')
@@ -53,9 +54,9 @@ export class UserExamProgressController {
 
   @Patch()
   @Roles(Role.ADMIN, Role.SUBSCRIBED_USER)
-  @ApiOperation({ summary: 'Update Attempted Exam Sets (IN PROGRESS)' })
-  update() {
-    return this.userExamProgressService.update();
+  @ApiOperation({ summary: 'Update Attempted Exam Sets' })
+  update(@Body() updateExamProgressDto: UpdateExamProgressDto) {
+    return this.userExamProgressService.update(updateExamProgressDto);
   }
 
   @Delete()

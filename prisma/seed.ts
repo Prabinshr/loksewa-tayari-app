@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   // USER
+  // Admin
   await prisma.user.upsert({
     where: { id: 'clhua4n4t0000but8wsapabsd' },
     update: {},
@@ -34,8 +35,10 @@ async function main() {
       role: Role.USER,
     },
   });
-  await prisma.user.create({
-    data: {
+  await prisma.user.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt1000s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt1000s1',
       username: 'subscribe',
       email: 'subscribe@subscribe.com',
@@ -44,6 +47,20 @@ async function main() {
       last_name: 'subscribe',
       password: await hash('subscribe'),
       role: Role.SUBSCRIBED_USER,
+    },
+  });
+  await prisma.user.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt1018970s1' },
+    update: {},
+    create: {
+      id: 'clhubp5rk0008bug8wplt1018970s1',
+      username: 'moderator',
+      email: 'moderator@moderator.com',
+      first_name: 'moderator',
+      middle_name: 'moderator',
+      last_name: 'moderator',
+      password: await hash('moderator'),
+      role: Role.MODERATOR,
     },
   });
 
@@ -57,15 +74,19 @@ async function main() {
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.sewaService.create({
-    data: {
+  await prisma.sewaService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt100s2' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt100s2',
       title: 'nepalpolice',
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.sewaService.create({
-    data: {
+  await prisma.sewaService.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt101s2' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt101s2',
       title: 'nepalarmy',
       status: STATUS.PUBLISHED,
@@ -73,6 +94,7 @@ async function main() {
   });
 
   // SUB SERVICE
+  // NIJAMATI
   await prisma.subService.upsert({
     where: { id: 'clhubp5rk0008bug8wplt64s1' },
     update: {},
@@ -106,15 +128,6 @@ async function main() {
       status: STATUS.PUBLISHED,
     },
   });
-  await prisma.subService.create({
-    data: {
-      id: 'clhubp5rk0008bug8wplt66546165s3',
-      sewaService_id: 'clhubp5rk0008bug8wplt62s2',
-      title: 'adhikrit',
-      user_id: 'clhubp5rk0008bug8wplt62s1',
-      status: STATUS.PUBLISHED,
-    },
-  });
 
   // EXAM SET
   await prisma.examSet.upsert({
@@ -128,8 +141,10 @@ async function main() {
       negative_mark_value: 0.25,
     },
   });
-  await prisma.examSet.create({
-    data: {
+  await prisma.examSet.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt65456s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt65456s1',
       subService_id: 'clhubp5rk0008bug8wplt64s1',
       title: 'MOCK EXAM SET 2',
@@ -159,7 +174,7 @@ async function main() {
   });
 
   // EXAM QUESTIONS
-  // GK E.Q.
+  // GK
   await prisma.examQuestion.upsert({
     where: { id: 'clhubp5rk0008bug8wplt68s1' },
     update: {},
@@ -353,34 +368,6 @@ async function main() {
   });
 
   // FORUM
-  await prisma.forum.upsert({
-    where: { id: 'clhubp5rk0008bug8wplt78s1' },
-    update: {},
-    create: {
-      id: 'clhubp5rk0008bug8wplt78s1',
-      sewaServiceId: 'clhubp5rk0008bug8wplt62s2',
-      title: 'nijamati',
-    },
-  });
-  await prisma.forum.upsert({
-    where: { id: 'clhubp5rk0008bug8wplt79s1' },
-    update: {},
-    create: {
-      id: 'clhubp5rk0008bug8wplt79s1',
-      sewaServiceId: 'clhubp5rk0008bug8wplt100s2',
-      title: 'nepalpolice',
-    },
-  });
-  await prisma.forum.upsert({
-    where: { id: 'clhubp5rk0008bug8wplt80s1' },
-    update: {},
-    create: {
-      id: 'clhubp5rk0008bug8wplt80s1',
-      sewaServiceId: 'clhubp5rk0008bug8wplt101s2',
-      title: 'nepalarmy',
-    },
-  });
-
   // POST
   await prisma.post.upsert({
     where: { id: 'clhubp5rk0008bug8wplt81s1' },
@@ -418,8 +405,10 @@ async function main() {
       creator_profile: null,
     },
   });
-  await prisma.post.create({
-    data: {
+  await prisma.post.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt8000s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt8000s1',
       forumId: 'clhubp5rk0008bug8wplt80s1',
       userId: 'clhubp5rk0008bug8wplt1000s1',
@@ -428,8 +417,10 @@ async function main() {
       creator_profile: null,
     },
   });
-  await prisma.post.create({
-    data: {
+  await prisma.post.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt8001s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt8001s1',
       forumId: 'clhubp5rk0008bug8wplt80s1',
       userId: 'clhubp5rk0008bug8wplt1000s1',
@@ -438,8 +429,10 @@ async function main() {
       creator_profile: null,
     },
   });
-  await prisma.post.create({
-    data: {
+  await prisma.post.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt8002s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt8002s1',
       forumId: 'clhubp5rk0008bug8wplt80s1',
       userId: 'clhubp5rk0008bug8wplt1000s1',
@@ -486,8 +479,10 @@ async function main() {
       creator_profile: null,
     },
   });
-  await prisma.comments.create({
-    data: {
+  await prisma.comments.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt65415174s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt65415174s1',
       postId: 'clhubp5rk0008bug8wplt8002s1',
       userId: 'clhubp5rk0008bug8wplt1000s1',
@@ -496,8 +491,10 @@ async function main() {
       creator_profile: null,
     },
   });
-  await prisma.comments.create({
-    data: {
+  await prisma.comments.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt654158574s1' },
+    update: {},
+    create: {
       id: 'clhubp5rk0008bug8wplt654158574s1',
       postId: 'clhubp5rk0008bug8wplt8002s1',
       userId: 'clhubp5rk0008bug8wplt1000s1',
@@ -508,8 +505,10 @@ async function main() {
   });
 
   // Exam Progress
-  await prisma.exam_Progress.create({
-    data: {
+  await prisma.exam_Progress.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt1000s1' },
+    update: {},
+    create: {
       userId: 'clhubp5rk0008bug8wplt1000s1',
       examSet_Id: 'clhubp5rk0008bug8wplt65s1',
       total_score: 100,
@@ -523,8 +522,10 @@ async function main() {
       result: Result.PASS,
     },
   });
-  await prisma.exam_Progress.create({
-    data: {
+  await prisma.exam_Progress.upsert({
+    where: { id: 'clhubp5rk0008bug8wplt1000s1' },
+    update: {},
+    create: {
       userId: 'clhubp5rk0008bug8wplt1000s1',
       examSet_Id: 'clhubp5rk0008bug8wplt65456s1',
       total_score: 100,

@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateExamProgressDto } from '../dto';
+import { UpdateExamProgressDto } from '../dto/update-examProgress.dto';
 
 @Injectable()
 export class UserExamProgressService {
@@ -188,7 +189,21 @@ export class UserExamProgressService {
     return progress;
   }
 
-  update() {}
+  async update(updateExamProgressDto: UpdateExamProgressDto) {
+    // Getting The Exam Progress ID That The User Wants To Update.
+    const { id } = await this.prisma.exam_Progress.findFirst({
+      where: {
+        userId: updateExamProgressDto.userId,
+        examSet_Id: updateExamProgressDto.examSet_Id,
+      },
+    });
+
+    // Updating Exam Progress Of That Exam Set
+    return await this.prisma.exam_Progress.update({
+      where: { id },
+      data: updateExamProgressDto,
+    });
+  }
 
   remove() {}
 }

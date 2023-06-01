@@ -285,7 +285,7 @@ CREATE TABLE "Forum" (
 CREATE TABLE "Post" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
-    "imae" TEXT,
+    "image" TEXT,
     "creator_name" TEXT,
     "creator_profile" TEXT,
     "forumId" TEXT NOT NULL,

@@ -85,6 +85,7 @@ export class UserController {
     )
     profile: Express.Multer.File,
   ) {
+    
     return await this.userService.uploadUserImage(user, profile);
   }
 

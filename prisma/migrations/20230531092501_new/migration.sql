@@ -5,6 +5,9 @@ CREATE TYPE "Role" AS ENUM ('ADMIN', 'MODERATOR', 'SUBSCRIBED_USER', 'USER');
 CREATE TYPE "OnlineStatus" AS ENUM ('ONLINE', 'OFFLINE');
 
 -- CreateEnum
+CREATE TYPE "Result" AS ENUM ('PASS', 'FAIL');
+
+-- CreateEnum
 CREATE TYPE "OTPType" AS ENUM ('EMAIL_VERIFICATION', 'PASSWORD_RESET', 'OTHER');
 
 -- CreateEnum
@@ -111,6 +114,26 @@ CREATE TABLE "User_Progress" (
     "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "User_Progress_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Exam_Progress" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "examSet_Id" TEXT NOT NULL,
+    "total_score" INTEGER NOT NULL,
+    "total_qsns" INTEGER NOT NULL,
+    "total_attempt_qsns" INTEGER NOT NULL,
+    "total_right_qsns" INTEGER NOT NULL,
+    "earn_points" DOUBLE PRECISION NOT NULL,
+    "total_wrong_qsns" INTEGER NOT NULL,
+    "negative_points" DOUBLE PRECISION NOT NULL,
+    "final_score" DOUBLE PRECISION NOT NULL,
+    "result" "Result" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Exam_Progress_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -251,6 +274,7 @@ CREATE TABLE "Forum" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "image" TEXT,
+    "sewaServiceId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -261,6 +285,9 @@ CREATE TABLE "Forum" (
 CREATE TABLE "Post" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "image" TEXT,
+    "creator_name" TEXT,
+    "creator_profile" TEXT,
     "forumId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -273,6 +300,9 @@ CREATE TABLE "Post" (
 CREATE TABLE "Comments" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
+    "image" TEXT,
+    "creator_name" TEXT,
+    "creator_profile" TEXT,
     "userId" TEXT NOT NULL,
     "postId" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -375,10 +405,16 @@ CREATE INDEX "refreshTokenHash_user_id_idx" ON "refreshTokenHash"("user_id");
 CREATE INDEX "refreshTokenHash_token_hash_idx" ON "refreshTokenHash"("token_hash");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Exam_Progress_examSet_Id_key" ON "Exam_Progress"("examSet_Id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Package_title_key" ON "Package"("title");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Coupon_code_key" ON "Coupon"("code");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Forum_sewaServiceId_key" ON "Forum"("sewaServiceId");
 
 -- AddForeignKey
 ALTER TABLE "refreshTokenHash" ADD CONSTRAINT "refreshTokenHash_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -400,6 +436,12 @@ ALTER TABLE "User_Progress" ADD CONSTRAINT "User_Progress_quiz_id_fkey" FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE "User_Progress" ADD CONSTRAINT "User_Progress_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Exam_Progress" ADD CONSTRAINT "Exam_Progress_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Exam_Progress" ADD CONSTRAINT "Exam_Progress_examSet_Id_fkey" FOREIGN KEY ("examSet_Id") REFERENCES "ExamSet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_couponCode_fkey" FOREIGN KEY ("couponCode") REFERENCES "Coupon"("code") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -439,6 +481,9 @@ ALTER TABLE "SubStrTopic" ADD CONSTRAINT "SubStrTopic_sub_struct_topic_id_fkey" 
 
 -- AddForeignKey
 ALTER TABLE "QuestionSet" ADD CONSTRAINT "QuestionSet_topic_id_fkey" FOREIGN KEY ("topic_id") REFERENCES "SubStrTopic"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Forum" ADD CONSTRAINT "Forum_sewaServiceId_fkey" FOREIGN KEY ("sewaServiceId") REFERENCES "SewaService"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_forumId_fkey" FOREIGN KEY ("forumId") REFERENCES "Forum"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

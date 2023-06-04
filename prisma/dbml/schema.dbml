@@ -24,6 +24,7 @@ Table User {
   updatedAt DateTime [not null, note: '@DtoReadOnly']
   transactions Transaction [not null, note: '@DtoCreateOptional']
   progress User_Progress [not null, note: '@DtoCreateOptional']
+  exam_progress Exam_Progress [not null]
   otps OTP [not null]
   hash refreshTokenHash
   posts Post [not null]
@@ -102,6 +103,25 @@ Table User_Progress {
   user User [not null]
 }
 
+Table Exam_Progress {
+  id String [pk]
+  userId String [not null]
+  examSet_Id String [unique, not null]
+  total_score Int [not null]
+  total_qsns Int [not null]
+  total_attempt_qsns Int [not null]
+  total_right_qsns Int [not null]
+  earn_points Float [not null]
+  total_wrong_qsns Int [not null]
+  negative_points Float [not null]
+  final_score Float [not null]
+  result Result [not null]
+  createdAt DateTime [default: `now()`, not null, note: '@DtoReadOnly']
+  updatedAt DateTime [not null, note: '@DtoReadOnly']
+  User User [not null]
+  examSet ExamSet [not null]
+}
+
 Table Package {
   id String [pk]
   title String [unique, not null]
@@ -160,6 +180,7 @@ Table SewaService {
   created_at DateTime [default: `now()`, not null]
   updated_at DateTime [not null]
   subServices SubService [not null]
+  forum Forum
 }
 
 Table SubService {
@@ -231,14 +252,19 @@ Table Forum {
   title String [not null]
   posts Post [not null]
   image String
+  sewaServiceId String [unique, not null]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
+  sewaService SewaService [not null]
 }
 
 Table Post {
   id String [pk]
   content String [not null]
   comments Comments [not null]
+  image String
+  creator_name String
+  creator_profile String
   Forum Forum [not null]
   forumId String [not null]
   User User [not null]
@@ -250,6 +276,9 @@ Table Post {
 Table Comments {
   id String [pk]
   content String [not null]
+  image String
+  creator_name String
+  creator_profile String
   User User [not null]
   userId String [not null]
   Post Post [not null]
@@ -265,6 +294,7 @@ Table ExamSet {
   mock Int [not null, default: 1]
   negative_mark_value Float [default: 0]
   examCategories ExamCategory [not null]
+  examProgress Exam_Progress
   subService_id String
   subService SubService
   createdAt DateTime [default: `now()`, not null]
@@ -332,6 +362,11 @@ Enum OnlineStatus {
   OFFLINE
 }
 
+Enum Result {
+  PASS
+  FAIL
+}
+
 Enum OTPType {
   EMAIL_VERIFICATION
   PASSWORD_RESET
@@ -369,6 +404,10 @@ Ref: User_Progress.quiz_id > Quiz.id
 
 Ref: User_Progress.user_id > User.id [delete: Cascade]
 
+Ref: Exam_Progress.userId > User.id
+
+Ref: Exam_Progress.examSet_Id - ExamSet.id
+
 Ref: Transaction.couponCode > Coupon.code
 
 Ref: Transaction.package_title > Package.title
@@ -394,6 +433,8 @@ Ref: SyllabusSubStructure.syllabus_structure_id > SyllabusStructure.id
 Ref: SubStrTopic.sub_struct_topic_id > SyllabusSubStructure.id
 
 Ref: QuestionSet.topic_id > SubStrTopic.id
+
+Ref: Forum.sewaServiceId - SewaService.id
 
 Ref: Post.forumId > Forum.id
 

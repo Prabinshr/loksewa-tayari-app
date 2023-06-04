@@ -6,7 +6,7 @@ import { UserModule } from 'src/user/user.module';
 import { UserService } from 'src/user/user.service';
 import { QuizModule } from 'src/quiz/quiz.module';
 import { QuestionModule } from 'src/question/question.module';
-import { UserProgressModule } from 'src/userProgress/progress.module';
+import { UserProgressModule } from 'src/userProgress/modules/progress.module';
 import { TransactionModule } from 'src/transaction/transaction.module';
 import { QuestionCategoryModule } from 'src/questionCategory/question_category.module';
 import { AuthModule } from 'src/auth/auth.module';
@@ -35,6 +35,8 @@ import { NotificationModule } from 'src/notification/notification.module';
 import { ExamsModule } from 'src/exams/exams.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TaskScrapeModule } from 'src/task-scrape/task-scrape.module';
 
 @Module({
   imports: [
@@ -42,6 +44,7 @@ import { APP_GUARD } from '@nestjs/core';
       ttl: 60,
       limit: 20,
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     PrismaModule,
     UserModule,
@@ -72,6 +75,7 @@ import { APP_GUARD } from '@nestjs/core';
     GorkhaPatraModule,
     NotificationModule,
     ExamsModule,
+    TaskScrapeModule,
   ],
   controllers: [AppController],
   providers: [

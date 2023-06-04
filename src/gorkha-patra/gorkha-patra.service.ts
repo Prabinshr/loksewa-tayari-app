@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { CreateGorkhaPatraDto } from './dto/create-gorkha-patra.dto';
-import { UpdateGorkhaPatraDto } from './dto/update-gorkha-patra.dto';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import puppeteer from 'puppeteer';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
-export class GorkhaPatraService {
+export class GorkhaPatraService implements OnModuleInit {
   constructor(private prisma: PrismaService) {}
 
-  // scrape gorkhaPatra loksewa news from smartTayari website
-  async scrapeNews() {
+  async onModuleInit() {
+    // scrape gorkhaPatra loksewa news from smartTayari website
     const url = 'https://smarttayari.com/gorkhapatra';
     const browser = await puppeteer.launch({
-      // headless: false,
+      headless: 'new',
       defaultViewport: null,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
     await page.goto(url);
@@ -51,12 +51,12 @@ export class GorkhaPatraService {
             image_url: news.image_url,
           },
         });
-      } else {
-        console.log('No latest news to store.');
-        return scrapNews;
       }
     }
-    await browser.close();
-    return scrapNews;
+  }
+
+  @Cron(CronExpression.EVERY_2_HOURS)
+  async scrapeNews() {
+    return await this.prisma.gorkhaPatra.findMany({});
   }
 }

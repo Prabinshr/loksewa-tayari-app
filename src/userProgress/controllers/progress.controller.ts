@@ -5,12 +5,13 @@ import {
   UseGuards,
   ForbiddenException,
 } from '@nestjs/common';
-import { UserProgressService } from './progress.service';
+import { UserProgressService } from '../services/progress.service';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Roles } from 'src/auth/guards/roles.decorator';
 import { Role, User } from '@prisma/client';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { Public } from 'src/decorators/public.decorator';
 
 @ApiTags('User Progress')
 @ApiBearerAuth('jwt')
